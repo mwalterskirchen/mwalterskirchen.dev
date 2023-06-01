@@ -1,19 +1,12 @@
-import { Controls, Player } from '@lottiefiles/react-lottie-player'
-import LottiePlayer from '@/app/player'
+import Hero from '@/components/hero'
 
 export default function Home() {
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <h1 className="text-5xl">
-                Maximilian Walterskirchen - Full Stack Software Engineer
-            </h1>
-            <LottiePlayer />
-            <div className="flex flex-col items-center">
-                <h2 className="text-2xl">
-                    🏗️ This Page is still being built...
-                </h2>
-                <span>Please come back at a later time 👋🏻</span>
-            </div>
+        <main>
+            <Hero />
+            <section>
+                <h2>About</h2>
+            </section>
         </main>
     )
 }
