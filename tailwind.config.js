@@ -8,7 +8,8 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                mono: ['var(--font-fira)'],
+                sans: ['var(--font-inter)'],
+                mono: ['var(--font-fira-code)'],
             },
         },
     },

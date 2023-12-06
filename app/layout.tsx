@@ -1,7 +1,7 @@
 import './globals.css'
-import { Fira_Code } from 'next/font/google'
+import { fira } from '@/util'
 
-const fira = Fira_Code({ subsets: ['latin'], variable: '--font-fira' })
+import type { ReactNode } from 'react'
 
 export const metadata = {
     title: 'Maximilian Walterkirchen - Full Stack Software Engineer',
@@ -9,11 +9,7 @@ export const metadata = {
         '🔭 Full Stack Engineer from Vienna, Austria 🇦🇹 Balancing a love for ☕ coffee with a passion for building brilliant software. Always brewing up fresh code! 💻',
 }
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="en">
             <body

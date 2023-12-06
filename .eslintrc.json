@@ -1,3 +1,37 @@
 {
-  "extends": ["next/core-web-vitals", "prettier"]
+  "extends": ["next/core-web-vitals", "prettier", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "root": true,
+  "plugins": ["import", "@typescript-eslint"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "@typescript-eslint/consistent-type-imports": ["error"],
+        "import/first": ["error"],
+        "import/no-useless-path-segments": ["error"],
+        "import/no-duplicates": ["error"],
+        "import/order": [
+          "error",
+          {
+            "pathGroups": [
+              {
+                "pattern": "@components/**|@lib/**|@styles/**|@public/**",
+                "group": "internal"
+              }
+            ],
+            "groups": [
+              ["external", "builtin"],
+              "internal",
+              ["index", "sibling", "parent"],
+              "object",
+              "type"
+            ],
+            "newlines-between": "always",
+            "pathGroupsExcludedImportTypes": ["type"]
+          }
+        ]
+      }
+    }
+  ]
 }
