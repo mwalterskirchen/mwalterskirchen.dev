@@ -1,15 +1,15 @@
 export default function Home() {
     return (
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <h1 className="text-5xl">
-                Maximilian Walterskirchen - Full Stack Software Engineer
+        <main className="h-full flex items-center flex-col">
+            <h1 className="text-2xl">
+                Hi, I&apos;m{' '}
+                <span className={'underline underline-offset-4 text-teal-400'}>Max</span>! 👋🏻
             </h1>
-            <div className="flex flex-col items-center">
-                <h2 className="text-2xl">
-                    🏗️ This Page is still being built...
-                </h2>
-                <span>Please come back at a later time 👋🏻</span>
-            </div>
+            <h2>
+                Merging the Art of Full Stack Web Development and Computer Science with a
+                Security Focus at TU Wien, while Relishing in CTF Challenges 🔐, Diving into
+                Video Games 👾, and Crafting Artisanal Espresso ☕.
+            </h2>
         </main>
     )
 }
