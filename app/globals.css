@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+pre > code {
+    display: grid;
+}
+
+code {
+    counter-reset: line;
+}
+
+/* Apply line numbers only when showLineNumbers is specified: */
+code[data-line-numbers] > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+
+    /* Other styling */
+    display: inline-block;
+    width: 1rem;
+    margin-right: 2rem;
+    text-align: right;
+    color: gray;
+}

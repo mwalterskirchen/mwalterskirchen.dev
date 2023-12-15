@@ -1,11 +1,19 @@
 import Link from 'next/link'
 
+import type { FC, PropsWithChildren } from 'react'
+
 export const Navigation = () => {
     return (
-        <nav className="flex justify-between items-center m-auto">
-            <Link href="/">main</Link>
-            <Link href={'/writeups'}>writeups</Link>
-            <Link href={'/contact'}>contact</Link>
+        <nav className="flex justify-between items-center m-auto mb-8">
+            <NavLink href={'/'}>main</NavLink>
+            <NavLink href={'/writeups'}>writeups</NavLink>
+            <NavLink href={'/contact'}>contact</NavLink>
         </nav>
     )
 }
+
+const NavLink: FC<{ href: string } & PropsWithChildren> = ({ href, children }) => (
+    <Link className={'hover:underline transition-all hover:text-teal-400'} href={href}>
+        {children}
+    </Link>
+)

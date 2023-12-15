@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../contentlayer.config.ts"],
+  "sourcesContent": ["import { defineDocumentType, makeSource } from 'contentlayer/source-files'\nimport rehypeHighlight from 'rehype-highlight'\n\nexport const Writeup = defineDocumentType(() => ({\n    name: 'Writeup',\n    filePathPattern: `**/*.md`,\n    fields: {\n        title: { type: 'string', required: true },\n        date: { type: 'date', required: true },\n        categories: {\n            type: 'list',\n            of: { type: 'enum', options: ['web', 'pwn', 'crypto', 'intro'] },\n        },\n    },\n    computedFields: {\n        url: { type: 'string', resolve: (post) => `/writeups/${post._raw.flattenedPath}` },\n    },\n}))\n\nexport default makeSource({\n    contentDirPath: 'writeups',\n    documentTypes: [Writeup],\n    mdx: {\n        rehypePlugins: [rehypeHighlight({})],\n    },\n})\n"],
+  "mappings": ";AAAA,SAAS,oBAAoB,kBAAkB;AAC/C,OAAO,qBAAqB;AAErB,IAAM,UAAU,mBAAmB,OAAO;AAAA,EAC7C,MAAM;AAAA,EACN,iBAAiB;AAAA,EACjB,QAAQ;AAAA,IACJ,OAAO,EAAE,MAAM,UAAU,UAAU,KAAK;AAAA,IACxC,MAAM,EAAE,MAAM,QAAQ,UAAU,KAAK;AAAA,IACrC,YAAY;AAAA,MACR,MAAM;AAAA,MACN,IAAI,EAAE,MAAM,QAAQ,SAAS,CAAC,OAAO,OAAO,UAAU,OAAO,EAAE;AAAA,IACnE;AAAA,EACJ;AAAA,EACA,gBAAgB;AAAA,IACZ,KAAK,EAAE,MAAM,UAAU,SAAS,CAAC,SAAS,aAAa,KAAK,KAAK,aAAa,GAAG;AAAA,EACrF;AACJ,EAAE;AAEF,IAAO,8BAAQ,WAAW;AAAA,EACtB,gBAAgB;AAAA,EAChB,eAAe,CAAC,OAAO;AAAA,EACvB,KAAK;AAAA,IACD,eAAe,CAAC,gBAAgB,CAAC,CAAC,CAAC;AAAA,EACvC;AACJ,CAAC;",
+  "names": []
+}

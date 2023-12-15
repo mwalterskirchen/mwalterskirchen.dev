@@ -1,5 +1,5 @@
 import './globals.css'
-import { fira } from '@/util'
+import { fira, inter } from '@/util'
 import { Navigation } from '@/components/navigation'
 
 import type { ReactNode } from 'react'
@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="en">
             <body
-                className={`bg-zinc-950 text-white ${fira.variable} font-mono min-h-screen pl-24 pr-24 pt-8 pb-8 max-w-screen-2xl m-auto`}
+                className={`bg-zinc-950 text-white ${fira.variable} ${inter.variable} font-mono min-h-screen pl-24 pr-24 pt-8 pb-8 max-w-screen-xl m-auto`}
             >
                 <header>
                     <Navigation />
