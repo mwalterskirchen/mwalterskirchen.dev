@@ -48,11 +48,11 @@ export const processCommand = ({
         case CommandEnum.CV:
             return 'cv'
         case CommandEnum.MKDIR:
-            const dir = new FileNode('dir', args[0], '')
+            const dir = new FileNode('dir', args[0])
             fileSystem.add(dir)
             return ''
         case CommandEnum.TOUCH:
-            const file = new FileNode('file', args[0], '')
+            const file = new FileNode('file', args[0])
             fileSystem.add(file)
             return ''
         default:
