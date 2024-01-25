@@ -1,50 +1,49 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Terminal as XTerm } from 'xterm'
 import 'xterm/css/xterm.css'
 import { FitAddon } from 'xterm-addon-fit'
 import { Readline } from 'xterm-readline'
 
-import type { Highlighter } from 'xterm-readline/lib/highlight'
+import { TerminalHighlighter } from '@/util/terminal-hightlighter'
+import { CommandEnum, processCommand } from '@/util/process-command'
+import { FileTree } from '@/util/file-system'
 
-const COMMANDS = ['help', 'clear']
-
-class CustomHighlighter implements Highlighter {
-    highlight(line: string): string {
-        const command = line.trim().split(' ')[0]
-
-        if (COMMANDS.includes(command)) {
-            // highlight in #2DD4BF and make bold
-            return `\x1b[1m\x1b[38;2;45;212;191m${line}\x1b[0m\x1b[22m`
-        }
-        return line
-    }
-    highlightPrompt(prompt: string): string {
-        return prompt
-    }
-    highlightChar(line: string): boolean {
-        if (COMMANDS.includes(line)) {
-            return true
-        }
-        return false
-    }
-}
+const COMMANDS = Object.values(CommandEnum)
 
 const Terminal = () => {
     const terminalRef = useRef<HTMLDivElement>(null)
     const xterm = useRef<XTerm>()
     const directory = useRef<string>('~')
     const rl = useMemo(() => new Readline(), [])
+    const fileSystem = useMemo(() => new FileTree(), [])
+    const [visitorIP, setVisitorIP] = useState('')
 
     const readLine = useCallback(() => {
-        const processLine = (text: string) => {
-            rl.println('you entered: ' + text)
-            setTimeout(readLine)
+        const processLine = (command: string) => {
+            const action = processCommand({
+                command,
+                fileSystem,
+                visitorIP,
+            })
+            if (action === CommandEnum.CLEAR) {
+                xterm.current?.clear()
+                setTimeout(readLine)
+            } else {
+                rl.println(action)
+                setTimeout(readLine)
+            }
         }
 
         rl.read('\x1b[1m\x1b[38;2;45;212;191m→ ~ \x1b[0m\x1b[22m').then(processLine)
-    }, [rl])
+    }, [fileSystem, rl, visitorIP])
+
+    useEffect(() => {
+        fetch('https://api.ipify.org?format=json')
+            .then((response) => response.json())
+            .then((data) => setVisitorIP(data.ip))
+    }, [])
 
     useEffect(() => {
         if (terminalRef.current) {
@@ -60,7 +59,6 @@ const Terminal = () => {
             xterm.current.loadAddon(rl)
             xterm.current.open(terminalRef.current)
             fitAddon.fit()
-            xterm.current.writeln('Welcome to my website!')
             xterm.current.write(`$ ${directory.current} `)
 
             rl.setCheckHandler((text) => {
@@ -71,7 +69,7 @@ const Terminal = () => {
                 return true
             })
 
-            const highlighter = new CustomHighlighter()
+            const highlighter = new TerminalHighlighter(COMMANDS)
 
             rl.setHighlighter(highlighter)
 

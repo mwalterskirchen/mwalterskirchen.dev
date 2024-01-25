@@ -5,7 +5,7 @@ import { getAllWriteups } from '@/util/get-all-writeups'
 export default function Home() {
     getAllWriteups()
     return (
-        <main className="h-full flex items-center flex-col">
+        <>
             <Avatar />
             <h1 className="text-2xl mb-4">
                 Hi, I&apos;m{' '}
@@ -20,6 +20,6 @@ export default function Home() {
                 Video Games 👾, and Crafting Artisanal Espresso ☕.
             </h2>
             <TerminalWindow />
-        </main>
+        </>
     )
 }

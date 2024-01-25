@@ -1,6 +1,7 @@
 import './globals.css'
 import { fira, inter } from '@/util'
 import { Navigation } from '@/components/navigation'
+import { Footer } from '@/components/footer'
 
 import type { ReactNode } from 'react'
 
@@ -16,12 +17,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="en">
             <body
-                className={`bg-zinc-950 text-white ${fira.variable} ${inter.variable} font-mono min-h-screen pl-24 pr-24 pt-8 pb-8 max-w-screen-xl m-auto`}
+                className={`flex flex-col bg-zinc-950 text-white ${fira.variable} ${inter.variable} font-mono min-h-screen`}
             >
                 <header>
                     <Navigation />
                 </header>
-                {children}
+                <main className="h-full flex-1 flex items-center flex-col max-w-screen-xl m-auto  pl-24 pr-24 pt-8 pb-8">
+                    {children}
+                </main>
+                <Footer />
             </body>
         </html>
     )
