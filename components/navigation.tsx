@@ -13,7 +13,7 @@ export const Navigation = () => {
 }
 
 const NavLink: FC<{ href: string } & PropsWithChildren> = ({ href, children }) => (
-    <Link className={'hover:underline transition-all hover:text-teal-400'} href={href}>
+    <Link className={'flex-1 flex justify-center hover:underline transition-all hover:text-teal-400'} href={href}>
         {children}
     </Link>
 )
