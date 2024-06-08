@@ -14,7 +14,12 @@ const COMMANDS = Object.values(CommandEnum)
 
 const Terminal = () => {
     const terminalRef = useRef<HTMLDivElement>(null)
-    const xterm = useRef<XTerm>()
+    const xterm = new XTerm({
+        fontSize: 16,
+        theme: { background: '#1f2937', cursorAccent: '#1f2937' },
+        cursorBlink: true,
+        cursorStyle: 'block',
+    })
     const directory = useRef<string>('~')
     const rl = useMemo(() => new Readline(), [])
     const fileSystem = useMemo(() => new FileTree(), [])
@@ -28,7 +33,7 @@ const Terminal = () => {
                 visitorIP,
             })
             if (action === CommandEnum.CLEAR) {
-                xterm.current?.clear()
+                xterm.clear()
                 setTimeout(readLine)
             } else {
                 rl.println(action)
@@ -37,7 +42,7 @@ const Terminal = () => {
         }
 
         rl.read('\x1b[1m\x1b[38;2;45;212;191m→ ~ \x1b[0m\x1b[22m').then(processLine)
-    }, [fileSystem, rl, visitorIP])
+    }, [fileSystem, rl, visitorIP, xterm])
 
     useEffect(() => {
         fetch('https://api.ipify.org?format=json')
@@ -46,37 +51,25 @@ const Terminal = () => {
     }, [])
 
     useEffect(() => {
-        if (terminalRef.current) {
-            xterm.current = new XTerm({
-                fontSize: 16,
-                theme: { background: '#1f2937', cursorAccent: '#1f2937' },
-                cursorBlink: true,
-                cursorStyle: 'block',
-            })
-            const fitAddon = new FitAddon()
+        if (!terminalRef.current) return
+        const fitAddon = new FitAddon()
+        xterm.loadAddon(fitAddon)
+        xterm.loadAddon(rl)
+        xterm.open(terminalRef.current)
+        fitAddon.fit()
+        xterm.write(`$ ${directory.current} `)
 
-            xterm.current.loadAddon(fitAddon)
-            xterm.current.loadAddon(rl)
-            xterm.current.open(terminalRef.current)
-            fitAddon.fit()
-            xterm.current.write(`$ ${directory.current} `)
+        rl.setCheckHandler((text) => {
+            const trimmedText = text.trimEnd()
+            return !trimmedText.endsWith('&&')
+        })
 
-            rl.setCheckHandler((text) => {
-                const trimmedText = text.trimEnd()
-                return !trimmedText.endsWith('&&')
-            })
+        const highlighter = new TerminalHighlighter(COMMANDS)
 
-            const highlighter = new TerminalHighlighter(COMMANDS)
+        rl.setHighlighter(highlighter)
 
-            rl.setHighlighter(highlighter)
-
-            readLine()
-        }
-
-        return () => {
-            xterm.current?.dispose()
-        }
-    }, [readLine, rl])
+        readLine()
+    }, [rl])
 
     return <div className={'w-full'} ref={terminalRef} />
 }
