@@ -24,11 +24,7 @@ export const CopyButton = ({ text }: Text) => {
     }
 
     return (
-        <button
-            className="dark:text-black flex ml-auto gap-2"
-            disabled={isCopied}
-            onClick={copy}
-        >
+        <button className="flex ml-auto gap-2" disabled={isCopied} onClick={copy}>
             <ClipboardDocumentIcon width={24} height={24} />
             {isCopied ? 'Copied!' : 'Copy code'}
         </button>

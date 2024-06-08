@@ -7,18 +7,18 @@ author: Maximilian Walterskirchen
 slug: we-rest-upon-a-single-hope
 ---
 
-### Background
+## Background
 In this challenge, you were brought to a pretty empty website with only an HTML form consisting of a text input field and a submit button.
-
-![[Screenshot 2023-11-28 at 14.07.50.png|500]]
-
+![Screenshot](/images/we-rest-upon-a-single-hope.png)
 At first, I tried to submit some random strings to trigger a response from the application, possibly an error message that would help me proceed. Since nothing on the page changed and no network requests were sent, everything here must be client-side only.
 
 I opened the console, and lo and behold this is what I encountered:
 
-```
-Gozer the Traveler. He will come in one of the pre-chosen forms. During the rectification of the Vuldrini, the traveler came as a large and moving Torg! Then, during the third reconciliation of the last of the McKetrick supplicants, they chose a new form for him: that of a giant Slor! Many Shuvs and Zuuls knew what it was to be roasted in the depths of the Slor that day, I can tell you!
-```
+
+> Gozer the Traveler. He will come in one of the pre-chosen forms. During the rectification of the Vuldrini, the traveler came as a large and moving Torg!
+> Then, during the third reconciliation of the last of the McKetrick supplicants, they chose a new form for him: that of a giant Slor!
+> Many Shuvs and Zuuls knew what it was to be roasted in the depths of the Slor that day, I can tell you!
+
 
 The message itself didn't help so I opened up the page source and had a look at the javascript there:
 ```js showLineNumbers
@@ -87,5 +87,5 @@ var v = Gozer(p/((o+c)*t)+f);
 ```
 
 The application is getting a lot of different navigator properties and just adding them together to get one big string. that might look something like this: `"undefinedMozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:120.0) Gecko/20100101 Firefox/120.0[object MimeTypeArray]1"` This then gets passed into the `Gozer` function and returns a hash of that value.
-#### Exploit
+## Exploit
 Now to the actual exploit. If you look at the `Zuul(key){...}` you can see that it checks if `key == v` where `v` is our random hash based on our navigator data and `key` is the provided input from the HTML form. We can generate the random hash beforehand and provide it to the `Zuul` function.  In our case, this would be `-1697408998`, and the resulting flag is: `poctf{uwsp_1_4m_4ll_7h47_7h3r3_15_0f_7h3_m057_r34l}`

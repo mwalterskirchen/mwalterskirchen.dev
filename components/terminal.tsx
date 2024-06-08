@@ -1,9 +1,9 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Terminal as XTerm } from 'xterm'
-import 'xterm/css/xterm.css'
-import { FitAddon } from 'xterm-addon-fit'
+import { Terminal as XTerm } from '@xterm/xterm'
+import '@xterm/xterm/css/xterm.css'
+import { FitAddon } from '@xterm/addon-fit'
 import { Readline } from 'xterm-readline'
 
 import { TerminalHighlighter } from '@/util/terminal-hightlighter'
@@ -63,10 +63,7 @@ const Terminal = () => {
 
             rl.setCheckHandler((text) => {
                 const trimmedText = text.trimEnd()
-                if (trimmedText.endsWith('&&')) {
-                    return false
-                }
-                return true
+                return !trimmedText.endsWith('&&')
             })
 
             const highlighter = new TerminalHighlighter(COMMANDS)
