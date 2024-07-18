@@ -5,6 +5,10 @@ const Posts: CollectionConfig = {
   admin: {
     useAsTitle: "title",
   },
+  auth: true,
+  access: {
+    read: () => true,
+  },
   fields: [
     {
       name: "title",

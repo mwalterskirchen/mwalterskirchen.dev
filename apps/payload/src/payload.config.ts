@@ -25,6 +25,8 @@ export default buildConfig({
     schemaOutputFile: path.resolve(__dirname, "generated-schema.graphql"),
   },
   plugins: [payloadCloud()],
+  cors: ["http://localhost:3000"],
+  csrf: ["http://localhost:3000"],
   db: mongooseAdapter({
     url: process.env.DATABASE_URI,
   }),

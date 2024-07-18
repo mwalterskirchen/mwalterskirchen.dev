@@ -1,39 +1,24 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+pre > code {
+    display: grid;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+code {
+    counter-reset: line;
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+/* Apply line numbers only when showLineNumbers is specified: */
+code[data-line-numbers] > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+    /* Other styling */
+    display: inline-block;
+    width: 1rem;
+    margin-right: 2rem;
+    text-align: right;
+    color: gray;
 }
