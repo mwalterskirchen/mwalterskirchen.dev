@@ -23,12 +23,6 @@ const Posts: CollectionConfig = {
       required: true,
     },
     {
-      name: "publishedAt",
-      label: "Published At",
-      type: "date",
-      required: true,
-    },
-    {
       name: "featuredImage",
       label: "Featured Image",
       type: "upload",
