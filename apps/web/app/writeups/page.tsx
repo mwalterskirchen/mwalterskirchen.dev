@@ -9,7 +9,7 @@ export default async function Page() {
   );
 }
 
-const WriteUpCard = ({ writeup }: { writeup }) => {
+const WriteUpCard = ({ writeup }: { writeup: any }) => {
   const date = format(writeup.date, "LLLL d, yyyy");
   return (
     <div className="mb-8">

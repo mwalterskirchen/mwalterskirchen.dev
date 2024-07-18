@@ -1,4 +1,5 @@
 import { Avatar } from "../components/avatar";
+import TerminalWindow from "../components/terminal-window";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         a Security Focus at TU Wien, while Relishing in CTF Challenges 🔐,
         Diving into Video Games 👾, and Crafting Artisanal Espresso ☕.
       </h2>
+      <TerminalWindow />
     </>
   );
 }
