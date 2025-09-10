@@ -1,0 +1,96 @@
+---
+import { getConfigurationCollection, processArticleDate } from "../lib/utils";
+import type { ProjectFrontmatter } from "../lib/types";
+import Prose from "../components/Prose.astro";
+import Layout from "./Layout.astro";
+import Section from "../components/common/Section.astro";
+import Anchor from "../components/common/Anchor.astro";
+
+type Props = { frontmatter: ProjectFrontmatter };
+
+const { frontmatter } = Astro.props;
+const { data: config } = await getConfigurationCollection();
+---
+
+<Layout>
+  <Fragment slot="head">
+    <title>{`${frontmatter.title} • ${config.personal.name}`}</title>
+    <meta
+      name="description"
+      content={frontmatter.longDescription ?? frontmatter.description}
+    />
+    <meta
+      property="og:title"
+      content={`${frontmatter.title} • ${config.personal.name}`}
+    />
+    <meta property="og:description" content={frontmatter.description} />
+    {
+      frontmatter.tags && (
+        <meta name="keywords" content={frontmatter.tags.join(", ")} />
+      )
+    }
+    {
+      frontmatter.cardImage && (
+        <meta property="og:image" content={frontmatter.cardImage} />
+      )
+    }
+    <meta
+      property="og:url"
+      content={`${config.site.baseUrl}/projects/${frontmatter.slug}`}
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content={`${frontmatter.title} • ${config.personal.name}`}
+    />
+    <meta name="twitter:description" content={frontmatter.description} />
+    {
+      frontmatter.cardImage && (
+        <meta name="twitter:image" content={frontmatter.cardImage} />
+      )
+    }
+    <meta http-equiv="content-language" content="en" />
+    <meta name="language" content="English" />
+    <link
+      rel="canonical"
+      href={`${config.site.baseUrl}/projects/${frontmatter.slug}`}
+    />
+  </Fragment>
+  <Section class="mt-8">
+    <div class="flex flex-col gap-4 mt-8 mb-16">
+      <h1 class="text-3xl sm:text-4xl leading-tight font-display">
+        {frontmatter.title}
+      </h1>
+      <div class="flex text-sm gap-2">
+        {
+          frontmatter.tags
+            ? frontmatter.tags.map((tag) => (
+                <span class="-zag-text -zag-bg zag-transition font-semibold py-1 px-2">
+                  {tag}
+                </span>
+              ))
+            : null
+        }
+      </div>
+      <div class="flex gap-2">
+        {
+          frontmatter.githubUrl ? (
+            <Anchor url={frontmatter.githubUrl} class="text-base" external>
+              GitHub
+            </Anchor>
+          ) : null
+        }
+        {
+          frontmatter.liveDemoUrl ? (
+            <Anchor url={frontmatter.liveDemoUrl} class="text-base" external>
+              Demo
+            </Anchor>
+          ) : null
+        }
+      </div>
+    </div>
+    <Prose>
+      <slot />
+    </Prose>
+  </Section>
+</Layout>

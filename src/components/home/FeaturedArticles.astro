@@ -1,0 +1,35 @@
+---
+import type { ArticleFrontmatter } from "../../lib/types";
+import { getConfigurationCollection } from "../../lib/utils";
+import ArticleSnippet from "../ArticleSnippet.astro";
+import Anchor from "../common/Anchor.astro";
+
+type Props = {
+  featuredArticles: Array<ArticleFrontmatter>;
+}
+
+
+const { featuredArticles } = Astro.props;
+const { data: config } = await getConfigurationCollection();
+---
+
+<div class="flex justify-between items-center w-full">
+  <h3 class="font-display text-lg sm:text-xl leading-loose">{config.texts.articlesName}</h3>
+  <Anchor url="/blog" class="text-base">{config.texts.viewAll}</Anchor>
+</div>
+<ul class="my-8">
+  {
+    (featuredArticles.length === 0 && <p>{config.texts.noArticles}</p>) ||
+      featuredArticles.map((article) => (
+        <li>
+          <ArticleSnippet
+            title={article.title}
+            description={article.description}
+            url={article.url}
+            timestamp={article.timestamp}
+            duration={`${article.readTime} min`}
+          />
+        </li>
+      ))
+  }
+</ul>
