@@ -50,7 +50,7 @@ noProjects = "No projects found."
 
 [_.about]
 description = """
-Senior Full Stack Engineer with <span class='-zag-bg -zag-text zag-transition px-2 py-1 text-sm font-semibold'>5+ years</span> experience building scalable web applications. </br> </br>
+Senior Full Stack Engineer with <span class='-zag-bg text-nowrap -zag-text zag-transition px-2 py-1 text-sm font-semibold'>5+ years</span> experience building scalable web applications. </br> </br>
 I've helped international clients from FinTech startups to enterprises transform ideas into robust solutions. <br /><br />
 Passionate about 🧠 AI integration, 🔒 cybersecurity, and modern web technologies. Always ready to tackle complex challenges and build something amazing. <br /><br />
 Let's create the future together. 🚀
@@ -61,16 +61,16 @@ skills = [
     "TypeScript",
     "React",
     "Node.js",
-    "Python",
+    "LLM / Generative AI",
     "Docker",
     "CI/CD",
+    "Cybersecurity",
     "AWS",
     "Azure",
     "GCP",
     "Terraform",
     "Git",
-    "Cybersecurity",
-    "LLM / Generative AI",
+    "Python",
     "Java",
     "Databases",
 ]

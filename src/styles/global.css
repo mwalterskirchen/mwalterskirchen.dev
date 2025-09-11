@@ -174,3 +174,45 @@
     font-variation-settings: "opsz" 72;
   }
 }
+
+@layer utilities {
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      animation: fade-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .animate-in-up {
+      animation: fade-in-up 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .delay-0 { animation-delay: 0ms; }
+    .delay-1 { animation-delay: 60ms; }
+    .delay-2 { animation-delay: 120ms; }
+    .delay-3 { animation-delay: 180ms; }
+    .delay-4 { animation-delay: 240ms; }
+    .delay-5 { animation-delay: 300ms; }
+    .delay-6 { animation-delay: 360ms; }
+    .delay-7 { animation-delay: 420ms; }
+    .delay-8 { animation-delay: 480ms; }
+  }
+}

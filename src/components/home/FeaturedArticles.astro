@@ -21,8 +21,21 @@ const { data: config } = await getConfigurationCollection();
 <ul class="my-8">
   {
     (featuredArticles.length === 0 && <p>{config.texts.noArticles}</p>) ||
-      featuredArticles.map((article) => (
-        <li>
+      featuredArticles.map((article, index) => (
+        <li
+          class:list={[
+            "animate-in-up",
+            index % 9 === 0 && "delay-0",
+            index % 9 === 1 && "delay-1",
+            index % 9 === 2 && "delay-2",
+            index % 9 === 3 && "delay-3",
+            index % 9 === 4 && "delay-4",
+            index % 9 === 5 && "delay-5",
+            index % 9 === 6 && "delay-6",
+            index % 9 === 7 && "delay-7",
+            index % 9 === 8 && "delay-8",
+          ]}
+        >
           <ArticleSnippet
             title={article.title}
             description={article.description}

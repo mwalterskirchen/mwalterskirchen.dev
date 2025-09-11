@@ -1,13 +1,13 @@
 ---
-title: A Basic Introduction to HTML
-slug: intro-to-html
+title: Why I built my personal website for 2025 in Astro, and why you should consider it too!
+slug: why-i-built-my-personal-website-for-2025-in-astro
 description: A brief guide covering the essentials of HTML.
 longDescription: HTML is the foundation of all websites. This guide will walk you through creating your first simple website using HTML.
 cardImage: "https://zaggonaut.dev/michael-dam-unsplash.webp"
 tags: ["code", "html"]
 readTime: 4
 featured: true
-timestamp: 2024-12-18T02:39:03+00:00
+timestamp: 2025-09-11T12:39:03+00:00
 ---
 
 HTML (HyperText Markup Language) is the foundation of all websites. Even with modern frameworks and tools, understanding HTML basics remains essential for web development. This guide will walk you through creating your first simple website using HTML.
