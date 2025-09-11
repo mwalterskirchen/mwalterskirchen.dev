@@ -1,7 +1,9 @@
 {
-  "cSpell.words": [
-    "Frontmatter",
-    "opsz",
-    "Zaggonaut"
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "astro", // Enable .astro
+    "typescript", // Enable .ts
+    "typescriptreact" // Enable .tsx
   ]
 }

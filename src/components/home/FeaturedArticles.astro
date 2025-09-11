@@ -6,15 +6,16 @@ import Anchor from "../common/Anchor.astro";
 
 type Props = {
   featuredArticles: Array<ArticleFrontmatter>;
-}
-
+};
 
 const { featuredArticles } = Astro.props;
 const { data: config } = await getConfigurationCollection();
 ---
 
-<div class="flex justify-between items-center w-full">
-  <h3 class="font-display text-lg sm:text-xl leading-loose">{config.texts.articlesName}</h3>
+<div class="flex w-full items-center justify-between">
+  <h3 class="font-display text-lg leading-loose sm:text-xl">
+    {config.texts.articlesName}
+  </h3>
   <Anchor url="/blog" class="text-base">{config.texts.viewAll}</Anchor>
 </div>
 <ul class="my-8">

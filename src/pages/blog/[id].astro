@@ -8,7 +8,7 @@ export async function getStaticPaths() {
   const { data: config } = await getConfigurationCollection();
   return posts.map((article) => ({
     params: { id: article.data.slug },
-    props: { 
+    props: {
       article: {
         ...article,
         data: {

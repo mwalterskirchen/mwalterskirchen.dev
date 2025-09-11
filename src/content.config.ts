@@ -45,7 +45,7 @@ const configuration = defineCollection({
       /**
        * The URL of the card image for social media sharing.
        */
-      cardImage: z.string().url().optional(),
+      cardImage: z.string().optional(),
 
       /**
        * Keywords for SEO, used in the `<meta name="keywords">` tag.
@@ -72,7 +72,7 @@ const configuration = defineCollection({
       /**
        * The URL of the card image for social media sharing.
        */
-      cardImage: z.string().url().optional(),
+      cardImage: z.string().optional(),
 
       /**
        * Keywords for SEO, used in the `<meta name="keywords">` tag.
@@ -102,7 +102,7 @@ const configuration = defineCollection({
       /**
        * The URL of the card image for social media sharing.
        */
-      cardImage: z.string().url().optional(),
+      cardImage: z.string().optional(),
 
       /**
        * Keywords for SEO, used in the `<meta name="keywords">` tag.
@@ -132,7 +132,7 @@ const configuration = defineCollection({
       /**
        * The URL of the card image for social media sharing.
        */
-      cardImage: z.string().url().optional(),
+      cardImage: z.string().optional(),
 
       /**
        * Keywords for SEO, used in the `<meta name="keywords">` tag.
@@ -147,17 +147,21 @@ const configuration = defineCollection({
       /**
        * The title displayed in the hero section.
        */
-      title: z.string().default("Zaggonaut"),
+      title: z.string().default("Maximilian Walterskirchen"),
 
       /**
        * The subtitle displayed in the hero section.
        */
-      subtitle: z.string().default("Retro-Inspired Theme &<br>Built for Astro"),
+      subtitle: z
+        .string()
+        .default(
+          "Senior Full Stack Developer </br> Passionate about AI and Web Development",
+        ),
 
       /**
        * The URL of the hero image, used as a background image in the hero section.
        */
-      image: z.string().url().optional(),
+      image: z.string().optional(),
 
       /**
        * The text displayed in the call-to-action button in the hero section.
@@ -177,7 +181,7 @@ const configuration = defineCollection({
       /**
        * The name of the site owner or author, used in various places throughout the site.
        */
-      name: z.string().default("Zaggonaut"),
+      name: z.string().default("Maximilian Walterskirchen"),
 
       /**
        * The GitHub profile URL of the site owner or author.
@@ -193,6 +197,15 @@ const configuration = defineCollection({
        * The LinkedIn profile URL of the site owner or author.
        */
       linkedinProfile: z.string().url().optional(),
+    }),
+    /**
+     * The about section configuration.
+     */
+    about: z.object({
+      /**
+       * The title displayed in the about section.
+       */
+      title: z.string().default("About Me"),
     }),
 
     /**
@@ -269,7 +282,7 @@ const blog = defineCollection({
       /**
        * The URL of the card image for social media sharing.
        */
-      cardImage: z.string().url().optional(),
+      cardImage: z.string().optional(),
 
       /**
        * The tags associated with the blog post, used for categorization and filtering.
@@ -312,57 +325,59 @@ const blog = defineCollection({
  */
 const project = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/projects" }),
-  schema: z.object({
-    /**
-     * The title of the project.
-     */
-    title: z.string(),
-    
-    /**
-     * The slug for the project, used in the URL.
-     */
-    slug: z.string().optional(),
+  schema: z
+    .object({
+      /**
+       * The title of the project.
+       */
+      title: z.string(),
 
-    /**
-     * The short description of the project, used in Open Graph metadata and as a fallback for SEO.
-     */
-    description: z.string(),
+      /**
+       * The slug for the project, used in the URL.
+       */
+      slug: z.string().optional(),
 
-    /**
-     * The long description of the project, used in Open Graph metadata and as a fallback for SEO.
-     */
-    longDescription: z.string().optional(),
+      /**
+       * The short description of the project, used in Open Graph metadata and as a fallback for SEO.
+       */
+      description: z.string(),
 
-    /**
-     * The URL of the card image for social media sharing.
-     */
-    cardImage: z.string().url().optional(),
+      /**
+       * The long description of the project, used in Open Graph metadata and as a fallback for SEO.
+       */
+      longDescription: z.string().optional(),
 
-    /**
-     * The tags associated with the project, used for categorization and filtering.
-     */
-    tags: z.array(z.string()).optional(),
+      /**
+       * The URL of the card image for social media sharing.
+       */
+      cardImage: z.string().optional(),
 
-    /**
-     * The github repository URL for the project.
-     */
-    githubUrl: z.string().url().optional(),
+      /**
+       * The tags associated with the project, used for categorization and filtering.
+       */
+      tags: z.array(z.string()).optional(),
 
-    /**
-     * The live demo URL for the project, if applicable.
-     */
-    liveDemoUrl: z.string().url().optional(),
+      /**
+       * The github repository URL for the project.
+       */
+      githubUrl: z.string().url().optional(),
 
-    /**
-     * The timestamp of the project, used for sorting and displaying the date.
-     */
-    timestamp: z.date().transform((val) => new Date(val)),
+      /**
+       * The live demo URL for the project, if applicable.
+       */
+      liveDemoUrl: z.string().url().optional(),
 
-    /**
-     * Whether the project is featured on the homepage.
-     */
-    featured: z.boolean().default(false),
-  }).transform((data) => {
+      /**
+       * The timestamp of the project, used for sorting and displaying the date.
+       */
+      timestamp: z.date().transform((val) => new Date(val)),
+
+      /**
+       * Whether the project is featured on the homepage.
+       */
+      featured: z.boolean().default(false),
+    })
+    .transform((data) => {
       const slug =
         data.slug ??
         data.title

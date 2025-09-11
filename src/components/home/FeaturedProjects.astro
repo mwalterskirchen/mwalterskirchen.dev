@@ -6,14 +6,16 @@ import ProjectSnippet from "../ProjectSnippet.astro";
 
 type Props = {
   featuredProjects: Array<ProjectFrontmatter>;
-}
+};
 
 const { featuredProjects } = Astro.props;
 const { data: config } = await getConfigurationCollection();
 ---
 
-<div class="flex justify-between items-center w-full">
-  <h3 class="font-display text-lg sm:text-xl leading-loose">{config.texts.projectsName}</h3>
+<div class="flex w-full items-center justify-between">
+  <h3 class="font-display text-lg leading-loose sm:text-xl">
+    {config.texts.projectsName}
+  </h3>
   <Anchor url="/projects" class="text-base">{config.texts.viewAll}</Anchor>
 </div>
 <ul class="my-8">

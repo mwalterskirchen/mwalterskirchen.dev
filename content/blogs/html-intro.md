@@ -23,6 +23,7 @@ HTML uses elements enclosed in tags to structure content. Most elements have ope
 ## Essential Tools
 
 To get started, you'll need:
+
 - A text editor (like VS Code, Sublime Text, or even Notepad)
 - A web browser to view your website
 
@@ -35,15 +36,15 @@ To get started, you'll need:
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My First Website</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Welcome to My Website</h1>
     <p>This is my first website created with HTML.</p>
-</body>
+  </body>
 </html>
 ```
 
@@ -86,30 +87,33 @@ HTML offers six heading levels:
 ### Images
 
 ```html
-<img src="image.jpg" alt="Description of image">
+<img src="image.jpg" alt="Description of image" />
 ```
 
 ### Lists
 
 Unordered list:
+
 ```html
 <ul>
-    <li>Item 1</li>
-    <li>Item 2</li>
+  <li>Item 1</li>
+  <li>Item 2</li>
 </ul>
 ```
 
 Ordered list:
+
 ```html
 <ol>
-    <li>First item</li>
-    <li>Second item</li>
+  <li>First item</li>
+  <li>Second item</li>
 </ol>
 ```
 
 ## Next Steps
 
 After mastering basic HTML, consider learning:
+
 - CSS for styling your website
 - JavaScript for adding interactivity
 - Responsive design techniques

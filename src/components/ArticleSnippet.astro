@@ -13,16 +13,16 @@ export type Props = {
 const { title, description, url, duration, timestamp } = Astro.props;
 ---
 
-<div class="relative zag-text zag-transition flex flex-col gap-3 mb-8 hover-zag-dotted-grid">
+<div
+  class="zag-text zag-transition hover-zag-dotted-grid relative mb-8 flex flex-col gap-3"
+>
   <Anchor url={url} class="text-xl">
     {title}
   </Anchor>
   <p class="">
     {description}
   </p>
-  <div
-    class="zag-muted zag-transition flex justify-between items-center"
-  >
+  <div class="zag-muted zag-transition flex items-center justify-between">
     {timestamp ? <p>{processArticleDate(timestamp)}</p> : null}
     {duration ? <p>{duration}</p> : null}
   </div>

@@ -17,36 +17,42 @@ const { data: config } = await getConfigurationCollection();
     <title>{config.projectMeta.title}</title>
     <meta
       name="description"
-      content={config.projectMeta.longDescription ?? config.projectMeta.description}
+      content={config.projectMeta.longDescription ??
+        config.projectMeta.description}
     />
     <meta property="og:title" content={config.projectMeta.title} />
-    <meta
-      property="og:description"
-      content={config.projectMeta.description}
-    />
-    {config.projectMeta.keywords && (
-      <meta name="keywords" content={config.projectMeta.keywords.join(", ")} />
-    )}
-    {config.projectMeta.cardImage && (
-      <meta property="og:image" content={config.projectMeta.cardImage} />
-    )}
+    <meta property="og:description" content={config.projectMeta.description} />
+    {
+      config.projectMeta.keywords && (
+        <meta
+          name="keywords"
+          content={config.projectMeta.keywords.join(", ")}
+        />
+      )
+    }
+    {
+      config.projectMeta.cardImage && (
+        <meta property="og:image" content={config.projectMeta.cardImage} />
+      )
+    }
     <meta property="og:url" content={`${config.site.baseUrl}/projects`} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={config.projectMeta.title} />
-    <meta
-      name="twitter:description"
-      content={config.projectMeta.description}
-    />
-    {config.projectMeta.cardImage && (
-      <meta name="twitter:image" content={config.projectMeta.cardImage} />
-    )}
+    <meta name="twitter:description" content={config.projectMeta.description} />
+    {
+      config.projectMeta.cardImage && (
+        <meta name="twitter:image" content={config.projectMeta.cardImage} />
+      )
+    }
     <meta http-equiv="content-language" content="en" />
     <meta name="language" content="English" />
     <link rel="canonical" href={`${config.site.baseUrl}/projects`} />
   </Fragment>
-  <Section class="py-4 my-8">
+  <Section class="my-8 py-4">
     <div class="flex items-center gap-4 pt-8 pb-16">
-      <h1 class="font-display text-3xl sm:text-4xl leading-loose">{config.texts.projectsName}</h1>
+      <h1 class="font-display text-3xl leading-loose sm:text-4xl">
+        {config.texts.projectsName}
+      </h1>
     </div>
     <ul>
       {
@@ -55,7 +61,7 @@ const { data: config } = await getConfigurationCollection();
             <ProjectSnippet
               title={project.data.title}
               description={project.data.description}
-              url={`${config.site.baseUrl}/projects/${project.data.slug}`}
+              url={`/projects/${project.data.slug}`}
               githubUrl={project.data.githubUrl}
               liveUrl={project.data.liveDemoUrl}
               tags={project.data.tags ?? []}

@@ -12,7 +12,7 @@ const { url, external, class: className } = Astro.props;
 <a
   href={url}
   class:list={[
-    "zag-offset underline font-medium flex items-center focus:outline-2 focus:outline-offset-2 focus:outline-zag-dark dark:focus:outline-zag-light",
+    "zag-offset focus:outline-zag-dark dark:focus:outline-zag-light flex items-center font-medium underline focus:outline-2 focus:outline-offset-2",
     className,
   ]}
   target={external ? "_blank" : "_self"}
@@ -23,7 +23,7 @@ const { url, external, class: className } = Astro.props;
     external ? (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="w-6 h-6"
+        class="h-6 w-6"
         viewBox="0 0 512 512"
       >
         <path

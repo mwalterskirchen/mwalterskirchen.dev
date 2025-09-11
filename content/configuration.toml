@@ -2,47 +2,44 @@
 # we need to prefix all configuration keys with an underscore.
 
 [_.site]
-baseUrl = "http://zaggonaut.dev"
+baseUrl = "http://mwalterskirchen.dev"
 
 [_.globalMeta]
-title = "Zaggonaut"
-description = "Retro-Inspired Theme & Built for Astro"
-longDescription = "Zaggonaut is a retro-inspired theme for Astro, built using TypeScript, TailwindCSS, and Astro."
-cardImage = "https://zaggonaut.dev/michael-dam-unsplash.webp"
+title = "Maximilian Walterskirchen"
+description = "Senior Full Stack Developer based in Zurich🇨🇭"
+longDescription = "Senior Full Stack Developer based in Zurich🇨🇭. Passionate about AI, Web Development and Cybersecurity."
+cardImage = "/avatar.jpeg"
 keywords = ["web development", "design", "technology"]
 
 [_.blogMeta]
-title = "Zaggonaut Blog"
+title = "Blog"
 description = "Practical wisdom, unfiltered thoughts, and hot takes."
-longDescription = "Web development, tech trends, and the occasional programming mishap."
-cardImage = "https://zaggonaut.dev/michael-dam-unsplash.webp"
+longDescription = "AI, Web Development, Cybersecurity and the occasional programming mishap."
+cardImage = "/avatar.jpeg"
 keywords = ["web development", "design", "technology"]
 
 [_.projectMeta]
-title = "Zaggonaut Projects"
+title = "Projects"
 description = "A list of my web development projects and developer tools."
 longDescription = "All of my projects, including both frontend and full-stack applications."
-cardImage = "https://zaggonaut.dev/michael-dam-unsplash.webp"
+cardImage = "/avatar.jpeg"
 keywords = ["web development", "design", "technology"]
 
 [_.notFoundMeta]
-title = "Zaggonaut 404"
+title = "Not Found - 404"
 description = "The page you are looking for does not exist."
 longDescription = "The page you are looking for does not exist. Maybe it never existed. Spooky."
-cardImage = "https://zaggonaut.dev/michael-dam-unsplash.webp"
+cardImage = "/avatar.jpeg"
 
 [_.hero]
-title = "Zaggonaut"
-subtitle = "Retro-Inspired Theme &<br />Built for Astro"
-image = "https://zaggonaut.dev/michael-dam-unsplash.webp"
-ctaText = "View Projects"
-ctaUrl = "/projects"
+title = "Maximilian Walterskirchen"
+subtitle = "Senior Full Stack Developer based in Zurich🇨🇭"
+image = "/avatar.jpeg"
 
 [_.personal]
-name = "Zaggonaut"
-githubProfile = "https://github.com/RATIU5/zaggonaut"
-twitterProfile = "https://twitter.com"
-linkedinProfile = "https://linkedin.com/"
+name = "Maximilian Walterskirchen"
+githubProfile = "https://github.com/mwalterskirchen"
+linkedinProfile = "https://linkedin.com/in/mwalterskirchen"
 
 [_.texts]
 articlesName = "Articles"
@@ -50,6 +47,9 @@ projectsName = "Projects"
 viewAll = "View All"
 noArticles = "No articles found."
 noProjects = "No projects found."
+
+[_.about]
+title = "About Me"
 
 [_.menu]
 home = "/"

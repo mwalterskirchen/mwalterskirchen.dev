@@ -13,40 +13,40 @@ const { data: config } = await getConfigurationCollection();
 ---
 
 <Layout>
-    <Fragment slot="head">
+  <Fragment slot="head">
     <title>{config.blogMeta.title}</title>
     <meta
       name="description"
       content={config.blogMeta.longDescription ?? config.blogMeta.description}
     />
     <meta property="og:title" content={config.blogMeta.title} />
-    <meta
-      property="og:description"
-      content={config.blogMeta.description}
-    />
-    {config.blogMeta.keywords && (
-      <meta name="keywords" content={config.blogMeta.keywords.join(", ")} />
-    )}
-    {config.blogMeta.cardImage && (
-      <meta property="og:image" content={config.blogMeta.cardImage} />
-    )}
+    <meta property="og:description" content={config.blogMeta.description} />
+    {
+      config.blogMeta.keywords && (
+        <meta name="keywords" content={config.blogMeta.keywords.join(", ")} />
+      )
+    }
+    {
+      config.blogMeta.cardImage && (
+        <meta property="og:image" content={config.blogMeta.cardImage} />
+      )
+    }
     <meta property="og:url" content={`${config.site.baseUrl}/blog`} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={config.blogMeta.title} />
-    <meta
-      name="twitter:description"
-      content={config.blogMeta.description}
-    />
-    {config.blogMeta.cardImage && (
-      <meta name="twitter:image" content={config.blogMeta.cardImage} />
-    )}
+    <meta name="twitter:description" content={config.blogMeta.description} />
+    {
+      config.blogMeta.cardImage && (
+        <meta name="twitter:image" content={config.blogMeta.cardImage} />
+      )
+    }
     <meta http-equiv="content-language" content="en" />
     <meta name="language" content="English" />
     <link rel="canonical" href={`${config.site.baseUrl}/blog`} />
   </Fragment>
   <Section class="my-8">
     <div class="flex items-center gap-4 pt-8 pb-16">
-      <h1 class="font-display text-3xl sm:text-4xl leading-loose">
+      <h1 class="font-display text-3xl leading-loose sm:text-4xl">
         {config.texts.articlesName}
       </h1>
     </div>
@@ -58,7 +58,7 @@ const { data: config } = await getConfigurationCollection();
               title={article.data.title}
               description={article.data.description}
               duration={`${article.data.readTime} min`}
-              url={`${config.site.baseUrl}/blog/${article.data.slug}`}
+              url={`/blog/${article.data.slug}`}
               timestamp={article.data.timestamp}
             />
           </li>

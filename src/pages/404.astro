@@ -11,19 +11,24 @@ const { data: config } = await getConfigurationCollection();
     <title>{config.notFoundMeta.title}</title>
     <meta
       name="description"
-      content={config.notFoundMeta.longDescription ?? config.notFoundMeta.description}
+      content={config.notFoundMeta.longDescription ??
+        config.notFoundMeta.description}
     />
     <meta property="og:title" content={config.notFoundMeta.title} />
-    <meta
-      property="og:description"
-      content={config.notFoundMeta.description}
-    />
-    {config.notFoundMeta.keywords && (
-      <meta name="keywords" content={config.notFoundMeta.keywords.join(", ")} />
-    )}
-    {config.notFoundMeta.cardImage && (
-      <meta property="og:image" content={config.notFoundMeta.cardImage} />
-    )}
+    <meta property="og:description" content={config.notFoundMeta.description} />
+    {
+      config.notFoundMeta.keywords && (
+        <meta
+          name="keywords"
+          content={config.notFoundMeta.keywords.join(", ")}
+        />
+      )
+    }
+    {
+      config.notFoundMeta.cardImage && (
+        <meta property="og:image" content={config.notFoundMeta.cardImage} />
+      )
+    }
     <meta property="og:url" content={config.site.baseUrl} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={config.notFoundMeta.title} />
@@ -31,21 +36,23 @@ const { data: config } = await getConfigurationCollection();
       name="twitter:description"
       content={config.notFoundMeta.description}
     />
-    {config.notFoundMeta.cardImage && (
-      <meta name="twitter:image" content={config.notFoundMeta.cardImage} />
-    )}
+    {
+      config.notFoundMeta.cardImage && (
+        <meta name="twitter:image" content={config.notFoundMeta.cardImage} />
+      )
+    }
     <meta http-equiv="content-language" content="en" />
     <meta name="language" content="English" />
     <link rel="canonical" href={config.site.baseUrl} />
   </Fragment>
   <Section class="mt-16">
-    <h1 class="text-3xl sm:text-4xl font-display pb-8">
+    <h1 class="font-display pb-8 text-3xl sm:text-4xl">
       Well, this is awkward
     </h1>
-    <h2 class="text-xl sm:text-2xl pb-8">404 - Page not found</h2>
+    <h2 class="pb-8 text-xl sm:text-2xl">404 - Page not found</h2>
     <p>
       It seems that this page does not exist. If you want to return to safety, <a
-        class="underline underline-offset-4 font-medium"
+        class="font-medium underline underline-offset-4"
         href="/">click here to go home</a
       >.
     </p>

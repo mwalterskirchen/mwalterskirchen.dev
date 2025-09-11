@@ -1,6 +1,14 @@
 ---
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
+import "@fontsource/ibm-plex-mono/latin-400";
+import "@fontsource/ibm-plex-mono/latin-400-italic";
+import "@fontsource/ibm-plex-mono/latin-500";
+import "@fontsource/ibm-plex-mono/latin-600";
+import "@fontsource/ibm-plex-mono/latin-700";
+import "@fontsource-variable/literata/opsz.css";
+import "@fontsource/press-start-2p";
+import plexMono from "@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url";
 import "../styles/global.css";
 ---
 
@@ -11,16 +19,20 @@ import "../styles/global.css";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="preconnect" href="https://fonts.bunny.net" />
     <link
-      href="https://fonts.bunny.net/css?family=ibm-plex-mono:400,400i,500,500i,600,600i,700,700i"
-      rel="stylesheet"
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={plexMono}
+      crossorigin="anonymous"
     />
-    
     <!-- Theme detection script - runs before page renders -->
     <script is:inline>
       const theme = (() => {
-        if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
           return localStorage.getItem("theme") ?? "light";
         }
         if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
@@ -37,7 +49,7 @@ import "../styles/global.css";
 
       window.localStorage.setItem("theme", theme);
     </script>
-    
+
     <slot name="head" />
   </head>
   <body class="zag-bg zag-text zag-transition font-mono">
