@@ -205,7 +205,12 @@ const configuration = defineCollection({
       /**
        * The title displayed in the about section.
        */
-      title: z.string().default("About Me"),
+      title: z.string(),
+
+      /**
+       * The description displayed in the about section.
+       */
+      description: z.string(),
     }),
 
     /**

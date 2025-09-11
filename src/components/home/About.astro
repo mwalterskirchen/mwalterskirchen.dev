@@ -4,8 +4,9 @@ import { getConfigurationCollection } from "../../lib/utils";
 const { data: config } = await getConfigurationCollection();
 ---
 
-<div class="flex w-full items-center justify-between">
-  <h3 class="font-display text-lg leading-loose sm:text-xl">
-    {config.about.title}
-  </h3>
+<h3 class="font-display text-lg leading-loose sm:text-xl">
+  {config.about.title}
+</h3>
+<div class="zag-text zag-transition">
+  <p set:html={config.about.description} />
 </div>

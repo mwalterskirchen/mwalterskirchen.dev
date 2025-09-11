@@ -6,8 +6,8 @@ baseUrl = "http://mwalterskirchen.dev"
 
 [_.globalMeta]
 title = "Maximilian Walterskirchen"
-description = "Senior Full Stack Developer based in Zurich🇨🇭"
-longDescription = "Senior Full Stack Developer based in Zurich🇨🇭. Passionate about AI, Web Development and Cybersecurity."
+description = "Senior Full Stack Engineer based in Zurich🇨🇭"
+longDescription = "Senior Full Stack Engineer based in Zurich🇨🇭. Passionate about AI, Web Development and Cybersecurity."
 cardImage = "/avatar.jpeg"
 keywords = ["web development", "design", "technology"]
 
@@ -33,7 +33,7 @@ cardImage = "/avatar.jpeg"
 
 [_.hero]
 title = "Maximilian Walterskirchen"
-subtitle = "Senior Full Stack Developer based in Zurich🇨🇭"
+subtitle = "Senior Full Stack Engineer based in Zurich🇨🇭"
 image = "/avatar.jpeg"
 
 [_.personal]
@@ -49,6 +49,12 @@ noArticles = "No articles found."
 noProjects = "No projects found."
 
 [_.about]
+description = """
+Senior Full Stack Engineer with 5+ years building scalable web applications using TypeScript, React, and Node.js. <br /><br />
+I've helped international clients from FinTech startups to enterprises transform ideas into robust solutions. <br /><br />
+Passionate about 🧠 AI integration, 🔒 cybersecurity, and modern web technologies. Always ready to tackle complex challenges and build something amazing. <br /><br />
+Let's create the future together. 🚀
+"""
 title = "About Me"
 
 [_.menu]
