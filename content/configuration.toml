@@ -19,7 +19,7 @@ cardImage = "/avatar.jpeg"
 keywords = ["web development", "design", "technology"]
 
 [_.projectMeta]
-title = "Projects"
+title = "Personal Projects"
 description = "A list of my web development projects and developer tools."
 longDescription = "All of my projects, including both frontend and full-stack applications."
 cardImage = "/avatar.jpeg"
@@ -43,7 +43,7 @@ linkedinProfile = "https://linkedin.com/in/mwalterskirchen"
 
 [_.texts]
 articlesName = "Articles"
-projectsName = "Projects"
+projectsName = "Personal Projects"
 viewAll = "View All"
 noArticles = "No articles found."
 noProjects = "No projects found."
@@ -52,7 +52,7 @@ noProjects = "No projects found."
 description = """
 Senior Full Stack Engineer with <span class='-zag-bg text-nowrap -zag-text zag-transition px-2 py-1 text-sm font-semibold'>5+ years</span> experience building scalable web applications. </br> </br>
 I've helped international clients from FinTech startups to enterprises transform ideas into robust solutions. <br /><br />
-Passionate about 🧠 AI integration, 🔒 cybersecurity, and modern web technologies. Always ready to tackle complex challenges and build something amazing. <br /><br />
+Passionate about 🧠 AI integration, 🔒 cybersecurity, and 💻 modern web technologies. Always ready to tackle complex challenges and build something amazing. <br /><br />
 Let's create the future together. 🚀
 """
 title = "About Me"
