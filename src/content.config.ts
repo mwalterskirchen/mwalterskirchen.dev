@@ -211,6 +211,16 @@ const configuration = defineCollection({
        * The description displayed in the about section.
        */
       description: z.string(),
+
+      /**
+       * The title displayed in the skills section.
+       */
+      skillsTitle: z.string(),
+
+      /**
+       * The skills displayed in the about section.
+       */
+      skills: z.array(z.string()),
     }),
 
     /**
