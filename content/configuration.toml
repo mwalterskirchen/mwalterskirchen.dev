@@ -18,12 +18,6 @@ longDescription = "AI, Web Development, Cybersecurity and the occasional program
 cardImage = "/avatar.jpeg"
 keywords = ["web development", "design", "technology"]
 
-[_.projectMeta]
-title = "Personal Projects"
-description = "A list of my web development projects and developer tools."
-longDescription = "All of my projects, including both frontend and full-stack applications."
-cardImage = "/avatar.jpeg"
-keywords = ["web development", "design", "technology"]
 
 [_.notFoundMeta]
 title = "Not Found - 404"
@@ -45,10 +39,8 @@ cv = "/cv-maximilian-walterskirchen-2025-09-11.pdf"
 
 [_.texts]
 articlesName = "Articles"
-projectsName = "Personal Projects"
 viewAll = "View All"
 noArticles = "No articles found."
-noProjects = "No projects found."
 
 [_.about]
 description = """
@@ -130,5 +122,4 @@ end = "2021-02"
 
 [_.menu]
 home = "/"
-projects = "/projects"
 blog = "/blog"

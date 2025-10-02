@@ -111,36 +111,6 @@ const configuration = defineCollection({
     }),
 
     /**
-     * The project page's metadata.
-     */
-    projectMeta: z.object({
-      /**
-       * The title of the page, used in the HTML `<title>` tag and Open Graph metadata.
-       */
-      title: z.string(),
-
-      /**
-       * The short description of the page, used in Open Graph metadata and as a fallback for SEO.
-       */
-      description: z.string(),
-
-      /**
-       * The long description of the page, used in Open Graph metadata and as a fallback for SEO.
-       */
-      longDescription: z.string().optional(),
-
-      /**
-       * The URL of the card image for social media sharing.
-       */
-      cardImage: z.string().optional(),
-
-      /**
-       * Keywords for SEO, used in the `<meta name="keywords">` tag.
-       */
-      keywords: z.array(z.string()).optional(),
-    }),
-
-    /**
      * The hero section configuration.
      */
     hero: z.object({
@@ -162,16 +132,6 @@ const configuration = defineCollection({
        * The URL of the hero image, used as a background image in the hero section.
        */
       image: z.string().optional(),
-
-      /**
-       * The text displayed in the call-to-action button in the hero section.
-       */
-      ctaText: z.string().default("View Projects"),
-
-      /**
-       * The URL of the call-to-action button in the hero section.
-       */
-      ctaUrl: z.string().default("/projects"),
     }),
 
     /**
@@ -277,11 +237,6 @@ const configuration = defineCollection({
       articlesName: z.string().default("Articles"),
 
       /**
-       * The text used when displaying the projects section on the homepage.
-       */
-      projectsName: z.string().default("Projects"),
-
-      /**
        * The text used for the "View All" button in the articles and projects sections.
        */
       viewAll: z.string().default("View All"),
@@ -291,10 +246,6 @@ const configuration = defineCollection({
        */
       noArticles: z.string().default("No articles found."),
 
-      /**
-       * The text displayed when there are no projects found.
-       */
-      noProjects: z.string().default("No projects found."),
     }),
 
     /**
@@ -303,9 +254,7 @@ const configuration = defineCollection({
      */
     menu: z.object({
       home: z.string().default("/"),
-      projects: z.string().default("/projects"),
       blog: z.string().default("/blog"),
-      /** Add other menu items here **/
     }),
   }),
 });
@@ -378,77 +327,5 @@ const blog = defineCollection({
     }),
 });
 
-/**
- * Loader and schema for the project collection.
- * It loads markdown files from the `content/projects` directory and defines the schema for each project.
- */
-const project = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./content/projects" }),
-  schema: z
-    .object({
-      /**
-       * The title of the project.
-       */
-      title: z.string(),
 
-      /**
-       * The slug for the project, used in the URL.
-       */
-      slug: z.string().optional(),
-
-      /**
-       * The short description of the project, used in Open Graph metadata and as a fallback for SEO.
-       */
-      description: z.string(),
-
-      /**
-       * The long description of the project, used in Open Graph metadata and as a fallback for SEO.
-       */
-      longDescription: z.string().optional(),
-
-      /**
-       * The URL of the card image for social media sharing.
-       */
-      cardImage: z.string().optional(),
-
-      /**
-       * The tags associated with the project, used for categorization and filtering.
-       */
-      tags: z.array(z.string()).optional(),
-
-      /**
-       * The github repository URL for the project.
-       */
-      githubUrl: z.string().url().optional(),
-
-      /**
-       * The live demo URL for the project, if applicable.
-       */
-      liveDemoUrl: z.string().url().optional(),
-
-      /**
-       * The timestamp of the project, used for sorting and displaying the date.
-       */
-      timestamp: z.date().transform((val) => new Date(val)),
-
-      /**
-       * Whether the project is featured on the homepage.
-       */
-      featured: z.boolean().default(false),
-    })
-    .transform((data) => {
-      const slug =
-        data.slug ??
-        data.title
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^\w-]/g, "");
-      const newData = {
-        ...data,
-        slug,
-      };
-      return newData;
-    }),
-});
-
-export const collections = { blog, project, configuration };
+export const collections = { blog, configuration };

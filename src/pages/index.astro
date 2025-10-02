@@ -5,19 +5,12 @@ import About from "../components/home/About.astro";
 import Education from "../components/home/Education.astro";
 import Experience from "../components/home/Experience.astro";
 import Section from "../components/common/Section.astro";
-import FeaturedProjects from "../components/home/FeaturedProjects.astro";
 import FeaturedArticles from "../components/home/FeaturedArticles.astro";
 import { getConfigurationCollection } from "../lib/utils";
 import { getCollection } from "astro:content";
 
 const { data: config } = await getConfigurationCollection();
 
-const featuredProjects = (
-  await getCollection("project", (e) => e.data.featured)
-).map((e) => ({
-  ...e.data,
-  url: `/projects/${e.data.slug}`,
-}));
 const featuredArticles = (
   await getCollection("blog", (e) => e.data.featured)
 ).map((e) => ({
@@ -70,9 +63,6 @@ const featuredArticles = (
   </Section>
   <Section>
     <Education />
-  </Section>
-  <Section>
-    <FeaturedProjects featuredProjects={featuredProjects} />
   </Section>
   <Section>
     <FeaturedArticles featuredArticles={featuredArticles} />
