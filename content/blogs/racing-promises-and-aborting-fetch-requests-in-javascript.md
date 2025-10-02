@@ -20,7 +20,7 @@ If you give `Promise.race` an array of promises, it resolves (or rejects) as soo
 
 It’s like saying:
 
-> “I don’t want to wait for everyone to finish their homework. The first one who shows me _anything_ wins.”
+> I don’t want to wait for everyone to finish their homework. The first one who shows me _anything_ wins.
 
 For example:
 
@@ -42,11 +42,11 @@ Because in the real world, waiting can be painful.
 
 Imagine a fetch request that takes too long. Do you just sit there, staring at a loading spinner for eternity? Or do you decide:
 
-> “If this API doesn’t respond in time, I’ll just abort it and show a fallback.”
+> If this API doesn’t respond in time, I’ll just abort it and show a fallback.
 
 This is especially relevant for **long-running tasks**—like calling an AI model that may or may not take 20 seconds.
 
-Enter our hero: **`Promise.race` + `AbortController`.**
+This is where **`Promise.race` + `AbortController`** come to the rescue.
 
 ## Racing a fetch with a timeout
 
