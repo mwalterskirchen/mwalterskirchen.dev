@@ -184,6 +184,16 @@ const configuration = defineCollection({
       name: z.string().default("Maximilian Walterskirchen"),
 
       /**
+       * The email of the site owner or author.
+       */
+      email: z.string().email().optional(),
+
+      /**
+       * The CV of the site owner or author.
+       */
+      cv: z.string().optional(),
+
+      /**
        * The GitHub profile URL of the site owner or author.
        */
       githubProfile: z.string().url().optional(),
@@ -221,6 +231,40 @@ const configuration = defineCollection({
        * The skills displayed in the about section.
        */
       skills: z.array(z.string()),
+    }),
+    education: z.object({
+      /**
+       * The title displayed in the education section.
+       */
+      title: z.string(),
+
+      educations: z.array(
+        z.object({
+          title: z.string(),
+          institution: z.string().optional(),
+          institutionUrl: z.string().url().optional(),
+          location: z.string().optional(),
+          year: z.string(),
+          thesis: z.string().optional(),
+        }),
+      ),
+    }),
+
+    experience: z.object({
+      /**
+       * The title displayed in the experience section.
+       */
+      title: z.string(),
+      experiences: z.array(
+        z.object({
+          title: z.string(),
+          company: z.string(),
+          companyUrl: z.string().url().optional(),
+          location: z.string(),
+          start: z.string(),
+          end: z.string(),
+        }),
+      ),
     }),
 
     /**

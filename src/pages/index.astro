@@ -2,6 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/home/Hero.astro";
 import About from "../components/home/About.astro";
+import Education from "../components/home/Education.astro";
+import Experience from "../components/home/Experience.astro";
 import Section from "../components/common/Section.astro";
 import FeaturedProjects from "../components/home/FeaturedProjects.astro";
 import FeaturedArticles from "../components/home/FeaturedArticles.astro";
@@ -57,10 +59,18 @@ const featuredArticles = (
     <meta name="language" content="English" />
     <link rel="canonical" href={config.site.baseUrl} />
   </Fragment>
-  <Section class="mt-16 mb-8">
+  <Section class="mt-8">
     <Hero />
   </Section>
-  <Section> <About /> </Section>
+  <Section>
+    <About />
+  </Section>
+  <Section>
+    <Experience />
+  </Section>
+  <Section>
+    <Education />
+  </Section>
   <Section>
     <FeaturedProjects featuredProjects={featuredProjects} />
   </Section>

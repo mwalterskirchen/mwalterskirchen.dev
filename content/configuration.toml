@@ -40,6 +40,8 @@ image = "/avatar.jpeg"
 name = "Maximilian Walterskirchen"
 githubProfile = "https://github.com/mwalterskirchen"
 linkedinProfile = "https://linkedin.com/in/mwalterskirchen"
+email = "contact@mwalterskirchen.dev"
+cv = "/cv-maximilian-walterskirchen-2025-09-11.pdf"
 
 [_.texts]
 articlesName = "Articles"
@@ -50,8 +52,8 @@ noProjects = "No projects found."
 
 [_.about]
 description = """
-Senior Full Stack Engineer with <span class='-zag-bg text-nowrap -zag-text zag-transition px-2 py-1 text-sm font-semibold'>5+ years</span> experience building scalable web applications. </br> </br>
-I've helped international clients from FinTech startups to enterprises transform ideas into robust solutions. <br /><br />
+Senior Full Stack Engineer with <span class='tag'>5+ years</span> experience building scalable web applications. </br> </br>
+I've helped companies from startups to enterprises transform ideas into robust solutions. <br /><br />
 Passionate about 🧠 AI integration, 🔒 cybersecurity, and 💻 modern web technologies. Always ready to tackle complex challenges and build something amazing. <br /><br />
 Let's create the future together. 🚀
 """
@@ -59,21 +61,72 @@ title = "About Me"
 skillsTitle = "Technologies"
 skills = [
     "TypeScript",
+    "JavaScript",
     "React",
+    "Next.js",
     "Node.js",
-    "LLM / Generative AI",
-    "Docker",
-    "CI/CD",
-    "Cybersecurity",
-    "AWS",
-    "Azure",
-    "GCP",
-    "Terraform",
-    "Git",
+    "AI Integration",
     "Python",
+    "System Design",
+    "PostgreSQL",
+    "MongoDB",
+    "REST APIs",
+    "GraphQL",
+    "Docker",
+    "Kubernetes",
     "Java",
-    "Databases",
+    "AWS",
+    "Terraform",
+    "CI/CD",
+    "Testing",
 ]
+
+[_.education]
+title = "Education"
+
+[[_.education.educations]]
+title = "Bachelor of Science in Computer Science"
+institution = "University of Technology Vienna"
+institutionUrl = "https://www.tuwien.at/"
+location = "Vienna, Austria"
+year = "2025"
+thesis = "Thesis: - 'From Flawed to Fortified: A Study on Vulnerabilities and Privacy Issues in Home Assistant Integrations'"
+
+[_.experience]
+title = "Experience"
+
+[[_.experience.experiences]]
+title = "Senior Full Stack Engineer"
+company = "Northstar"
+companyUrl = "https://www.northstar-digital.ch/"
+location = "Zurich, Switzerland"
+start = "2025-05"
+end = "2025-07"
+
+[[_.experience.experiences]]
+title = "Senior Full Stack Engineer"
+company = "functn"
+companyUrl = "https://www.functn.com/"
+location = "Vienna, Austria"
+start = "2022-06"
+end = "2025-04"
+
+[[_.experience.experiences]]
+title = "Full Stack Engineer"
+company = "functn"
+companyUrl = "https://www.functn.com/"
+location = "Vienna, Austria"
+start = "2021-03"
+end = "2022-05"
+
+[[_.experience.experiences]]
+title = "Full Stack Engineer"
+company = "LKW WALTER"
+companyUrl = "https://www.lkw-walter.com/"
+location = "Wiener Neudorf, Austria"
+start = "2020-03"
+end = "2021-02"
+
 
 [_.menu]
 home = "/"

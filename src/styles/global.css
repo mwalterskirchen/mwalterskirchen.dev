@@ -176,6 +176,37 @@
 }
 
 @layer utilities {
+  /* Pixel-art vertical timeline for experience */
+  .pixel-timeline {
+    position: relative;
+  }
+  .pixel-timeline::before {
+    content: "";
+    position: absolute;
+    left: 8px; /* aligns with .pl-6 dot position */
+    top: 0;
+    bottom: 0;
+    width: 2px; /* crisp pixel line */
+    background-color: var(--color-zag-dark);
+  }
+  :where(.dark, .dark *) .pixel-timeline::before {
+    background-color: var(--color-zag-light);
+  }
+  .pixel-dot {
+    position: absolute;
+    left: 4px;
+    top: 0.45rem; /* aligns roughly with first line of text */
+    width: 10px;
+    height: 10px;
+    background:
+      linear-gradient(90deg, transparent 0 2px, currentColor 2px 8px, transparent 8px 10px),
+      linear-gradient(transparent 0 2px, currentColor 2px 8px, transparent 8px 10px);
+    color: var(--color-zag-dark);
+    image-rendering: pixelated;
+  }
+  :where(.dark, .dark *) .pixel-dot {
+    color: var(--color-zag-light);
+  }
   @media (prefers-reduced-motion: no-preference) {
     @keyframes fade-in {
       from {
@@ -215,4 +246,29 @@
     .delay-7 { animation-delay: 420ms; }
     .delay-8 { animation-delay: 480ms; }
   }
+}
+
+@utility tag {
+  background-color: var(--color-zag-dark);
+  :where(.dark, .dark *) & {
+    background-color: var(--color-zag-light);
+  }
+  color: var(--color-zag-light);
+    :where(.dark, .dark *) & {
+      color: var(--color-zag-dark);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      background-color var(--zag-transition-duration)
+        var(--zag-transition-timing-function),
+      color var(--zag-transition-duration)
+        var(--zag-transition-timing-function),
+      fill var(--zag-transition-duration)
+        var(--zag-transition-timing-function),
+      border-color var(--zag-transition-duration)
+        var(--zag-transition-timing-function),
+      transform var(--zag-transition-duration)
+        var(--zag-transition-timing-function);
+  }
+  @apply px-2 py-1 text-sm font-semibold;
 }
