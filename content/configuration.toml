@@ -88,7 +88,15 @@ thesis = "Thesis: - 'From Flawed to Fortified: A Study on Vulnerabilities and Pr
 title = "Experience"
 
 [[_.experience.experiences]]
-title = "Senior Full Stack Engineer"
+title = "Founding Engineer"
+company = "IndigoListings"
+companyUrl = "https://www.indigolisting.com/"
+location = "Remote"
+start = "2025-08"
+end = "2025-11"
+
+[[_.experience.experiences]]
+title = "Full Stack Engineer"
 company = "Northstar"
 companyUrl = "https://www.northstar-digital.ch/"
 location = "Zurich, Switzerland"
@@ -96,20 +104,13 @@ start = "2025-05"
 end = "2025-07"
 
 [[_.experience.experiences]]
-title = "Senior Full Stack Engineer"
-company = "functn"
-companyUrl = "https://www.functn.com/"
-location = "Vienna, Austria"
-start = "2022-06"
-end = "2025-04"
-
-[[_.experience.experiences]]
 title = "Full Stack Engineer"
 company = "functn"
 companyUrl = "https://www.functn.com/"
 location = "Vienna, Austria"
 start = "2021-03"
-end = "2022-05"
+end = "2025-04"
+
 
 [[_.experience.experiences]]
 title = "Full Stack Engineer"
