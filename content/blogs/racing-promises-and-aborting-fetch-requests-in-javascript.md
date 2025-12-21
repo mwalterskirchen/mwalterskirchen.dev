@@ -4,6 +4,7 @@ slug: racing-promises-and-aborting-fetch-requests-in-javascript
 description: Learn how to use Promise.race and AbortController to handle slow fetch requests and improve user experience in JavaScript.
 longDescription: Discover how Promise.race can help you respond to the fastest asynchronous task, and how to combine it with AbortController to abort slow fetch requests. This guide explains practical patterns for racing promises, handling timeouts, and ensuring your users never wait forever for a response.
 tags: ["javascript", "typescript"]
+cardImage: https://mwalterskirchen.dev/cards/racing-promises-and-aborting-fetch-requests-in-javascript.png
 featured: true
 readTime: 4
 timestamp: 2025-10-02T12:24:01+00:00
