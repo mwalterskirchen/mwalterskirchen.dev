@@ -1,7 +1,18 @@
 ---
-const { class: className } = Astro.props;
+interface Props {
+  class?: string;
+  wide?: boolean;
+}
+
+const { class: className, wide = false } = Astro.props;
 ---
 
-<section class:list={["animate-in-up mx-auto max-w-2xl p-4", className]}>
+<section
+  class:list={[
+    "animate-in-up mx-auto p-4",
+    wide ? "max-w-prose" : "max-w-2xl",
+    className,
+  ]}
+>
   <slot />
 </section>

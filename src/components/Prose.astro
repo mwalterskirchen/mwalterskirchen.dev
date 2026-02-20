@@ -6,9 +6,6 @@ type Props = {
 const { class: customClass } = Astro.props;
 ---
 
-<div
-  class="prose prose-headings:font-mono prose-img:rounded-none prose-p:text-[var(--color-neutral-900)] prose-p:dark:text-[var(--color-neutral-100)] prose-a:underline-offset-4 prose-h1:text-2xl prose-a:text-[var(--color-neutral-900)] dark:prose-a:text-[var(--color-neutral-100)] prose-headings:text-[var(--color-neutral-900)] prose-headings:dark:text-[var(--color-neutral-100)] prose-p:text-justify prose-code:text-[var(--color-neutral-900)] dark:prose-code:text-[var(--color-neutral-100)] prose-h2:text-2xl prose-h3:text-xl prose-h4:text-lg prose-h5:text-base prose-h6:text-sm prose-strong:text-[var(--color-neutral-900)] dark:prose-strong:text-[var(--color-neutral-100)] prose-li:text-[var(--color-neutral-900)] dark:prose-li:text-[var(--color-neutral-100)] prose-ul:marker:text-[var(--color-neutral-900)] prose-ul:dark:marker:text-[var(--color-neutral-100)] prose-ol:marker:text-[var(--color-neutral-900)] prose-ol:dark:marker:text-[var(--color-neutral-100)] prose-a:underline-offset-[6px] prose-a:focus:outline-2 prose-a:focus:outline-offset-2 prose-a:focus:outline-neutral-900 prose-a:dark:focus:outline-neutral-100 w-full font-mono"
-  class:list={customClass ? [customClass] : []}
->
+<div class="prose dark:prose-invert blog-prose w-full" class:list={customClass ? [customClass] : []}>
   <slot />
 </div>

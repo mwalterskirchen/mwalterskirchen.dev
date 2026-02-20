@@ -9,6 +9,7 @@ import "@fontsource/ibm-plex-mono/latin-700";
 import "@fontsource-variable/literata/opsz.css";
 import "@fontsource/press-start-2p";
 import plexMono from "@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url";
+import literata from "@fontsource-variable/literata/files/literata-latin-opsz-normal.woff2?url";
 import "../styles/global.css";
 ---
 
@@ -24,6 +25,13 @@ import "../styles/global.css";
       as="font"
       type="font/woff2"
       href={plexMono}
+      crossorigin="anonymous"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={literata}
       crossorigin="anonymous"
     />
     <!-- Theme detection script - runs before page renders -->

@@ -27,7 +27,9 @@ For example:
 
 ```js
 const fast = new Promise((resolve) => setTimeout(() => resolve("fast!"), 100));
-const slow = new Promise((resolve) => setTimeout(() => resolve("slow..."), 200));
+const slow = new Promise((resolve) =>
+  setTimeout(() => resolve("slow..."), 200),
+);
 
 Promise.race([fast, slow]).then(console.log);
 // → "fast!"
