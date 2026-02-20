@@ -7,111 +7,17 @@
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-display: "Press Start 2P", ui-monospace, monospace;
   --font-serif: "Literata Variable", serif;
-  --color-zag-dark: var(--color-neutral-900);
-  --color-zag-dark-opaque: oklch(from var(--color-neutral-900) l c h / 0.5);
-  --color-zag-light: var(--color-neutral-100);
-  --color-zag-light-opaque: oklch(from var(--color-neutral-100) l c h / 0.5);
-  --color-zag-dark-muted: var(--color-neutral-600);
-  --color-zag-light-muted: var(--color-neutral-400);
-  --color-zag-accent-light: var(--color-emerald-400);
-  --color-zag-accent-light-muted: var(--color-emerald-300);
-  --color-zag-accent-dark: var(--color-emerald-600);
-  --color-zag-accent-dark-muted: var(--color-emerald-800);
 }
 
 @layer base {
-  :root {
-    --zag-stroke: 2px;
-    --zag-offset: 6px;
-    --zag-transition-duration: 0.15s;
-    --zag-transition-timing-function: ease-in-out;
-  }
-
   ::selection {
-    background-color: var(--color-zag-accent-light);
-    color: var(--color-zag-dark-muted);
+    background-color: var(--color-emerald-400);
+    color: var(--color-neutral-600);
   }
 
-  .zag-transition {
-    @media (prefers-reduced-motion: no-preference) {
-      transition:
-        background-color var(--zag-transition-duration)
-          var(--zag-transition-timing-function),
-        color var(--zag-transition-duration)
-          var(--zag-transition-timing-function),
-        fill var(--zag-transition-duration)
-          var(--zag-transition-timing-function),
-        border-color var(--zag-transition-duration)
-          var(--zag-transition-timing-function),
-        transform var(--zag-transition-duration)
-          var(--zag-transition-timing-function);
-    }
-  }
-
-  .zag-bg {
-    background-color: var(--color-zag-light);
-    :where(.dark, .dark *) & {
-      background-color: var(--color-zag-dark);
-    }
-  }
-
-  .-zag-bg {
-    background-color: var(--color-zag-dark);
-    :where(.dark, .dark *) & {
-      background-color: var(--color-zag-light);
-    }
-  }
-
-  .zag-text {
-    color: var(--color-zag-dark);
-    :where(.dark, .dark *) & {
-      color: var(--color-zag-light);
-    }
-  }
-
-  .-zag-text {
-    color: var(--color-zag-light);
-    :where(.dark, .dark *) & {
-      color: var(--color-zag-dark);
-    }
-  }
-
-  .zag-muted {
-    color: var(--color-zag-dark-muted);
-    :where(.dark, .dark *) & {
-      color: var(--color-zag-light-muted);
-    }
-  }
-
-  .zag-fill {
-    fill: var(--color-zag-dark);
-    &:where(.dark, .dark *) {
-      fill: var(--color-zag-light);
-    }
-  }
-
-  .zag-text-muted {
-    color: var(--color-zag-dark-muted);
-    &:where(.dark, .dark *) {
-      color: var(--color-zag-light-muted);
-    }
-  }
-
-  .zag-border-b {
-    border-bottom: var(--zag-stroke) solid;
-    border-color: var(--color-zag-dark);
-    &:where(.dark, .dark *) {
-      border-color: var(--color-zag-light);
-    }
-  }
-
-  .zag-offset {
-    text-underline-offset: var(--zag-offset);
-  }
-
-  .hover-zag-dotted-grid:hover::before {
-    --dot-bg: var(--color-zag-light);
-    --dot-color: var(--color-zag-dark-muted);
+  .hover-dotted-grid:hover::before {
+    --dot-bg: var(--color-neutral-100);
+    --dot-color: var(--color-neutral-600);
     --dot-size: 1.5px;
     --dot-space: 16px;
     content: "";
@@ -138,12 +44,12 @@
     pointer-events: none;
   }
 
-  :where(.dark, .dark *) .hover-zag-dotted-grid:hover::before {
-    --dot-bg: var(--color-zag-dark);
-    --dot-color: var(--color-zag-light-muted);
+  :where(.dark, .dark *) .hover-dotted-grid:hover::before {
+    --dot-bg: var(--color-neutral-900);
+    --dot-color: var(--color-neutral-400);
   }
 
-  .hover-zag-dotted-grid:hover::after {
+  .hover-dotted-grid:hover::after {
     content: "";
     position: absolute;
     top: 0;
@@ -154,19 +60,19 @@
     z-index: -1;
     background: linear-gradient(
       159deg,
-      var(--color-zag-light) 0%,
-      var(--color-zag-light) 50%,
-      var(--color-zag-light-opaque) 100%
+      var(--color-neutral-100) 0%,
+      var(--color-neutral-100) 50%,
+      oklch(from var(--color-neutral-100) l c h / 0.5) 100%
     );
     pointer-events: none;
   }
 
-  :where(.dark, .dark *) .hover-zag-dotted-grid:hover::after {
+  :where(.dark, .dark *) .hover-dotted-grid:hover::after {
     background: linear-gradient(
       159deg,
-      var(--color-zag-dark) 0%,
-      var(--color-zag-dark) 50%,
-      var(--color-zag-dark-opaque) 100%
+      var(--color-neutral-900) 0%,
+      var(--color-neutral-900) 50%,
+      oklch(from var(--color-neutral-900) l c h / 0.5) 100%
     );
   }
 
@@ -218,26 +124,21 @@
 }
 
 @utility tag {
-  background-color: var(--color-zag-dark);
+  background-color: var(--color-neutral-900);
   :where(.dark, .dark *) & {
-    background-color: var(--color-zag-light);
+    background-color: var(--color-neutral-100);
   }
-  color: var(--color-zag-light);
+  color: var(--color-neutral-100);
     :where(.dark, .dark *) & {
-      color: var(--color-zag-dark);
+      color: var(--color-neutral-900);
   }
   @media (prefers-reduced-motion: no-preference) {
     transition:
-      background-color var(--zag-transition-duration)
-        var(--zag-transition-timing-function),
-      color var(--zag-transition-duration)
-        var(--zag-transition-timing-function),
-      fill var(--zag-transition-duration)
-        var(--zag-transition-timing-function),
-      border-color var(--zag-transition-duration)
-        var(--zag-transition-timing-function),
-      transform var(--zag-transition-duration)
-        var(--zag-transition-timing-function);
+      background-color 0.15s ease-in-out,
+      color 0.15s ease-in-out,
+      fill 0.15s ease-in-out,
+      border-color 0.15s ease-in-out,
+      transform 0.15s ease-in-out;
   }
   @apply px-2 py-1 text-sm font-semibold;
 }

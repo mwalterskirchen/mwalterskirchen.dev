@@ -3,15 +3,15 @@ import { Sun, Moon } from "@lucide/astro";
 ---
 
 <button
-  class="focus:outline-zag-dark dark:focus:outline-zag-light border-none bg-none focus:outline-2 focus:outline-offset-2"
+  class="focus:outline-neutral-900 dark:focus:outline-neutral-100 border-none bg-none focus:outline-2 focus:outline-offset-2"
   id="themeToggle"
   aria-label="Theme Toggle"
 >
   <Sun
-    class="zag-transition stroke-neutral-900 dark:hidden dark:stroke-transparent"
+    class="transition-colors duration-150 ease-in-out motion-reduce:transition-none stroke-neutral-900 dark:hidden dark:stroke-transparent"
   />
   <Moon
-    class="zag-transition hidden stroke-transparent dark:block dark:stroke-neutral-100"
+    class="transition-colors duration-150 ease-in-out motion-reduce:transition-none hidden stroke-transparent dark:block dark:stroke-neutral-100"
   />
 </button>
 
