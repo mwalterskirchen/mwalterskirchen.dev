@@ -2,14 +2,10 @@
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/home/Hero.astro";
 import About from "../components/home/About.astro";
-import Education from "../components/home/Education.astro";
-import Experience from "../components/home/Experience.astro";
 import Section from "../components/common/Section.astro";
 import FeaturedArticles from "../components/home/FeaturedArticles.astro";
-import { getConfigurationCollection } from "../lib/utils";
+import SEO from "../components/SEO.astro";
 import { getCollection } from "astro:content";
-
-const { data: config } = await getConfigurationCollection();
 
 const featuredArticles = (
   await getCollection("blog", (e) => e.data.featured)
@@ -17,52 +13,26 @@ const featuredArticles = (
   ...e.data,
   url: `/blog/${e.data.slug}`,
 }));
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <Layout>
   <Fragment slot="head">
-    <title>{config.globalMeta.title}</title>
-    <meta
-      name="description"
-      content={config.globalMeta.longDescription ??
-        config.globalMeta.description}
+    <SEO
+      title="Maximilian Walterskirchen"
+      description="Senior Software Engineer based in Zurich. Passionate about AI, Web Development and Cybersecurity."
+      longDescription="Senior Software Engineer based in Zurich. Passionate about AI, Web Development and Cybersecurity."
+      cardImage="/avatar.jpeg"
+      keywords={["web development", "design", "technology"]}
+      canonicalUrl={canonicalUrl}
     />
-    <meta property="og:title" content={config.globalMeta.title} />
-    <meta property="og:description" content={config.globalMeta.description} />
-    {
-      config.globalMeta.keywords && (
-        <meta name="keywords" content={config.globalMeta.keywords.join(", ")} />
-      )
-    }
-    {
-      config.globalMeta.cardImage && (
-        <meta property="og:image" content={config.globalMeta.cardImage} />
-      )
-    }
-    <meta property="og:url" content={config.site.baseUrl} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={config.globalMeta.title} />
-    <meta name="twitter:description" content={config.globalMeta.description} />
-    {
-      config.globalMeta.cardImage && (
-        <meta name="twitter:image" content={config.globalMeta.cardImage} />
-      )
-    }
-    <meta http-equiv="content-language" content="en" />
-    <meta name="language" content="English" />
-    <link rel="canonical" href={config.site.baseUrl} />
   </Fragment>
   <Section class="mt-8">
     <Hero />
   </Section>
   <Section>
     <About />
-  </Section>
-  <Section>
-    <Experience />
-  </Section>
-  <Section>
-    <Education />
   </Section>
   <Section>
     <FeaturedArticles featuredArticles={featuredArticles} />

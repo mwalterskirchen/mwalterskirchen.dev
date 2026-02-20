@@ -1,13 +1,10 @@
 ---
-import { getConfigurationCollection } from "../lib/utils";
+import { config } from "../config";
 import Anchor from "./common/Anchor.astro";
 import Section from "./common/Section.astro";
 import { Github, Linkedin } from "@lucide/astro";
 
-const { data: config } = await getConfigurationCollection();
-
-const date = new Date();
-const year = date.getFullYear();
+const year = new Date().getFullYear();
 ---
 
 <footer class="mt-16 mb-8">
@@ -15,26 +12,18 @@ const year = date.getFullYear();
     <div
       class="zag-border-b zag-transition flex items-center justify-center gap-4 pb-4"
     >
-      {
-        config.personal.githubProfile && (
-          <Anchor
-            url={config.personal.githubProfile}
-            aria-label={`${config.personal.name} GitHub Profile`}
-          >
-            <Github />
-          </Anchor>
-        )
-      }
-      {
-        config.personal.linkedinProfile && (
-          <Anchor
-            url={config.personal.linkedinProfile}
-            aria-label={`${config.personal.name} LinkedIn Profile`}
-          >
-            <Linkedin />
-          </Anchor>
-        )
-      }
+      <Anchor
+        url={config.personal.githubProfile}
+        aria-label={`${config.personal.name} GitHub Profile`}
+      >
+        <Github />
+      </Anchor>
+      <Anchor
+        url={config.personal.linkedinProfile}
+        aria-label={`${config.personal.name} LinkedIn Profile`}
+      >
+        <Linkedin />
+      </Anchor>
     </div>
   </Section>
   <p class="zag-text zag-transition text-center text-sm font-medium">

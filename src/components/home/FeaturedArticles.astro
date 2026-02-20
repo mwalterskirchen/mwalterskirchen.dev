@@ -1,6 +1,5 @@
 ---
 import type { ArticleFrontmatter } from "../../lib/types";
-import { getConfigurationCollection } from "../../lib/utils";
 import ArticleSnippet from "../ArticleSnippet.astro";
 import Anchor from "../common/Anchor.astro";
 
@@ -9,18 +8,15 @@ type Props = {
 };
 
 const { featuredArticles } = Astro.props;
-const { data: config } = await getConfigurationCollection();
 ---
 
 <div class="flex w-full items-center justify-between">
-  <h3 class="font-display text-lg leading-loose sm:text-xl">
-    {config.texts.articlesName}
-  </h3>
-  <Anchor url="/blog" class="text-base">{config.texts.viewAll}</Anchor>
+  <h3 class="font-display text-lg leading-loose sm:text-xl">Articles</h3>
+  <Anchor url="/blog" class="text-base">View All</Anchor>
 </div>
 <ul class="my-8">
   {
-    (featuredArticles.length === 0 && <p>{config.texts.noArticles}</p>) ||
+    (featuredArticles.length === 0 && <p>No articles found.</p>) ||
       featuredArticles.map((article, index) => (
         <li
           class:list={[

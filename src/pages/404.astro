@@ -1,49 +1,20 @@
 ---
 import Section from "../components/common/Section.astro";
 import Layout from "../layouts/Layout.astro";
-import { getConfigurationCollection } from "../lib/utils";
+import SEO from "../components/SEO.astro";
 
-const { data: config } = await getConfigurationCollection();
+const canonicalUrl = new URL("/", Astro.site).href;
 ---
 
 <Layout>
   <Fragment slot="head">
-    <title>{config.notFoundMeta.title}</title>
-    <meta
-      name="description"
-      content={config.notFoundMeta.longDescription ??
-        config.notFoundMeta.description}
+    <SEO
+      title="Not Found - 404"
+      description="The page you are looking for does not exist."
+      longDescription="The page you are looking for does not exist. Maybe it never existed. Spooky."
+      cardImage="/avatar.jpeg"
+      canonicalUrl={canonicalUrl}
     />
-    <meta property="og:title" content={config.notFoundMeta.title} />
-    <meta property="og:description" content={config.notFoundMeta.description} />
-    {
-      config.notFoundMeta.keywords && (
-        <meta
-          name="keywords"
-          content={config.notFoundMeta.keywords.join(", ")}
-        />
-      )
-    }
-    {
-      config.notFoundMeta.cardImage && (
-        <meta property="og:image" content={config.notFoundMeta.cardImage} />
-      )
-    }
-    <meta property="og:url" content={config.site.baseUrl} />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={config.notFoundMeta.title} />
-    <meta
-      name="twitter:description"
-      content={config.notFoundMeta.description}
-    />
-    {
-      config.notFoundMeta.cardImage && (
-        <meta name="twitter:image" content={config.notFoundMeta.cardImage} />
-      )
-    }
-    <meta http-equiv="content-language" content="en" />
-    <meta name="language" content="English" />
-    <link rel="canonical" href={config.site.baseUrl} />
   </Fragment>
   <Section class="mt-16">
     <h1 class="font-display pb-8 text-2xl sm:text-3xl">

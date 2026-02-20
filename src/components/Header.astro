@@ -1,8 +1,7 @@
 ---
-import { getConfigurationCollection } from "../lib/utils";
+import { config } from "../config";
 import Anchor from "./common/Anchor.astro";
 import ThemeToggle from "./ThemeToggle.astro";
-const { data: config } = await getConfigurationCollection();
 ---
 
 <header class="zag-bg zag-border-b zag-transition sticky top-0 z-10 w-full">
@@ -11,8 +10,8 @@ const { data: config } = await getConfigurationCollection();
   >
     <div class="flex gap-4 font-mono font-medium">
       {
-        Object.entries(config.menu).map((i) => (
-          <Anchor url={i[1]}>{i[0]}</Anchor>
+        config.nav.map((item) => (
+          <Anchor url={item.href}>{item.label}</Anchor>
         ))
       }
     </div>

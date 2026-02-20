@@ -1,25 +1,51 @@
 ---
-import { getConfigurationCollection } from "../../lib/utils";
+import { config } from "../../config";
 
-const { data: config } = await getConfigurationCollection();
+const skills = [
+  "TypeScript",
+  "JavaScript",
+  "React",
+  "Next.js",
+  "Node.js",
+  "AI Integration",
+  "Python",
+  "System Design",
+  "PostgreSQL",
+  "MongoDB",
+  "REST APIs",
+  "GraphQL",
+  "Docker",
+  "Kubernetes",
+  "Java",
+  "AWS",
+  "Terraform",
+  "CI/CD",
+  "Testing",
+];
 ---
 
-<h3 class="font-display text-lg leading-loose sm:text-xl">
-  {config.about.title}
-</h3>
+<h3 class="font-display text-lg leading-loose sm:text-xl">About Me</h3>
 <div class="zag-text zag-transition flex flex-col gap-4">
-  <p set:html={config.about.description} />
+  <p>
+    Senior Software Engineer with <span class="tag">5+ years</span> experience building
+    scalable web applications. <br /><br />
+    I've helped companies from startups to enterprises transform ideas into robust
+    solutions. <br /><br />
+    Passionate about 🧠 AI integration, &#x1F512; cybersecurity, and &#x1F4BB; modern
+    web technologies. Always ready to tackle complex challenges and build something
+    amazing. <br /><br />
+    Let's create the future together. &#x1F680;
+  </p>
   <a
     href={`mailto:${config.personal.email}`}
     class="underline underline-offset-8"
-    >✉️ Let's Connect: {config.personal.email}</a
   >
+    &#x2709;&#xFE0F; Let's Connect: {config.personal.email}
+  </a>
 </div>
 <div class="mt-4 flex flex-col gap-2">
-  <h4 class="font-display text-lg leading-loose sm:text-xl">
-    {config.about.skillsTitle}
-  </h4>
+  <h4 class="font-display text-lg leading-loose sm:text-xl">Technologies</h4>
   <ul class="flex flex-wrap gap-2">
-    {config.about.skills.map((skill) => <li class="tag">{skill}</li>)}
+    {skills.map((skill) => <li class="tag">{skill}</li>)}
   </ul>
 </div>

@@ -1,27 +1,24 @@
 ---
-import { getConfigurationCollection } from "../../lib/utils";
 import { Image } from "astro:assets";
 import avatar from "../../../public/avatar.jpeg";
-
-const { data: config } = await getConfigurationCollection();
 ---
 
 <div class="flex flex-col items-center gap-8 sm:flex-row">
   <Image
     src={avatar}
-    alt={`${config.hero.title} Profile Image`}
+    alt="Maximilian Walterskirchen Profile Image"
     class="z-0 mb-4 h-40 w-40 max-w-40 rounded-full"
   />
   <div>
     <h1
       class="font-display opsz text-center text-2xl font-semibold sm:text-left sm:text-3xl"
     >
-      {config.hero.title}
+      Maximilian Walterskirchen
     </h1>
     <h2
       class="text-center font-mono text-xl font-medium sm:text-left sm:text-2xl"
     >
-      <p set:html={config.hero.subtitle} />
+      Senior Full Stack Engineer based in Zurich&#x1F1E8;&#x1F1ED;
     </h2>
   </div>
 </div>

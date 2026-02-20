@@ -1,0 +1,67 @@
+---
+type Props = {
+  title: string;
+  description: string;
+  longDescription?: string;
+  cardImage?: string;
+  keywords?: string[];
+  canonicalUrl: string;
+  type?: "website" | "article";
+  publishedTime?: string;
+  authorName?: string;
+};
+
+const {
+  title,
+  description,
+  longDescription,
+  cardImage,
+  keywords,
+  canonicalUrl,
+  type = "website",
+  publishedTime,
+  authorName,
+} = Astro.props;
+
+const metaDescription = longDescription ?? description;
+
+const jsonLd =
+  type === "article"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: title,
+        description,
+        url: canonicalUrl,
+        ...(cardImage && { image: cardImage }),
+        ...(publishedTime && { datePublished: publishedTime }),
+        ...(authorName && {
+          author: { "@type": "Person", name: authorName },
+        }),
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: title,
+        description,
+        url: canonicalUrl,
+      };
+---
+
+<title>{title}</title>
+<meta name="description" content={metaDescription} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonicalUrl} />
+{cardImage && <meta property="og:image" content={cardImage} />}
+{keywords && <meta name="keywords" content={keywords.join(", ")} />}
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{cardImage && <meta name="twitter:image" content={cardImage} />}
+<meta http-equiv="content-language" content="en" />
+<meta name="language" content="English" />
+<link rel="canonical" href={canonicalUrl} />
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
