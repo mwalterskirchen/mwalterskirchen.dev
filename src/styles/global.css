@@ -29,17 +29,10 @@
     display: block;
     z-index: -1;
     background:
-      linear-gradient(
-          90deg,
-          var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
-          transparent 1%
-        )
+      linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%)
         bottom right / var(--dot-space) var(--dot-space),
-      linear-gradient(
-          var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
-          transparent 1%
-        )
-        bottom right / var(--dot-space) var(--dot-space),
+      linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) bottom
+        right / var(--dot-space) var(--dot-space),
       var(--dot-color);
     pointer-events: none;
   }
@@ -111,15 +104,33 @@
       animation: fade-in-up 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
-    .delay-0 { animation-delay: 0ms; }
-    .delay-1 { animation-delay: 60ms; }
-    .delay-2 { animation-delay: 120ms; }
-    .delay-3 { animation-delay: 180ms; }
-    .delay-4 { animation-delay: 240ms; }
-    .delay-5 { animation-delay: 300ms; }
-    .delay-6 { animation-delay: 360ms; }
-    .delay-7 { animation-delay: 420ms; }
-    .delay-8 { animation-delay: 480ms; }
+    .delay-0 {
+      animation-delay: 0ms;
+    }
+    .delay-1 {
+      animation-delay: 60ms;
+    }
+    .delay-2 {
+      animation-delay: 120ms;
+    }
+    .delay-3 {
+      animation-delay: 180ms;
+    }
+    .delay-4 {
+      animation-delay: 240ms;
+    }
+    .delay-5 {
+      animation-delay: 300ms;
+    }
+    .delay-6 {
+      animation-delay: 360ms;
+    }
+    .delay-7 {
+      animation-delay: 420ms;
+    }
+    .delay-8 {
+      animation-delay: 480ms;
+    }
   }
 }
 
@@ -129,8 +140,8 @@
     background-color: var(--color-neutral-100);
   }
   color: var(--color-neutral-100);
-    :where(.dark, .dark *) & {
-      color: var(--color-neutral-900);
+  :where(.dark, .dark *) & {
+    color: var(--color-neutral-900);
   }
   @media (prefers-reduced-motion: no-preference) {
     transition:

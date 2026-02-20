@@ -4,16 +4,14 @@ import Anchor from "./common/Anchor.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 ---
 
-<header class="bg-neutral-100 dark:bg-neutral-900 border-b-2 border-neutral-900 dark:border-neutral-100 transition-colors duration-150 ease-in-out motion-reduce:transition-none sticky top-0 z-10 w-full">
+<header
+  class="sticky top-0 z-10 w-full border-b-2 border-neutral-900 bg-neutral-100 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:border-neutral-100 dark:bg-neutral-900"
+>
   <nav
-    class="bg-neutral-100 dark:bg-neutral-900 border-b-2 border-neutral-900 dark:border-neutral-100 transition-colors duration-150 ease-in-out motion-reduce:transition-none inset-x-0 top-0 mx-auto flex h-auto max-w-2xl justify-between gap-8 px-4 py-4 text-xl sm:flex-row sm:border-none sm:px-4 sm:pt-4"
+    class="inset-x-0 top-0 mx-auto flex h-auto max-w-2xl justify-between gap-8 border-b-2 border-neutral-900 bg-neutral-100 px-4 py-4 text-xl transition-colors duration-150 ease-in-out motion-reduce:transition-none sm:flex-row sm:border-none sm:px-4 sm:pt-4 dark:border-neutral-100 dark:bg-neutral-900"
   >
     <div class="flex gap-4 font-mono font-medium">
-      {
-        config.nav.map((item) => (
-          <Anchor url={item.href}>{item.label}</Anchor>
-        ))
-      }
+      {config.nav.map((item) => <Anchor url={item.href}>{item.label}</Anchor>)}
     </div>
     <div class="justify-between gap-4 sm:flex">
       <ThemeToggle />

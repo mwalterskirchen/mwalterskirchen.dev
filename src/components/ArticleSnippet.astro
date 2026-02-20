@@ -14,7 +14,7 @@ const { title, description, url, duration, timestamp } = Astro.props;
 ---
 
 <div
-  class="text-neutral-900 dark:text-neutral-100 transition-colors duration-150 ease-in-out motion-reduce:transition-none hover-dotted-grid relative mb-8 flex flex-col gap-3"
+  class="hover-dotted-grid relative mb-8 flex flex-col gap-3 text-neutral-900 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:text-neutral-100"
 >
   <Anchor url={url} class="text-xl">
     {title}
@@ -22,7 +22,9 @@ const { title, description, url, duration, timestamp } = Astro.props;
   <p class="">
     {description}
   </p>
-  <div class="text-neutral-600 dark:text-neutral-400 transition-colors duration-150 ease-in-out motion-reduce:transition-none flex items-center justify-between">
+  <div
+    class="flex items-center justify-between text-neutral-600 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:text-neutral-400"
+  >
     {timestamp ? <p>{processArticleDate(timestamp)}</p> : null}
     {duration ? <p>{duration}</p> : null}
   </div>

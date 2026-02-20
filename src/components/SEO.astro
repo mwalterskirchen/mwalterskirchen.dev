@@ -56,7 +56,11 @@ const jsonLd =
 <meta property="og:url" content={canonicalUrl} />
 {cardImage && <meta property="og:image" content={cardImage} />}
 {keywords && <meta name="keywords" content={keywords.join(", ")} />}
-{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{
+  publishedTime && (
+    <meta property="article:published_time" content={publishedTime} />
+  )
+}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
