@@ -8,9 +8,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 pnpm dev        # Start dev server (localhost:4321)
 pnpm build      # Production build to dist/
 pnpm preview    # Preview production build
-pnpm lint       # ESLint check
-pnpm lint:fix   # ESLint auto-fix
-pnpm format     # Prettier format
+pnpm lint       # oxlint check
+pnpm lint:fix   # oxlint auto-fix
+pnpm fmt        # oxfmt format
+pnpm fmt:check  # oxfmt check (no write)
 ```
 
 No test runner is configured.
@@ -33,7 +34,7 @@ Blog posts are Markdown files in `content/blogs/`. Schema defined in `src/conten
 
 ### Config
 
-`src/config.ts` holds all site metadata, personal info, nav links, and work experience. Typed with `as const`.
+`src/config.ts` holds all site metadata, personal info, and nav links. Typed with `as const`.
 
 ### Dark Mode
 
