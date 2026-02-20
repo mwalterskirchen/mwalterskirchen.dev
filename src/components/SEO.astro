@@ -24,6 +24,9 @@ const {
 } = Astro.props;
 
 const metaDescription = longDescription ?? description;
+const resolvedCardImage = cardImage
+  ? new URL(cardImage, Astro.site).href
+  : undefined;
 
 const jsonLd =
   type === "article"
@@ -33,7 +36,7 @@ const jsonLd =
         headline: title,
         description,
         url: canonicalUrl,
-        ...(cardImage && { image: cardImage }),
+        ...(resolvedCardImage && { image: resolvedCardImage }),
         ...(publishedTime && { datePublished: publishedTime }),
         ...(authorName && {
           author: { "@type": "Person", name: authorName },
@@ -54,7 +57,7 @@ const jsonLd =
 <meta property="og:description" content={description} />
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonicalUrl} />
-{cardImage && <meta property="og:image" content={cardImage} />}
+{resolvedCardImage && <meta property="og:image" content={resolvedCardImage} />}
 {keywords && <meta name="keywords" content={keywords.join(", ")} />}
 {
   publishedTime && (
@@ -64,7 +67,7 @@ const jsonLd =
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
-{cardImage && <meta name="twitter:image" content={cardImage} />}
+{resolvedCardImage && <meta name="twitter:image" content={resolvedCardImage} />}
 <meta http-equiv="content-language" content="en" />
 <meta name="language" content="English" />
 <link rel="canonical" href={canonicalUrl} />
