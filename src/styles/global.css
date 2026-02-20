@@ -29,10 +29,17 @@
     display: block;
     z-index: -1;
     background:
-      linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%)
+      linear-gradient(
+          90deg,
+          var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+          transparent 1%
+        )
         bottom right / var(--dot-space) var(--dot-space),
-      linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) bottom
-        right / var(--dot-space) var(--dot-space),
+      linear-gradient(
+          var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
+          transparent 1%
+        )
+        bottom right / var(--dot-space) var(--dot-space),
       var(--dot-color);
     pointer-events: none;
   }
@@ -135,6 +142,7 @@
 }
 
 @utility tag {
+  white-space: nowrap;
   background-color: var(--color-neutral-900);
   :where(.dark, .dark *) & {
     background-color: var(--color-neutral-100);
