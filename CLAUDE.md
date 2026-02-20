@@ -45,4 +45,4 @@ Class-based (`.dark` on `<html>`). An inline script in `Layout.astro` runs befor
 
 ## Commit Style
 
-Write concise commit messages (1-2 lines). Do not append "Co-Authored-By" lines.
+Single-line commit messages only (e.g. `fix: resize avatar image to 320x320`). No body, no "Co-Authored-By" lines.
