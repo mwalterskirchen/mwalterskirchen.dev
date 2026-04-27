@@ -29,17 +29,10 @@
     display: block;
     z-index: -1;
     background:
-      linear-gradient(
-          90deg,
-          var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
-          transparent 1%
-        )
+      linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%)
         bottom right / var(--dot-space) var(--dot-space),
-      linear-gradient(
-          var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),
-          transparent 1%
-        )
-        bottom right / var(--dot-space) var(--dot-space),
+      linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) bottom
+        right / var(--dot-space) var(--dot-space),
       var(--dot-color);
     pointer-events: none;
   }
@@ -203,7 +196,6 @@
       background-color: var(--color-neutral-800);
     }
   }
-
 }
 
 @utility tag {
