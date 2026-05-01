@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import ArticleSnippet from "../../components/ArticleSnippet.astro";
-import Section from "../../components/common/Section.astro";
+import Section from "../../components/Section.astro";
 import SEO from "../../components/SEO.astro";
 
 const articles = (await getCollection("blog")).sort(

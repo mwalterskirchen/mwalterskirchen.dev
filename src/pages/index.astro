@@ -1,11 +1,13 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Hero from "../components/home/Hero.astro";
-import About from "../components/home/About.astro";
-import Section from "../components/common/Section.astro";
-import FeaturedArticles from "../components/home/FeaturedArticles.astro";
-import SEO from "../components/SEO.astro";
+import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Section from "../components/Section.astro";
+import Anchor from "../components/Anchor.astro";
+import ArticleSnippet from "../components/ArticleSnippet.astro";
+import SEO from "../components/SEO.astro";
+import { config } from "../config";
+import avatar from "../../public/avatar.jpeg";
 
 const featuredArticles = (
   await getCollection("blog", (e) => e.data.featured)
@@ -13,6 +15,19 @@ const featuredArticles = (
   ...e.data,
   url: `/blog/${e.data.slug}`,
 }));
+
+const skills = [
+  "Agentic Engineering",
+  "AI / LLMs",
+  "TypeScript",
+  "System Design",
+  "Next.js",
+  "Angular",
+  "Node.js",
+  "PostgreSQL",
+  "Kubernetes",
+  "Terraform",
+];
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
@@ -28,13 +43,102 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       canonicalUrl={canonicalUrl}
     />
   </Fragment>
+
   <Section class="mt-8">
-    <Hero />
+    <div class="flex flex-col items-center gap-8 sm:flex-row">
+      <Image
+        src={avatar}
+        alt="Maximilian Walterskirchen Profile Image"
+        width={320}
+        height={320}
+        class="z-0 mb-4 h-40 w-40 max-w-40 rounded-full"
+      />
+      <div>
+        <h1
+          class="font-display opsz text-center text-2xl font-semibold sm:text-left sm:text-3xl"
+        >
+          Maximilian Walterskirchen
+        </h1>
+        <h2
+          class="text-center font-mono text-xl font-medium sm:text-left sm:text-2xl"
+        >
+          Senior Software Engineer
+        </h2>
+        <h3 class="text-center font-mono text-sm sm:text-left sm:text-base">
+          Zurich, Switzerland 🇨🇭
+        </h3>
+      </div>
+    </div>
   </Section>
+
   <Section>
-    <About />
+    <h3 class="font-display text-lg leading-loose sm:text-xl">About Me</h3>
+    <div
+      class="flex flex-col gap-4 text-neutral-900 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:text-neutral-100"
+    >
+      <p>
+        I build production software with AI in the loop and write about the engineering side of doing it well.
+      </p>
+
+      <p>
+        Five years shipping scalable web apps in TypeScript. The last couple of years deep into LLM-powered features and agent orchestration in real products, not demos.
+      </p>
+
+      <p>
+        I'm interested in the boring engineering questions underneath the hype: how to make agents reliable, how to ship AI features that don't fall apart on contact with users, and how to stay a good engineer while the tools change underneath you.
+      </p>
+
+      <p>
+        Speaker and CFP reviewer @<a href="https://zurichjs.com" target="_blank" rel="noopener noreferrer">ZurichJS</a>.
+      </p>
+      <a
+        href={`mailto:${config.personal.email}`}
+        class="underline underline-offset-8"
+      >
+        📫 Let's chat: {config.personal.email}
+      </a>
+    </div>
+    <div class="mt-4 flex flex-col gap-2">
+      <h4 class="font-display text-lg leading-loose sm:text-xl">Technologies</h4>
+      <ul class="flex flex-wrap gap-2">
+        {skills.map((skill) => <li class="tag">{skill}</li>)}
+      </ul>
+    </div>
   </Section>
+
   <Section>
-    <FeaturedArticles featuredArticles={featuredArticles} />
+    <div class="flex w-full items-center justify-between">
+      <h3 class="font-display text-lg leading-loose sm:text-xl">Articles</h3>
+      <Anchor url="/blog" class="text-base">View All</Anchor>
+    </div>
+    <ul class="my-8">
+      {
+        (featuredArticles.length === 0 && <p>No articles found.</p>) ||
+          featuredArticles.map((article, index) => (
+            <li
+              class:list={[
+                "animate-in-up",
+                index % 9 === 0 && "delay-0",
+                index % 9 === 1 && "delay-1",
+                index % 9 === 2 && "delay-2",
+                index % 9 === 3 && "delay-3",
+                index % 9 === 4 && "delay-4",
+                index % 9 === 5 && "delay-5",
+                index % 9 === 6 && "delay-6",
+                index % 9 === 7 && "delay-7",
+                index % 9 === 8 && "delay-8",
+              ]}
+            >
+              <ArticleSnippet
+                title={article.title}
+                description={article.description}
+                url={article.url}
+                timestamp={article.timestamp}
+                duration={`${article.readTime} min`}
+              />
+            </li>
+          ))
+      }
+    </ul>
   </Section>
 </Layout>

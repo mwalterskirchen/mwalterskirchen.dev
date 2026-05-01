@@ -1,5 +1,9 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection, z, type CollectionEntry } from "astro:content";
 import { glob } from "astro/loaders";
+
+export type ArticleFrontmatter = CollectionEntry<"blog">["data"] & {
+  url: string;
+};
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/blogs" }),

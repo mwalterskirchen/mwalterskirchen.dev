@@ -1,19 +1,18 @@
 ---
 import { config } from "../config";
-import { processArticleDate } from "../lib/utils";
-import type { ArticleFrontmatter } from "../lib/types";
-import Section from "../components/common/Section.astro";
-import Prose from "../components/Prose.astro";
+import type { ArticleFrontmatter } from "../content.config";
+import Section from "../components/Section.astro";
 import SEO from "../components/SEO.astro";
 import Layout from "./Layout.astro";
 
 type Props = { frontmatter: ArticleFrontmatter };
 
 const { frontmatter } = Astro.props;
-const articleDate = processArticleDate(frontmatter.timestamp);
-const isoDate = frontmatter.timestamp.toISOString();
+const { timestamp } = frontmatter;
+const articleDate = `${timestamp.toLocaleString("default", { month: "short" })} ${timestamp.getDate()}, ${timestamp.getFullYear()}`;
+const isoDate = timestamp.toISOString();
 const canonicalUrl = new URL(`/blog/${frontmatter.slug}`, Astro.site).href;
-const pageTitle = `${frontmatter.title} \u2022 ${config.personal.name}`;
+const pageTitle = `${frontmatter.title} • ${config.personal.name}`;
 ---
 
 <Layout>
@@ -55,9 +54,9 @@ const pageTitle = `${frontmatter.title} \u2022 ${config.personal.name}`;
           </div>
         )}
       </header>
-      <Prose>
+      <div class="prose dark:prose-invert blog-prose w-full">
         <slot />
-      </Prose>
+      </div>
       <footer class="mt-16 border-t border-neutral-300 pt-8 dark:border-neutral-700">
         <p class="font-mono text-sm text-neutral-500">~{config.personal.name}</p>
       </footer>

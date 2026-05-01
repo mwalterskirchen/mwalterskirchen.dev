@@ -1,6 +1,5 @@
 ---
-import { processArticleDate } from "../lib/utils";
-import Anchor from "./common/Anchor.astro";
+import Anchor from "./Anchor.astro";
 
 export type Props = {
   title: string;
@@ -11,6 +10,10 @@ export type Props = {
 };
 
 const { title, description, url, duration, timestamp } = Astro.props;
+
+const formattedDate = timestamp
+  ? `${timestamp.toLocaleString("default", { month: "short" })} ${timestamp.getDate()}, ${timestamp.getFullYear()}`
+  : null;
 ---
 
 <div
@@ -25,7 +28,7 @@ const { title, description, url, duration, timestamp } = Astro.props;
   <div
     class="flex items-center justify-between text-neutral-600 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:text-neutral-400"
   >
-    {timestamp ? <p>{processArticleDate(timestamp)}</p> : null}
+    {formattedDate ? <p>{formattedDate}</p> : null}
     {duration ? <p>{duration}</p> : null}
   </div>
 </div>
