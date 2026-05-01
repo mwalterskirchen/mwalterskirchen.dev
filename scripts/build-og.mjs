@@ -23,8 +23,7 @@ const files = (await fs.readdir(blogsDir)).filter((f) => f.endsWith(".md"));
 
 const options = (title) => ({
   title,
-  description: "Read more →",
-  logo: { path: "./public/avatar.jpeg", size: [80, 80] },
+  description: "Maximilian Walterskirchen · Read more →",
   bgGradient: [[23, 23, 23]],
   padding: 80,
   border: { color: [16, 185, 129], width: 6, side: "inline-start" },
