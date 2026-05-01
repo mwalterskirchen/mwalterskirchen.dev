@@ -20,6 +20,8 @@ const AUTHOR_SIZE = 26;
 const CTA_SIZE = 32;
 const GAP_TITLE_AUTHOR = 36;
 const GAP_AUTHOR_CTA = 18;
+const AVATAR_SIZE = 96;
+const GAP_AVATAR_TITLE = 32;
 
 const NEUTRAL_900 = [23, 23, 23];
 const NEUTRAL_100 = [245, 245, 245];
@@ -60,6 +62,9 @@ const [boldFont, regularFont] = await Promise.all([
 ]);
 const fontMgr = CanvasKit.FontMgr.FromData(boldFont, regularFont);
 
+const avatarBytes = await fs.readFile(path.join(root, "public/avatar.jpeg"));
+const avatarImg = CanvasKit.MakeImageFromEncoded(avatarBytes);
+
 const rgb = ([r, g, b]) => CanvasKit.Color(r, g, b, 1);
 
 const makeParagraph = (text, { color, size, weight, family = "IBM Plex Mono" }) => {
@@ -81,27 +86,29 @@ const makeParagraph = (text, { color, size, weight, family = "IBM Plex Mono" }) 
   return para;
 };
 
-const renderCard = (title) => {
+const renderCard = ({ title, subtitle, cta, avatar = false }) => {
   const titlePara = makeParagraph(title, {
     color: NEUTRAL_100,
     size: TITLE_SIZE,
     weight: CanvasKit.FontWeight.Bold,
   });
-  const authorPara = makeParagraph("Maximilian Walterskirchen", {
+  const subtitlePara = makeParagraph(subtitle, {
     color: NEUTRAL_400,
     size: AUTHOR_SIZE,
     weight: CanvasKit.FontWeight.Normal,
   });
-  const ctaPara = makeParagraph("Read more →", {
+  const ctaPara = makeParagraph(cta, {
     color: EMERALD,
     size: CTA_SIZE,
     weight: CanvasKit.FontWeight.Bold,
   });
 
   const titleH = titlePara.getHeight();
-  const authorH = authorPara.getHeight();
+  const subtitleH = subtitlePara.getHeight();
   const ctaH = ctaPara.getHeight();
-  const totalH = titleH + GAP_TITLE_AUTHOR + authorH + GAP_AUTHOR_CTA + ctaH;
+  const avatarBlock = avatar ? AVATAR_SIZE + GAP_AVATAR_TITLE : 0;
+  const totalH =
+    avatarBlock + titleH + GAP_TITLE_AUTHOR + subtitleH + GAP_AUTHOR_CTA + ctaH;
   const startY = Math.round((H - totalH) / 2);
 
   const surface = CanvasKit.MakeSurface(W, H);
@@ -114,10 +121,31 @@ const renderCard = (title) => {
   canvas.drawRect(CanvasKit.LTRBRect(0, 0, BORDER, H), borderPaint);
 
   let y = startY;
+
+  if (avatar) {
+    canvas.save();
+    const builder = new CanvasKit.PathBuilder();
+    builder.addCircle(PAD + AVATAR_SIZE / 2, y + AVATAR_SIZE / 2, AVATAR_SIZE / 2);
+    const clip = builder.detach();
+    builder.delete();
+    canvas.clipPath(clip, CanvasKit.ClipOp.Intersect, true);
+    const imgPaint = new CanvasKit.Paint();
+    canvas.drawImageRect(
+      avatarImg,
+      CanvasKit.LTRBRect(0, 0, avatarImg.width(), avatarImg.height()),
+      CanvasKit.LTRBRect(PAD, y, PAD + AVATAR_SIZE, y + AVATAR_SIZE),
+      imgPaint,
+    );
+    canvas.restore();
+    clip.delete();
+    imgPaint.delete();
+    y += AVATAR_SIZE + GAP_AVATAR_TITLE;
+  }
+
   canvas.drawParagraph(titlePara, PAD, y);
   y += titleH + GAP_TITLE_AUTHOR;
-  canvas.drawParagraph(authorPara, PAD, y);
-  y += authorH + GAP_AUTHOR_CTA;
+  canvas.drawParagraph(subtitlePara, PAD, y);
+  y += subtitleH + GAP_AUTHOR_CTA;
   canvas.drawParagraph(ctaPara, PAD, y);
 
   const img = surface.makeImageSnapshot();
@@ -127,13 +155,26 @@ const renderCard = (title) => {
   surface.delete();
   borderPaint.delete();
   titlePara.delete();
-  authorPara.delete();
+  subtitlePara.delete();
   ctaPara.delete();
 
   return Buffer.from(png);
 };
 
 await fs.mkdir(outDir, { recursive: true });
+
+const siteOut = path.join(outDir, "site.png");
+await fs.writeFile(
+  siteOut,
+  renderCard({
+    title: "Maximilian Walterskirchen",
+    subtitle: "Senior Software Engineer · Zurich",
+    cta: "mwalterskirchen.dev →",
+    avatar: true,
+  }),
+);
+console.log(`[og] wrote ${path.relative(root, siteOut)}`);
+
 const files = (await fs.readdir(blogsDir)).filter((f) => f.endsWith(".md"));
 
 for (const file of files) {
@@ -145,6 +186,13 @@ for (const file of files) {
   }
   const slug = data.slug ?? slugify(data.title);
   const out = path.join(outDir, `${slug}.png`);
-  await fs.writeFile(out, renderCard(data.title));
+  await fs.writeFile(
+    out,
+    renderCard({
+      title: data.title,
+      subtitle: "Maximilian Walterskirchen",
+      cta: "Read more →",
+    }),
+  );
   console.log(`[og] wrote ${path.relative(root, out)}`);
 }
