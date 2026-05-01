@@ -16,6 +16,10 @@ const featuredArticles = (
   url: `/blog/${e.data.slug}`,
 }));
 
+const featuredTalks = (
+  await getCollection("talks", (e) => e.data.featured)
+).sort((a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf());
+
 const skills = [
   "Agentic Engineering",
   "AI / LLMs",
@@ -135,6 +139,43 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
                 url={article.url}
                 timestamp={article.timestamp}
                 duration={`${article.readTime} min`}
+              />
+            </li>
+          ))
+      }
+    </ul>
+  </Section>
+
+  <Section>
+    <div class="flex w-full items-center justify-between">
+      <h3 class="font-display text-lg leading-loose sm:text-xl">Talks</h3>
+      <Anchor url="/talks" class="text-base">View All</Anchor>
+    </div>
+    <ul class="my-8">
+      {
+        (featuredTalks.length === 0 && <p>No talks found.</p>) ||
+          featuredTalks.map((talk, index) => (
+            <li
+              class:list={[
+                "animate-in-up",
+                index % 9 === 0 && "delay-0",
+                index % 9 === 1 && "delay-1",
+                index % 9 === 2 && "delay-2",
+                index % 9 === 3 && "delay-3",
+                index % 9 === 4 && "delay-4",
+                index % 9 === 5 && "delay-5",
+                index % 9 === 6 && "delay-6",
+                index % 9 === 7 && "delay-7",
+                index % 9 === 8 && "delay-8",
+              ]}
+            >
+              <ArticleSnippet
+                title={talk.data.title}
+                description={talk.data.description}
+                url={talk.data.slidesUrl ?? talk.data.repoUrl}
+                timestamp={talk.data.timestamp}
+                duration={talk.data.event}
+                external
               />
             </li>
           ))

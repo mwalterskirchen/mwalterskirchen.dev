@@ -5,6 +5,12 @@ export type ArticleFrontmatter = CollectionEntry<"blog">["data"] & {
   url: string;
 };
 
+const slugify = (title: string) =>
+  title
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]/g, "");
+
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/blogs" }),
   schema: z
@@ -19,15 +25,23 @@ const blog = defineCollection({
       featured: z.boolean().default(false),
       timestamp: z.date().transform((val) => new Date(val)),
     })
-    .transform((data) => {
-      const slug =
-        data.slug ??
-        data.title
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^\w-]/g, "");
-      return { ...data, slug };
-    }),
+    .transform((data) => ({ ...data, slug: data.slug ?? slugify(data.title) })),
 });
 
-export const collections = { blog };
+const talks = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./content/talks" }),
+  schema: z
+    .object({
+      title: z.string(),
+      slug: z.string().optional(),
+      event: z.string(),
+      description: z.string(),
+      timestamp: z.date().transform((val) => new Date(val)),
+      repoUrl: z.string().url(),
+      slidesUrl: z.string().url().optional(),
+      featured: z.boolean().default(false),
+    })
+    .transform((data) => ({ ...data, slug: data.slug ?? slugify(data.title) })),
+});
+
+export const collections = { blog, talks };

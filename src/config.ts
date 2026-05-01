@@ -12,5 +12,6 @@ export const config = {
   nav: [
     { label: "home", href: "/" },
     { label: "blog", href: "/blog" },
+    { label: "talks", href: "/talks" },
   ],
 } as const;

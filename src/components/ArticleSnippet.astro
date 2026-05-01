@@ -7,9 +7,10 @@ export type Props = {
   url: string;
   duration?: string;
   timestamp?: Date;
+  external?: boolean;
 };
 
-const { title, description, url, duration, timestamp } = Astro.props;
+const { title, description, url, duration, timestamp, external } = Astro.props;
 
 const formattedDate = timestamp
   ? `${timestamp.toLocaleString("default", { month: "short" })} ${timestamp.getDate()}, ${timestamp.getFullYear()}`
@@ -19,7 +20,7 @@ const formattedDate = timestamp
 <div
   class="hover-dotted-grid relative mb-8 flex flex-col gap-3 text-neutral-900 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:text-neutral-100"
 >
-  <Anchor url={url} class="text-xl">
+  <Anchor url={url} external={external} class="text-xl">
     {title}
   </Anchor>
   <p class="">

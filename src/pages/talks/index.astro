@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import ArticleSnippet from "../../components/ArticleSnippet.astro";
+import Section from "../../components/Section.astro";
+import SEO from "../../components/SEO.astro";
+
+const talks = (await getCollection("talks")).sort(
+  (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
+);
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<Layout>
+  <Fragment slot="head">
+    <SEO
+      title="Talks"
+      description="Talks I've given at meetups and conferences."
+      cardImage="/avatar.jpeg"
+      keywords={["talks", "speaking", "conferences", "meetups"]}
+      canonicalUrl={canonicalUrl}
+    />
+  </Fragment>
+  <Section class="my-8">
+    <div class="flex items-center gap-4 pt-8 pb-16">
+      <h1 class="font-display text-2xl leading-loose sm:text-3xl">Talks</h1>
+    </div>
+    <ul>
+      {
+        talks.map((talk) => (
+          <li>
+            <ArticleSnippet
+              title={talk.data.title}
+              description={talk.data.description}
+              duration={talk.data.event}
+              url={talk.data.slidesUrl ?? talk.data.repoUrl}
+              timestamp={talk.data.timestamp}
+              external
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</Layout>
