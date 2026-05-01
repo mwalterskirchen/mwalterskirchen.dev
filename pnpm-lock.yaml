@@ -57,6 +57,9 @@ importers:
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
+      jiti:
+        specifier: ^2.6.1
+        version: 2.6.1
       oxfmt:
         specifier: ^0.47.0
         version: 0.47.0
