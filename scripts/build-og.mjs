@@ -1,32 +1,15 @@
 import matter from "gray-matter";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
-
-const require = createRequire(import.meta.url);
-const { default: canvaskitInit } = await import("canvaskit-wasm/full");
+import satori from "satori";
+import { html } from "satori-html";
+import { Resvg } from "@resvg/resvg-js";
+import sharp from "sharp";
 
 const root = path.resolve(fileURLToPath(import.meta.url), "../..");
 const blogsDir = path.join(root, "content/blogs");
 const outDir = path.join(root, "public/og");
-
-const W = 1200;
-const H = 630;
-const PAD = 80;
-const BORDER = 6;
-const TITLE_SIZE = 56;
-const AUTHOR_SIZE = 26;
-const CTA_SIZE = 32;
-const GAP_TITLE_AUTHOR = 36;
-const GAP_AUTHOR_CTA = 18;
-const AVATAR_SIZE = 96;
-const GAP_AVATAR_TITLE = 32;
-
-const NEUTRAL_900 = [23, 23, 23];
-const NEUTRAL_100 = [245, 245, 245];
-const NEUTRAL_400 = [163, 163, 163];
-const EMERALD = [16, 185, 129];
 
 const FONT_BOLD =
   "https://raw.githubusercontent.com/IBM/plex/master/packages/plex-mono/fonts/complete/ttf/IBMPlexMono-Bold.ttf";
@@ -52,113 +35,43 @@ const fetchFont = async (url) => {
   }
 };
 
-const CanvasKit = await canvaskitInit({
-  locateFile: (f) => require.resolve(`canvaskit-wasm/bin/full/${f}`),
-});
-
-const [boldFont, regularFont] = await Promise.all([
+const [boldFont, regularFont, avatarBuf] = await Promise.all([
   fetchFont(FONT_BOLD),
   fetchFont(FONT_REGULAR),
+  sharp(path.join(root, "public/avatar.jpeg"))
+    .resize(192, 192)
+    .jpeg({ quality: 85 })
+    .toBuffer(),
 ]);
-const fontMgr = CanvasKit.FontMgr.FromData(boldFont, regularFont);
 
-const avatarBytes = await fs.readFile(path.join(root, "public/avatar.jpeg"));
-const avatarImg = CanvasKit.MakeImageFromEncoded(avatarBytes);
+const avatarDataUrl = `data:image/jpeg;base64,${avatarBuf.toString("base64")}`;
 
-const rgb = ([r, g, b]) => CanvasKit.Color(r, g, b, 1);
+const fonts = [
+  { name: "IBM Plex Mono", data: regularFont, weight: 400, style: "normal" },
+  { name: "IBM Plex Mono", data: boldFont, weight: 700, style: "normal" },
+];
 
-const makeParagraph = (text, { color, size, weight, family = "IBM Plex Mono" }) => {
-  const style = new CanvasKit.ParagraphStyle({
-    textStyle: {
-      color: rgb(color),
-      fontFamilies: [family],
-      fontSize: size,
-      fontStyle: { weight },
-      heightMultiplier: 1.25,
-    },
-    textAlign: CanvasKit.TextAlign.Left,
-  });
-  const builder = CanvasKit.ParagraphBuilder.Make(style, fontMgr);
-  builder.addText(text);
-  const para = builder.build();
-  para.layout(W - PAD * 2);
-  builder.delete();
-  return para;
-};
+const containerStyle =
+  "width:1200px;height:630px;background:#171717;border-left:6px solid #10b981;display:flex;flex-direction:column;justify-content:center;padding:0 80px;font-family:'IBM Plex Mono'";
+const avatarStyle =
+  "width:96px;height:96px;border-radius:9999px;margin-bottom:32px";
+const titleStyle =
+  "font-size:56px;font-weight:700;color:#f5f5f5;line-height:1.25";
+const subtitleStyle =
+  "font-size:26px;font-weight:400;color:#a3a3a3;margin-top:36px";
+const ctaStyle =
+  "font-size:32px;font-weight:700;color:#10b981;margin-top:18px";
 
-const renderCard = ({ title, subtitle, cta, avatar = false }) => {
-  const titlePara = makeParagraph(title, {
-    color: NEUTRAL_100,
-    size: TITLE_SIZE,
-    weight: CanvasKit.FontWeight.Bold,
-  });
-  const subtitlePara = makeParagraph(subtitle, {
-    color: NEUTRAL_400,
-    size: AUTHOR_SIZE,
-    weight: CanvasKit.FontWeight.Normal,
-  });
-  const ctaPara = makeParagraph(cta, {
-    color: EMERALD,
-    size: CTA_SIZE,
-    weight: CanvasKit.FontWeight.Bold,
-  });
+const templateWithAvatar = ({ title, subtitle, cta }) =>
+  html`<div style="${containerStyle}"><img src="${avatarDataUrl}" style="${avatarStyle}" /><div style="${titleStyle}">${title}</div><div style="${subtitleStyle}">${subtitle}</div><div style="${ctaStyle}">${cta}</div></div>`;
 
-  const titleH = titlePara.getHeight();
-  const subtitleH = subtitlePara.getHeight();
-  const ctaH = ctaPara.getHeight();
-  const avatarBlock = avatar ? AVATAR_SIZE + GAP_AVATAR_TITLE : 0;
-  const totalH =
-    avatarBlock + titleH + GAP_TITLE_AUTHOR + subtitleH + GAP_AUTHOR_CTA + ctaH;
-  const startY = Math.round((H - totalH) / 2);
+const templatePlain = ({ title, subtitle, cta }) =>
+  html`<div style="${containerStyle}"><div style="${titleStyle}">${title}</div><div style="${subtitleStyle}">${subtitle}</div><div style="${ctaStyle}">${cta}</div></div>`;
 
-  const surface = CanvasKit.MakeSurface(W, H);
-  const canvas = surface.getCanvas();
-  canvas.clear(rgb(NEUTRAL_900));
-
-  const borderPaint = new CanvasKit.Paint();
-  borderPaint.setColor(rgb(EMERALD));
-  borderPaint.setStyle(CanvasKit.PaintStyle.Fill);
-  canvas.drawRect(CanvasKit.LTRBRect(0, 0, BORDER, H), borderPaint);
-
-  let y = startY;
-
-  if (avatar) {
-    canvas.save();
-    const builder = new CanvasKit.PathBuilder();
-    builder.addCircle(PAD + AVATAR_SIZE / 2, y + AVATAR_SIZE / 2, AVATAR_SIZE / 2);
-    const clip = builder.detach();
-    builder.delete();
-    canvas.clipPath(clip, CanvasKit.ClipOp.Intersect, true);
-    const imgPaint = new CanvasKit.Paint();
-    canvas.drawImageRect(
-      avatarImg,
-      CanvasKit.LTRBRect(0, 0, avatarImg.width(), avatarImg.height()),
-      CanvasKit.LTRBRect(PAD, y, PAD + AVATAR_SIZE, y + AVATAR_SIZE),
-      imgPaint,
-    );
-    canvas.restore();
-    clip.delete();
-    imgPaint.delete();
-    y += AVATAR_SIZE + GAP_AVATAR_TITLE;
-  }
-
-  canvas.drawParagraph(titlePara, PAD, y);
-  y += titleH + GAP_TITLE_AUTHOR;
-  canvas.drawParagraph(subtitlePara, PAD, y);
-  y += subtitleH + GAP_AUTHOR_CTA;
-  canvas.drawParagraph(ctaPara, PAD, y);
-
-  const img = surface.makeImageSnapshot();
-  const png = img.encodeToBytes();
-
-  img.delete();
-  surface.delete();
-  borderPaint.delete();
-  titlePara.delete();
-  subtitlePara.delete();
-  ctaPara.delete();
-
-  return Buffer.from(png);
+const renderCard = async ({ avatar = false, ...props }) => {
+  const node = avatar ? templateWithAvatar(props) : templatePlain(props);
+  const svg = await satori(node, { width: 1200, height: 630, fonts });
+  return new Resvg(svg).render().asPng();
 };
 
 await fs.mkdir(outDir, { recursive: true });
@@ -166,7 +79,7 @@ await fs.mkdir(outDir, { recursive: true });
 const siteOut = path.join(outDir, "site.png");
 await fs.writeFile(
   siteOut,
-  renderCard({
+  await renderCard({
     title: "Maximilian Walterskirchen",
     subtitle: "Senior Software Engineer · Zurich",
     cta: "mwalterskirchen.dev →",
@@ -188,7 +101,7 @@ for (const file of files) {
   const out = path.join(outDir, `${slug}.png`);
   await fs.writeFile(
     out,
-    renderCard({
+    await renderCard({
       title: data.title,
       subtitle: "Maximilian Walterskirchen",
       cta: "Read more →",
