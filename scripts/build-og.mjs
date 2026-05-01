@@ -23,6 +23,7 @@ const files = (await fs.readdir(blogsDir)).filter((f) => f.endsWith(".md"));
 
 const options = (title) => ({
   title,
+  description: "Read more →",
   logo: { path: "./public/avatar.jpeg", size: [80, 80] },
   bgGradient: [[23, 23, 23]],
   padding: 80,
@@ -34,6 +35,13 @@ const options = (title) => ({
       weight: "Bold",
       families: ["IBM Plex Mono"],
       lineHeight: 1.25,
+    },
+    description: {
+      color: [16, 185, 129],
+      size: 32,
+      weight: "Bold",
+      families: ["IBM Plex Mono"],
+      lineHeight: 1.2,
     },
   },
   fonts: [
