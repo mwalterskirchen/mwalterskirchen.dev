@@ -34,7 +34,7 @@ The common thread: pilots had been promoted from _operators_ to _supervisors_ of
 
 ## The Same Thing Is Happening to Us (And the Data Is Starting to Show It)
 
-> Updated 4th May 2026 with a more recent data source (METR 2025).
+> Updated 2026-05-04 with a more recent data source (METR 2025).
 
 When I started writing this, I assumed the research hadn't caught up yet. It turns out it has. I just hadn't gone looking.
 
