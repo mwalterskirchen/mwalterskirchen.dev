@@ -34,13 +34,19 @@ The common thread: pilots had been promoted from _operators_ to _supervisors_ of
 
 ## The Same Thing Is Happening to Us (And the Data Is Starting to Show It)
 
+> Updated 4th May 2026 with a more recent data source (METR 2025).
+
 When I started writing this, I assumed the research hadn't caught up yet. It turns out it has. I just hadn't gone looking.
 
 [GitClear](https://www.gitclear.com/ai_assistant_code_quality_2025_research) analyzed over 200 million lines of changed code across major enterprise and open-source repos from 2020 to 2024. Their findings are uncomfortable: code churn (lines reverted or rewritten within two weeks of being committed) has roughly doubled since the pre-AI baseline. Refactoring as a share of code changes dropped from 25% in 2021 to under 10% in 2024. Copy-pasted code is up by nearly half. Their summary line is brutal: AI-assisted code "more resembles an itinerant contributor" than a careful senior developer.
 
 [Apiiro](https://apiiro.com/blog/4x-velocity-10x-vulnerabilities-ai-coding-assistants-are-shipping-more-risks/)'s 2024 security research found AI-generated code introduced **322% more privilege escalation paths** and **153% more design flaws** than human-written code. And because AI-assisted commits get merged about 4x faster than regular ones, this code is reaching production before anyone reviews it carefully.
 
+The cleanest evidence comes from a 2025 randomized controlled trial by [METR](https://arxiv.org/abs/2507.09089). They put 16 experienced open-source developers in front of Cursor on real tasks in their own repositories. Before starting, the developers predicted AI would make them 24% faster. After the study, they estimated they'd been 20% faster. They were actually 19% slower.
+
 Google's own 2024 [DORA](https://services.google.com/fh/files/misc/2024_final_dora_report.pdf) report (not exactly an AI-skeptical source) quantified a 7.2% decrease in delivery stability for every 25% increase in AI adoption.
+
+A note on the data. AI tooling moves faster than rigorous studies can catch up. METR is from mid-2025 and was studying tools that already aren't quite the current frontier. DORA, GitClear and Apiiro is 2024. Treat the specific numbers as directional rather than current. The pattern is consistent across sources, methodologies, and timeframes, and that consistency is what matters more than any single statistic being today's truth.
 
 This isn't a panic. Aggregate developer productivity is genuinely up. Trivial syntax errors are way down. But the _type_ of failure is shifting, exactly the way it shifted in aviation: fewer of the obvious mistakes, more of the deep, structural, hard-to-catch ones. Things that work in isolation but violate the architecture. Patterns copied from public repos that don't fit a regulated environment. Hard-coded credentials in scaffolding. Bugs that ship in seconds and take months to refactor out.
 
