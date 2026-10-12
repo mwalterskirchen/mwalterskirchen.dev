@@ -38,10 +38,7 @@ const fetchFont = async (url) => {
 const [boldFont, regularFont, avatarBuf] = await Promise.all([
   fetchFont(FONT_BOLD),
   fetchFont(FONT_REGULAR),
-  sharp(path.join(root, "public/avatar.jpeg"))
-    .resize(192, 192)
-    .jpeg({ quality: 85 })
-    .toBuffer(),
+  sharp(path.join(root, "public/avatar.jpeg")).resize(192, 192).jpeg({ quality: 85 }).toBuffer(),
 ]);
 
 const avatarDataUrl = `data:image/jpeg;base64,${avatarBuf.toString("base64")}`;
@@ -53,20 +50,25 @@ const fonts = [
 
 const containerStyle =
   "width:1200px;height:630px;background:#171717;border-left:6px solid #10b981;display:flex;flex-direction:column;justify-content:center;padding:0 80px;font-family:'IBM Plex Mono'";
-const avatarStyle =
-  "width:96px;height:96px;border-radius:9999px;margin-bottom:32px";
-const titleStyle =
-  "font-size:56px;font-weight:700;color:#f5f5f5;line-height:1.25;max-width:1034px";
-const subtitleStyle =
-  "font-size:26px;font-weight:400;color:#a3a3a3;margin-top:36px";
-const ctaStyle =
-  "font-size:32px;font-weight:700;color:#10b981;margin-top:18px";
+const avatarStyle = "width:96px;height:96px;border-radius:9999px;margin-bottom:32px";
+const titleStyle = "font-size:56px;font-weight:700;color:#f5f5f5;line-height:1.25;max-width:1034px";
+const subtitleStyle = "font-size:26px;font-weight:400;color:#a3a3a3;margin-top:36px";
+const ctaStyle = "font-size:32px;font-weight:700;color:#10b981;margin-top:18px";
 
 const templateWithAvatar = ({ title, subtitle, cta }) =>
-  html`<div style="${containerStyle}"><img src="${avatarDataUrl}" style="${avatarStyle}" /><div style="${titleStyle}">${title}</div><div style="${subtitleStyle}">${subtitle}</div><div style="${ctaStyle}">${cta}</div></div>`;
+  html`<div style="${containerStyle}">
+    <img src="${avatarDataUrl}" style="${avatarStyle}" />
+    <div style="${titleStyle}">${title}</div>
+    <div style="${subtitleStyle}">${subtitle}</div>
+    <div style="${ctaStyle}">${cta}</div>
+  </div>`;
 
 const templatePlain = ({ title, subtitle, cta }) =>
-  html`<div style="${containerStyle}"><div style="${titleStyle}">${title}</div><div style="${subtitleStyle}">${subtitle}</div><div style="${ctaStyle}">${cta}</div></div>`;
+  html`<div style="${containerStyle}">
+    <div style="${titleStyle}">${title}</div>
+    <div style="${subtitleStyle}">${subtitle}</div>
+    <div style="${ctaStyle}">${cta}</div>
+  </div>`;
 
 const renderCard = async ({ avatar = false, ...props }) => {
   const node = avatar ? templateWithAvatar(props) : templatePlain(props);
