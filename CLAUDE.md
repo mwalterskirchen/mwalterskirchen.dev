@@ -17,6 +17,7 @@ Personal site and blog built with Astro, Tailwind CSS 4 and the Cloudflare adapt
 - Routes, RSS links and OG card paths all use `data.slug`, not the entry id. When frontmatter has no `slug`, the schema derives it from `title`. Set `slug` explicitly on a post so that a title edit does not change its URL.
 - Talks have no detail page. They link out to `repoUrl` and `slidesUrl`.
 - `featured: true` puts an entry on the homepage.
+- URLs have no trailing slash (`trailingSlash: "never"` and `build.format: "file"` in `astro.config.mjs`). Write internal links as `/blog/<slug>`. A trailing slash returns 404 in `astro dev`.
 
 ## OG cards
 

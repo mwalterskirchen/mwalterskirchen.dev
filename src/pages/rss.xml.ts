@@ -10,6 +10,7 @@ export async function GET(context: { site: URL }) {
     description:
       "Senior Full Stack Engineer based in Zurich. Passionate about AI, Web Development and Cybersecurity.",
     site: context.site,
+    trailingSlash: false,
     items: posts.map((post) => ({
       title: post.data.title,
       description: post.data.description,
