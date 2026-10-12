@@ -8,11 +8,12 @@ featured: true
 readTime: 9
 timestamp: 2026-05-01T17:45:00+00:00
 ---
+
 ## Introduction
 
 Over the last few months I've been thinking a lot about what's starting to get known as **Agentic Engineering**.
 
-> Agentic Engineering: integrating AI agents into your existing development workflow under the supervision of an engineer who actually knows what they're doing. 
+> Agentic Engineering: integrating AI agents into your existing development workflow under the supervision of an engineer who actually knows what they're doing.
 
 Like most of my colleagues and friends, I'm a heavy Claude Code (or insert hyped agent harness of the week) user. These tools are genuinely amazing. They really do accelerate you as a software engineer. But the more I've used them, the more I've come to a painful realization: they come with a cost. Call it **coding atrophy**.
 
@@ -91,4 +92,3 @@ I'm not anti-AI. I'm writing this in an editor with an agent open in the next pa
 But the gains aren't free. Aviation got a thirty-year head start on figuring this out, paid for it in lives, and eventually arrived at a stable answer: the automation stays, the humans stay sharp, and the training adapts to the new reality. We're somewhere in the messy middle of that same arc, except our crashes are silent, distributed across a thousand subtly broken systems, and won't show up on the news most of the time.
 
 The senior engineers we'll need in five years are the ones who stay sharp now. Don't let the autopilot fly the whole flight.
-

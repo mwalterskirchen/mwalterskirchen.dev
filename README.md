@@ -58,15 +58,15 @@ Open [localhost:4321](http://localhost:4321).
 
 ### Other Commands
 
-| Command            | Description                            |
-| ------------------ | -------------------------------------- |
-| `pnpm build`       | Generate OG cards, then production build |
-| `pnpm build:og`    | Generate OG cards only                 |
-| `pnpm preview`     | Preview production build               |
-| `pnpm lint`        | Lint with oxlint                       |
-| `pnpm lint:fix`    | Lint and auto-fix                      |
-| `pnpm fmt`         | Format with oxfmt                      |
-| `pnpm fmt:check`   | Check formatting without writing       |
+| Command          | Description                              |
+| ---------------- | ---------------------------------------- |
+| `pnpm build`     | Generate OG cards, then production build |
+| `pnpm build:og`  | Generate OG cards only                   |
+| `pnpm preview`   | Preview production build                 |
+| `pnpm lint`      | Lint with oxlint                         |
+| `pnpm lint:fix`  | Lint and auto-fix                        |
+| `pnpm fmt`       | Format with oxfmt                        |
+| `pnpm fmt:check` | Check formatting without writing         |
 
 ## Deployment
 
