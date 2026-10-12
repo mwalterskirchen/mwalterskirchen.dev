@@ -27,20 +27,18 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       <h1 class="font-display text-2xl leading-loose sm:text-3xl">Talks</h1>
     </div>
     <ul>
-      {
-        talks.map((talk) => (
-          <li>
-            <ArticleSnippet
-              title={talk.data.title}
-              description={talk.data.description}
-              duration={talk.data.event}
-              url={talk.data.slidesUrl ?? talk.data.repoUrl}
-              timestamp={talk.data.timestamp}
-              external
-            />
-          </li>
-        ))
-      }
+      {talks.map((talk) => (
+        <li>
+          <ArticleSnippet
+            title={talk.data.title}
+            description={talk.data.description}
+            duration={talk.data.event}
+            url={talk.data.slidesUrl ?? talk.data.repoUrl}
+            timestamp={talk.data.timestamp}
+            external
+          />
+        </li>
+      ))}
     </ul>
   </Section>
 </Layout>

@@ -19,19 +19,13 @@ const { url, external, class: className } = Astro.props;
   aria-label={Astro.props["aria-label"]}
 >
   <slot />
-  {
-    external ? (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6"
-        viewBox="0 0 512 512"
-      >
-        <path
-          class="fill-neutral-900 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:fill-neutral-100"
-          fill-rule="evenodd"
-          d="M362.666 149.333V320H320l-.001-97.831l-154.51 154.51l-30.169-30.17L289.829 192h-97.83v-42.666z"
-        />
-      </svg>
-    ) : null
-  }
+  {external ? (
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 512 512">
+      <path
+        class="fill-neutral-900 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:fill-neutral-100"
+        fill-rule="evenodd"
+        d="M362.666 149.333V320H320l-.001-97.831l-154.51 154.51l-30.169-30.17L289.829 192h-97.83v-42.666z"
+      />
+    </svg>
+  ) : null}
 </a>
