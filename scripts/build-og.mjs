@@ -56,7 +56,7 @@ const containerStyle =
 const avatarStyle =
   "width:96px;height:96px;border-radius:9999px;margin-bottom:32px";
 const titleStyle =
-  "font-size:56px;font-weight:700;color:#f5f5f5;line-height:1.25";
+  "font-size:56px;font-weight:700;color:#f5f5f5;line-height:1.25;max-width:1034px";
 const subtitleStyle =
   "font-size:26px;font-weight:400;color:#a3a3a3;margin-top:36px";
 const ctaStyle =
