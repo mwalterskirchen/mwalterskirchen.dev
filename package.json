@@ -31,6 +31,9 @@
     "eslint-plugin-astro": "^3.2.1",
     "oxfmt": "^0.72.0",
     "oxlint": "^1.87.0",
+    "prettier": "3.9.10",
+    "prettier-plugin-astro": "1.1.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "sharp": "^0.35.5",
     "takumi-js": "^2.15.0",
     "wrangler": "^4.149.0"
