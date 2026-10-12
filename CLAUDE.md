@@ -8,7 +8,8 @@ Personal site and blog built with Astro, Tailwind CSS 4 and the Cloudflare adapt
 
 - Use `pnpm` only. A `preinstall` hook blocks npm and yarn.
 - The repo has no test suite and no type-check script. `pnpm build` is the check: it generates content types, prerenders every page and renders the OG cards, so schema or type errors surface there.
-- Run `pnpm lint` and `pnpm fmt:check` before committing. Formatting uses oxfmt.
+- Run `pnpm lint` and `pnpm fmt:check` before committing. ESLint and Prettier both cover `.astro` files. `prettier-plugin-tailwindcss` sorts Tailwind classes.
+- typescript-eslint supports TypeScript only below 6.1, so `typescript` stays pinned to 6.0.x.
 
 ## Content
 

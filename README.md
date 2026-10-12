@@ -12,7 +12,7 @@ The source of [mwalterskirchen.dev](https://mwalterskirchen.dev), my personal si
 - [Tailwind CSS 4](https://tailwindcss.com) and its typography plugin handle the styling.
 - [Takumi](https://takumi.kane.tw) renders the Open Graph (OG) cards at build time.
 - [Cloudflare Workers](https://workers.cloudflare.com) serves the site.
-- [oxlint](https://oxc.rs/docs/guide/usage/linter) and [oxfmt](https://oxc.rs/docs/guide/usage/formatter) lint and format the code.
+- [ESLint](https://eslint.org) and [Prettier](https://prettier.io) lint and format the code, including `.astro` files.
 
 ## Features
 
