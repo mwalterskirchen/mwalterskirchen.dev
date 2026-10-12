@@ -1,6 +1,7 @@
 import type { APIRoute, GetStaticPaths, InferGetStaticPropsType } from "astro";
 import { getCollection } from "astro:content";
 import fs from "node:fs/promises";
+import sharp from "sharp";
 import { render } from "takumi-js";
 import { Renderer } from "takumi-js/node";
 import { config } from "../../config";
@@ -9,13 +10,19 @@ import { config } from "../../config";
 // so paths are relative to the project root.
 const FONT_DIR = "src/assets/fonts/ibm-plex-mono";
 const AVATAR = "public/avatar.jpeg";
+// The homepage and other pages link to /og/site.png.
+const SITE_SLUG = "site";
 
 export const getStaticPaths = (async () => {
   const posts = await getCollection("blog", ({ data }) => !data.cardImage);
+  const clash = posts.find(({ data }) => data.slug === SITE_SLUG);
+  if (clash) {
+    throw new Error(`Blog post "${clash.data.title}" uses the reserved OG slug "${SITE_SLUG}".`);
+  }
 
   return [
     {
-      params: { slug: "site" },
+      params: { slug: SITE_SLUG },
       props: {
         title: config.personal.name,
         subtitle: "Senior Software Engineer · Zurich",
@@ -46,7 +53,7 @@ const loadAssets = () =>
     const [regular, bold, avatar] = await Promise.all([
       fs.readFile(`${FONT_DIR}/IBMPlexMono-Regular.ttf`),
       fs.readFile(`${FONT_DIR}/IBMPlexMono-Bold.ttf`),
-      fs.readFile(AVATAR),
+      sharp(AVATAR).resize(192, 192).jpeg({ quality: 85 }).toBuffer(),
     ]);
     await renderer.registerFont({ name: "IBM Plex Mono", data: regular, weight: 400 });
     await renderer.registerFont({ name: "IBM Plex Mono", data: bold, weight: 700 });
@@ -70,7 +77,9 @@ export const GET: APIRoute<Props> = async ({ props }) => {
     width: 1200,
     height: 630,
     format: "png",
-    images: [{ src: "avatar.jpeg", data: avatar }],
+    images: props.avatar ? [{ src: "avatar.jpeg", data: avatar }] : [],
+    // Draw emoji from the fonts instead of fetching Twemoji images over the network.
+    emoji: "from-font",
   });
 
   return new Response(png, { headers: { "Content-Type": "image/png" } });
