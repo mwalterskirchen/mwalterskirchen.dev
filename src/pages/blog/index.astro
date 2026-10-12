@@ -28,19 +28,17 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       <h1 class="font-display text-2xl leading-loose sm:text-3xl">Articles</h1>
     </div>
     <ul>
-      {
-        articles.map((article) => (
-          <li>
-            <ArticleSnippet
-              title={article.data.title}
-              description={article.data.description}
-              duration={`${article.data.readTime} min`}
-              url={`/blog/${article.data.slug}`}
-              timestamp={article.data.timestamp}
-            />
-          </li>
-        ))
-      }
+      {articles.map((article) => (
+        <li>
+          <ArticleSnippet
+            title={article.data.title}
+            description={article.data.description}
+            duration={`${article.data.readTime} min`}
+            url={`/blog/${article.data.slug}`}
+            timestamp={article.data.timestamp}
+          />
+        </li>
+      ))}
     </ul>
   </Section>
 </Layout>

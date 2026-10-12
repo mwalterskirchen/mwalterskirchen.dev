@@ -1,49 +1,30 @@
 # mwalterskirchen.dev
 
-Personal portfolio and blog — [mwalterskirchen.dev](https://mwalterskirchen.dev)
+[![Deploy](https://github.com/mwalterskirchen/mwalterskirchen.dev/actions/workflows/deploy.yml/badge.svg)](https://github.com/mwalterskirchen/mwalterskirchen.dev/actions/workflows/deploy.yml)
 
-## Tech Stack
+The source of [mwalterskirchen.dev](https://mwalterskirchen.dev), my personal site. I write about software engineering and list the talks I give.
 
-- [Astro 7](https://astro.build) — Static site generation
-- [TypeScript](https://www.typescriptlang.org) — Strict mode
-- [Tailwind CSS 4](https://tailwindcss.com) — Styling + typography plugin
-- [Takumi](https://takumi.kane.tw) — OG card rendering
-- [Cloudflare Workers](https://workers.cloudflare.com) — Hosting and deployment
+[![mwalterskirchen.dev](https://mwalterskirchen.dev/og/site.png)](https://mwalterskirchen.dev)
+
+## Stack
+
+- [Astro 7](https://astro.build) prerenders every page to static HTML.
+- [Tailwind CSS 4](https://tailwindcss.com) and its typography plugin handle the styling.
+- [Takumi](https://takumi.kane.tw) renders the Open Graph (OG) cards at build time.
+- [Cloudflare Workers](https://workers.cloudflare.com) serves the site.
+- [ESLint](https://eslint.org) and [Prettier](https://prettier.io) lint and format the code, including `.astro` files.
 
 ## Features
 
-- Dark mode with flash-free page loads
-- Blog and talks via Astro content collections (Markdown)
-- OG cards per post, generated at build time
-- RSS feed (`/rss.xml`) and sitemap (`@astrojs/sitemap`)
-- SEO with structured data (JSON-LD)
-- Entry animations and hover effects
-- Responsive design
+- Blog posts and talks as Markdown content collections
+- A generated OG card for each post
+- Dark mode without a flash on page load
+- RSS feed at [`/rss.xml`](https://mwalterskirchen.dev/rss.xml) and a sitemap
+- JSON-LD structured data for search engines
 
-## Project Structure
+## Getting started
 
-```
-src/
-├── components/         # UI components (Header, Footer, SEO, ...)
-├── layouts/            # Layout.astro (base), BlogLayout.astro (posts)
-├── pages/              # File-based routing
-│   ├── blog/           # Blog index + dynamic [id] route
-│   ├── og/             # OG card endpoint ([slug].png.ts)
-│   ├── talks/          # Talks index
-│   ├── rss.xml.ts      # RSS feed endpoint
-│   └── index.astro     # Homepage
-├── assets/fonts/       # TTF fonts for OG cards
-├── styles/             # Global CSS, fonts, animations
-├── config.ts           # Site metadata and navigation
-└── content.config.ts
-content/
-├── blogs/              # Markdown blog posts
-└── talks/              # Markdown talks
-```
-
-## Getting Started
-
-Requires [Node.js 22](https://nodejs.org) and [pnpm 10](https://pnpm.io) (pinned via `packageManager`; non-pnpm installs are blocked).
+You need Node.js 22.12 or later and pnpm 10. The `packageManager` field pins the pnpm version, and a `preinstall` hook blocks npm and yarn.
 
 ```bash
 git clone https://github.com/mwalterskirchen/mwalterskirchen.dev.git
@@ -52,19 +33,58 @@ pnpm install
 pnpm dev
 ```
 
-Open [localhost:4321](http://localhost:4321).
+The dev server runs at [localhost:4321](http://localhost:4321).
 
-### Other Commands
+| Command          | Description                                  |
+| ---------------- | -------------------------------------------- |
+| `pnpm dev`       | Start the dev server                         |
+| `pnpm build`     | Build the site and the OG cards into `dist/` |
+| `pnpm preview`   | Serve the production build                   |
+| `pnpm lint`      | Lint with ESLint                             |
+| `pnpm lint:fix`  | Lint and apply fixes                         |
+| `pnpm fmt`       | Format with Prettier                         |
+| `pnpm fmt:check` | Check formatting without writing             |
 
-| Command          | Description                      |
-| ---------------- | -------------------------------- |
-| `pnpm build`     | Production build                 |
-| `pnpm preview`   | Preview production build         |
-| `pnpm lint`      | Lint with oxlint                 |
-| `pnpm lint:fix`  | Lint and auto-fix                |
-| `pnpm fmt`       | Format with oxfmt                |
-| `pnpm fmt:check` | Check formatting without writing |
+## Writing content
+
+Posts go in `content/blogs/` and talks go in `content/talks/`, one Markdown file each. `src/content.config.ts` defines the frontmatter schema for both.
+
+A minimal post looks like this:
+
+```markdown
+---
+title: My new post
+slug: my-new-post
+description: One sentence for the post list, RSS and search results.
+timestamp: 2026-10-12T09:00:00+02:00
+featured: true
+---
+```
+
+- Set `slug` explicitly. Without it, the slug comes from the title, so a later title edit changes the URL.
+- `featured: true` shows the entry on the homepage.
+- The build renders an OG card to `/og/<slug>.png` for each post. Set `cardImage` to use your own image instead.
+
+## Project structure
+
+```
+content/
+├── blogs/              Markdown blog posts
+└── talks/              Markdown talks
+src/
+├── assets/fonts/       Fonts for the OG cards
+├── components/         Header, Footer, SEO and other components
+├── layouts/            Base layout and blog post layout
+├── pages/              File-based routes, the RSS feed and the OG card endpoint
+├── styles/             Global CSS
+├── config.ts           Site metadata and navigation
+└── content.config.ts   Content collection schemas
+```
 
 ## Deployment
 
-Pushes to `main` trigger a GitHub Actions workflow that builds the site and deploys to Cloudflare Workers via Wrangler.
+A push to `main` starts a GitHub Actions workflow. It builds the site and deploys it to Cloudflare Workers with Wrangler. Pull requests run lint, the format check and a build first.
+
+## License
+
+The code is available under the [MIT License](LICENSE). The posts and talks in `content/` are © Maximilian Walterskirchen, all rights reserved.

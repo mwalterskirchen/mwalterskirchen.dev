@@ -20,27 +20,12 @@ import "../styles/global.css";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href={plexMono}
-      crossorigin="anonymous"
-    />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href={literata}
-      crossorigin="anonymous"
-    />
+    <link rel="preload" as="font" type="font/woff2" href={plexMono} crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href={literata} crossorigin="anonymous" />
     <!-- Theme detection script - runs before page renders -->
     <script is:inline>
       const theme = (() => {
-        if (
-          typeof localStorage !== "undefined" &&
-          localStorage.getItem("theme")
-        ) {
+        if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
           return localStorage.getItem("theme") ?? "light";
         }
         if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
@@ -57,12 +42,9 @@ import "../styles/global.css";
 
       window.localStorage.setItem("theme", theme);
     </script>
-
     <slot name="head" />
   </head>
-  <body
-    class="bg-neutral-100 font-mono text-neutral-900 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:bg-neutral-900 dark:text-neutral-100"
-  >
+  <body class="bg-neutral-100 font-mono text-neutral-900 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:bg-neutral-900 dark:text-neutral-100">
     <Header />
     <main>
       <slot />
