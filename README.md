@@ -4,17 +4,17 @@ Personal portfolio and blog — [mwalterskirchen.dev](https://mwalterskirchen.de
 
 ## Tech Stack
 
-- [Astro 6](https://astro.build) — Static site generation
+- [Astro 7](https://astro.build) — Static site generation
 - [TypeScript](https://www.typescriptlang.org) — Strict mode
 - [Tailwind CSS 4](https://tailwindcss.com) — Styling + typography plugin
-- [Satori](https://github.com/vercel/satori) + [resvg](https://github.com/yisibl/resvg-js) — OG card rendering
+- [Takumi](https://takumi.kane.tw) — OG card rendering
 - [Cloudflare Workers](https://workers.cloudflare.com) — Hosting and deployment
 
 ## Features
 
 - Dark mode with flash-free page loads
 - Blog and talks via Astro content collections (Markdown)
-- Auto-generated OG cards per post
+- OG cards per post, generated at build time
 - RSS feed (`/rss.xml`) and sitemap (`@astrojs/sitemap`)
 - SEO with structured data (JSON-LD)
 - Entry animations and hover effects
@@ -28,19 +28,17 @@ src/
 ├── layouts/            # Layout.astro (base), BlogLayout.astro (posts)
 ├── pages/              # File-based routing
 │   ├── blog/           # Blog index + dynamic [id] route
+│   ├── og/             # OG card endpoint ([slug].png.ts)
 │   ├── talks/          # Talks index
 │   ├── rss.xml.ts      # RSS feed endpoint
 │   └── index.astro     # Homepage
+├── assets/fonts/       # TTF fonts for OG cards
 ├── styles/             # Global CSS, fonts, animations
 ├── config.ts           # Site metadata and navigation
 └── content.config.ts
 content/
 ├── blogs/              # Markdown blog posts
 └── talks/              # Markdown talks
-scripts/
-└── build-og.mjs        # Pre-build OG card generator
-public/
-└── og/                 # Generated OG images
 ```
 
 ## Getting Started
@@ -58,15 +56,14 @@ Open [localhost:4321](http://localhost:4321).
 
 ### Other Commands
 
-| Command          | Description                              |
-| ---------------- | ---------------------------------------- |
-| `pnpm build`     | Generate OG cards, then production build |
-| `pnpm build:og`  | Generate OG cards only                   |
-| `pnpm preview`   | Preview production build                 |
-| `pnpm lint`      | Lint with oxlint                         |
-| `pnpm lint:fix`  | Lint and auto-fix                        |
-| `pnpm fmt`       | Format with oxfmt                        |
-| `pnpm fmt:check` | Check formatting without writing         |
+| Command          | Description                      |
+| ---------------- | -------------------------------- |
+| `pnpm build`     | Production build                 |
+| `pnpm preview`   | Preview production build         |
+| `pnpm lint`      | Lint with oxlint                 |
+| `pnpm lint:fix`  | Lint and auto-fix                |
+| `pnpm fmt`       | Format with oxfmt                |
+| `pnpm fmt:check` | Check formatting without writing |
 
 ## Deployment
 

@@ -4,8 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/build-og.mjs && astro build",
-    "build:og": "node scripts/build-og.mjs",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "preinstall": "npx only-allow pnpm",
@@ -28,18 +27,15 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^26.6.5",
     "eslint-plugin-astro": "^3.2.1",
-    "gray-matter": "^4.0.3",
     "oxfmt": "^0.72.0",
     "oxlint": "^1.87.0",
     "prettier": "3.9.10",
     "prettier-plugin-astro": "1.1.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
-    "satori": "^0.48.0",
-    "satori-html": "^0.3.2",
     "sharp": "^0.35.5",
+    "takumi-js": "^2.15.0",
     "wrangler": "^4.149.0"
   },
   "packageManager": "pnpm@10.30.1",
