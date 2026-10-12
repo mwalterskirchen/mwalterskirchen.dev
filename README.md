@@ -40,9 +40,9 @@ The dev server runs at [localhost:4321](http://localhost:4321).
 | `pnpm dev`       | Start the dev server                         |
 | `pnpm build`     | Build the site and the OG cards into `dist/` |
 | `pnpm preview`   | Serve the production build                   |
-| `pnpm lint`      | Lint with oxlint                             |
+| `pnpm lint`      | Lint with ESLint                             |
 | `pnpm lint:fix`  | Lint and apply fixes                         |
-| `pnpm fmt`       | Format with oxfmt                            |
+| `pnpm fmt`       | Format with Prettier                         |
 | `pnpm fmt:check` | Check formatting without writing             |
 
 ## Writing content
