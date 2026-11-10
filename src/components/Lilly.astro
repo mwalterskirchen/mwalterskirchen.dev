@@ -13,7 +13,11 @@ const scale = 3;
 
 {/* Lilly and her ball. The grass is the bottom 24px of `.ground`: the ball and her feet stand
      on top of it, and her shadow, which is the bottom of her picture, lies on it. */}
-<span class="lilly text-apricot absolute" style={`bottom: ${24 - footing * scale}px`} title="Lilly">
+<span class="lilly group text-apricot absolute" style={`bottom: ${24 - footing * scale}px`}>
+  {/* Her name tag, which shows while the pointer is on her. */}
+  <span class="pixel-frame bg-bg text-fg pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 px-2 py-0.5 text-sm font-medium opacity-0 transition-opacity duration-150 ease-out group-hover:opacity-100 [--frame-shadow:var(--color-accent)]">
+    Lilly
+  </span>
   {/* The script draws her on the canvas and removes the still image. */}
   <PixelIcon rows={standing} scale={scale} class="lilly-still" />
   <canvas
