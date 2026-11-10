@@ -23,7 +23,7 @@ const formattedDate = timestamp
   {/* The same selection cursor as the 404 menu. It needs the wide gutter, so it is desktop only. */}
   <PixelIcon
     name="cursor"
-    class="text-accent invisible absolute top-10 -left-7 hidden group-focus-within:visible group-hover:visible md:block"
+    class="bob text-accent absolute top-10 -left-7 hidden opacity-0 transition-opacity duration-150 ease-out group-focus-within:opacity-100 group-hover:opacity-100 md:block"
   />
   <p class="text-muted flex flex-wrap gap-x-6 text-sm md:text-base">
     {formattedDate ? <time datetime={timestamp?.toISOString()}>{formattedDate}</time> : null}

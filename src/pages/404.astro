@@ -32,7 +32,7 @@ const canonicalUrl = new URL("/", Astro.site).href;
             href={item.href}
             class="focus-visible:outline-fg flex items-center gap-3 py-1 focus-visible:outline-2 focus-visible:outline-offset-2"
           >
-            <PixelIcon name="cursor" class="cursor text-accent" />
+            <PixelIcon name="cursor" class="cursor bob text-accent" />
             {item.label}
           </a>
         </li>
@@ -45,10 +45,11 @@ const canonicalUrl = new URL("/", Astro.site).href;
   /* Global because the cursor is drawn by a child component, which scoped styles do not reach.
      The cursor sits on the first option until another one is hovered or focused. */
   .continue .cursor {
-    visibility: hidden;
+    opacity: 0;
+    transition: opacity 150ms ease-out;
   }
   .continue li:is(:hover, :focus-within) .cursor,
   .continue:not(:hover, :focus-within) li:first-child .cursor {
-    visibility: visible;
+    opacity: 1;
   }
 </style>

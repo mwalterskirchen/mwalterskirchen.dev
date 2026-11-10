@@ -7,9 +7,10 @@ import PixelIcon from "./PixelIcon.astro";
 const path = Astro.url.pathname.replace(/(\/index)?\.html$/, "").replace(/\/$/, "") || "/";
 const isCurrent = (href: string) =>
   href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
+const isPost = path.startsWith("/blog/");
 ---
 
-<header class="border-fg bg-bg sticky top-0 z-10 w-full border-b-4">
+<header class="site-header border-fg bg-bg sticky top-0 z-10 w-full border-b-4">
   <nav class="mx-auto flex max-w-3xl items-center justify-between gap-8 px-4 py-3 text-xl">
     <div class="-ml-2 flex gap-2 font-mono font-medium">
       {config.nav.map((item) => (
@@ -24,7 +25,7 @@ const isCurrent = (href: string) =>
       ))}
     </div>
     <button
-      class="focus-visible:outline-fg cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2"
+      class="focus-visible:outline-fg focus-visible:outline-2 focus-visible:outline-offset-2"
       id="themeToggle"
       aria-label="Theme Toggle"
     >
@@ -32,15 +33,52 @@ const isCurrent = (href: string) =>
       <PixelIcon name="moon" class="hidden dark:block" />
     </button>
   </nav>
+  {/* On a post, the header's bottom border fills up as the reader scrolls. */}
+  {isPost && <div class="read-progress bg-accent absolute -bottom-1 left-0 h-1 w-full" />}
 </header>
 
-<script is:inline>
-  const handleToggleClick = () => {
-    const element = document.documentElement;
-    element.classList.toggle("dark");
+<style>
+  /* Hidden where the browser cannot tie an animation to the scroll position. */
+  .read-progress {
+    display: none;
+  }
 
-    const isDark = element.classList.contains("dark");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
+  @supports (animation-timeline: scroll()) {
+    @keyframes fill {
+      from {
+        transform: scaleX(0);
+      }
+    }
+
+    .read-progress {
+      display: block;
+      transform-origin: left;
+      animation: fill linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+</style>
+
+<script is:inline>
+  const root = document.documentElement;
+
+  const toggleTheme = () => {
+    root.classList.toggle("dark");
+    localStorage.setItem("theme", root.classList.contains("dark") ? "dark" : "light");
+  };
+
+  // The themes cross-fade where the browser can do it and the person has not asked for
+  // reduced motion.
+  const handleToggleClick = () => {
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (still || !document.startViewTransition) {
+      toggleTheme();
+      return;
+    }
+    root.classList.add("theme-fade");
+    document
+      .startViewTransition(toggleTheme)
+      .finished.finally(() => root.classList.remove("theme-fade"));
   };
 
   document.getElementById("themeToggle")?.addEventListener("click", handleToggleClick);

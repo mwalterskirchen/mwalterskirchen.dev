@@ -31,11 +31,12 @@ Dark mode is class based. `global.css` defines the `dark` variant on `.dark`. An
 
 The look is pixel art, and `global.css` holds its rules:
 
-- Colours come from a fixed palette: five blue-greys and one accent. Use the role classes (`bg-bg`, `text-fg`, `text-muted`, `border-panel`), which swap with the theme, instead of `dark:` colour variants. The accent is the same in both themes and is only for fills, underlines and shadows (`bg-accent`, `decoration-accent`), never text colour. Do not add gradients, opacity, rounded corners or eased transitions.
+- Colours come from a fixed palette: five blue-greys and one accent. Use the role classes (`bg-bg`, `text-fg`, `text-muted`, `border-panel`), which swap with the theme, instead of `dark:` colour variants. The accent is the same in both themes and is only for fills, underlines and shadows (`bg-accent`, `decoration-accent`), never text colour. Do not add gradients, translucent colours or rounded corners.
 - Jersey 10 (`font-display`) is only sharp at multiples of 56/3 px. Set it with `text-pixel-sm`, `text-pixel-md` or `text-pixel-lg`, and never bold.
 - Icons are text bitmaps in `src/icons.ts`, rendered by `PixelIcon.astro`. Add an icon there instead of importing an icon library.
 - The homepage portrait sharpens in four steps on load: three coarse frames from `src/assets/avatar-frames.png`, then the photo. `scripts/pixel-avatar.mjs` draws the frames from `public/avatar.jpeg`, so run `node scripts/pixel-avatar.mjs` after changing the photo.
-- The portrait sharpening is the only entrance animation. Do not add entrances to sections or list items. Motion that answers an action, such as the pressed email button, steps instead of easing.
+- The mouse cursors are pixel art too. `scripts/pixel-cursors.mjs` holds their bitmaps and writes the images to `src/assets/cursors/` and a `pixel-cursor-*` utility for every CSS cursor keyword to `src/styles/cursors.css`. Do not edit that file: change the script and run `node scripts/pixel-cursors.mjs`. `global.css` applies the arrow, hand, I-beam and "not allowed" cursors to the matching elements. For any other cursor use `pixel-cursor-<keyword>` (for example `pixel-cursor-grab`), never Tailwind's `cursor-*`, which gives the system cursor.
+- Motion is smooth: short eased transitions of 100 to 350ms, never `steps()`. The one exception is the homepage portrait, which sharpens in four steps by design. `global.css` holds the page fade (cross-document view transitions) and `.bob` for menu cursors. The theme toggle and the reading progress bar on posts are in `Header.astro`. Keep page movement behind `prefers-reduced-motion: no-preference`. Apart from the page fade and the portrait, nothing animates on load: do not add entrances to sections or list items.
 
 ## Deployment
 

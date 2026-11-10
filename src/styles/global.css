@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./cursors.css";
 @plugin "@tailwindcss/typography";
 
 @variant dark (&:where(.dark, .dark *));
@@ -70,6 +71,57 @@
     --panel: var(--color-dusk);
   }
 
+  /* Pixel cursors. scripts/pixel-cursors.mjs draws them and writes a `pixel-cursor-*` utility
+     for each one to cursors.css. These rules put them on the elements where a browser would
+     show its arrow, hand, I-beam and "not allowed" cursors. */
+  html {
+    @apply pixel-cursor-auto;
+  }
+
+  :where(
+    a,
+    button,
+    summary,
+    select,
+    label[for],
+    [role="button"],
+    input:is(
+      [type="button"],
+      [type="submit"],
+      [type="reset"],
+      [type="checkbox"],
+      [type="radio"],
+      [type="range"],
+      [type="file"],
+      [type="color"],
+      [type="image"]
+    )
+  ) {
+    @apply pixel-cursor-pointer;
+  }
+
+  main :where(p, h1, h2, h3, h4, h5, h6, blockquote, pre, td, th, figcaption),
+  .blog-prose :where(li),
+  :where(textarea, [contenteditable]:not([contenteditable="false"])),
+  :where(
+    input:not([type]),
+    input:is(
+      [type="text"],
+      [type="search"],
+      [type="email"],
+      [type="url"],
+      [type="tel"],
+      [type="password"],
+      [type="number"]
+    )
+  ) {
+    @apply pixel-cursor-text;
+  }
+
+  :where(:disabled, [aria-disabled="true"]) {
+    @apply pixel-cursor-not-allowed;
+  }
+
   ::selection {
     background-color: var(--color-accent);
     color: var(--color-mist);
@@ -78,6 +130,63 @@
   /* Turn off anti-aliasing where the browser allows it, so the pixel font has hard edges. */
   .font-display {
     -webkit-font-smoothing: none;
+  }
+}
+
+/* Motion is short and eased. The one exception is the homepage portrait, which sharpens in
+   steps. Movement between pages and the cursor nudge are off for people who ask for reduced
+   motion. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Moving between pages fades the old page out while the new one fades in and settles
+     upwards. Browsers without cross-document view transitions load the page as usual. */
+  @view-transition {
+    navigation: auto;
+  }
+
+  @keyframes page-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes page-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+
+  /* The theme toggle sets `theme-fade` on the root. These rules then step aside, and the
+     browser's own cross-fade changes the whole screen at once, header included. */
+  :root:not(.theme-fade)::view-transition-old(root) {
+    animation: page-out 160ms ease-out both;
+    mix-blend-mode: normal;
+  }
+  :root:not(.theme-fade)::view-transition-new(root) {
+    animation: page-in 320ms cubic-bezier(0.2, 0, 0, 1) 80ms both;
+    mix-blend-mode: normal;
+  }
+
+  /* The header keeps its place while the page under it changes. */
+  :root:not(.theme-fade) .site-header {
+    view-transition-name: site-header;
+  }
+  ::view-transition-old(site-header) {
+    display: none;
+  }
+  ::view-transition-new(site-header) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  /* A menu cursor drifts back and forth while it points at something. */
+  @keyframes bob {
+    to {
+      transform: translateX(4px);
+    }
+  }
+
+  .bob {
+    animation: bob 560ms ease-in-out infinite alternate;
   }
 }
 
@@ -109,6 +218,9 @@
     & :where(a) {
       text-decoration-thickness: 2px;
       text-underline-offset: 6px;
+      transition:
+        text-decoration-color 150ms ease-out,
+        text-decoration-thickness 150ms ease-out;
     }
     & :where(a):hover {
       text-decoration-color: var(--color-accent);

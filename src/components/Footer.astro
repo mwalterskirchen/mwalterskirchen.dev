@@ -22,8 +22,11 @@ const links = [
       <ul class="flex items-center gap-4">
         {links.map((link) => (
           <li>
-            <Anchor url={link.url} aria-label={link.label}>
-              <PixelIcon name={link.icon} />
+            <Anchor url={link.url} aria-label={link.label} class="group">
+              <PixelIcon
+                name={link.icon}
+                class="transition-transform duration-150 ease-out group-hover:-translate-y-1 group-focus-visible:-translate-y-1"
+              />
             </Anchor>
           </li>
         ))}
