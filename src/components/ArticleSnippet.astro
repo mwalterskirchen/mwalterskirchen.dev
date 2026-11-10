@@ -17,12 +17,12 @@ const formattedDate = timestamp
   : null;
 ---
 
-<div class="hover-dotted-grid relative mb-8 flex flex-col gap-3 text-neutral-900 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:text-neutral-100">
+<div class="hover-marker relative mb-8 flex flex-col gap-3">
   <Anchor url={url} external={external} class="text-xl">
     {title}
   </Anchor>
-  <p class="">{description}</p>
-  <div class="flex items-center justify-between text-neutral-600 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:text-neutral-400">
+  <p>{description}</p>
+  <div class="text-muted flex items-center justify-between">
     {formattedDate ? <p>{formattedDate}</p> : null}
     {duration ? <p>{duration}</p> : null}
   </div>

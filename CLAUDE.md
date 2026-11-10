@@ -29,6 +29,12 @@ Personal site and blog built with Astro, Tailwind CSS 4 and the Cloudflare adapt
 
 Dark mode is class based. `global.css` defines the `dark` variant on `.dark`. An inline script in `Layout.astro` sets the class from `localStorage.theme` before paint, and the toggle in `Header.astro` updates it.
 
+The look is pixel art, and `global.css` holds its rules:
+
+- Colours come from a fixed palette: five blue-greys and one accent. Use the role classes (`bg-bg`, `text-fg`, `text-muted`, `border-panel`), which swap with the theme, instead of `dark:` colour variants. The accent is the same in both themes and is only for fills, underlines and shadows (`bg-accent`, `decoration-accent`), never text colour. Do not add gradients, opacity, rounded corners or eased transitions.
+- Jersey 10 (`font-display`) is only sharp at multiples of 56/3 px. Set it with `text-pixel-sm`, `text-pixel-md` or `text-pixel-lg`, and never bold.
+- Icons are text bitmaps in `src/icons.ts`, rendered by `PixelIcon.astro`. Add an icon there instead of importing an icon library.
+
 ## Deployment
 
 A push to `main` runs `.github/workflows/deploy.yml`, which builds the site and deploys it to Cloudflare Workers with Wrangler. The build writes static files to `dist/client/`. The Cloudflare adapter also writes a generated `dist/client/wrangler.json` from `wrangler.jsonc`, and `.wrangler/deploy/config.json` points Wrangler at that file. The `assets.directory` in `wrangler.jsonc` is therefore not the directory that deploys. Work on a branch and open a PR. `.github/workflows/ci.yml` runs lint, the format check and a build on every PR.

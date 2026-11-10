@@ -5,87 +5,85 @@
 
 @theme {
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --font-display: "Press Start 2P", ui-monospace, monospace;
-  --font-serif: "Literata Variable", serif;
+  --font-display: "Jersey 10", ui-monospace, monospace;
+
+  /* The whole site is drawn from five blue-greys and one accent. No gradients, no opacity. */
+  --color-ink: #1a1c2c;
+  --color-dusk: #333c57;
+  --color-slate: #566c86;
+  --color-steel: #94b0c2;
+  --color-mist: #e8ecf1;
+  /* The accent is the same in both themes. It is bright enough to show on ink and dark enough
+     to carry mist text, but too dark for small text on ink: use it for fills, underlines and
+     shadows, never as a text colour. */
+  --color-accent: #3264c9;
+
+  /* Jersey 10 is drawn on a grid of 56/3 px per em, so it is only sharp at multiples of that.
+     These three sizes draw each font pixel as 2, 3 and 4 screen pixels. */
+  --text-pixel-sm: calc(7rem / 3);
+  --text-pixel-sm--line-height: 2.5rem;
+  --text-pixel-md: 3.5rem;
+  --text-pixel-md--line-height: 3.5rem;
+  --text-pixel-lg: calc(14rem / 3);
+  --text-pixel-lg--line-height: 4rem;
+}
+
+/* Roles that swap between the light and dark theme (see :root and .dark below). */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-panel: var(--panel);
 }
 
 @layer base {
+  :root {
+    color-scheme: light;
+    --bg: var(--color-mist);
+    --fg: var(--color-ink);
+    --muted: var(--color-slate);
+    --panel: var(--color-steel);
+  }
+
+  .dark {
+    color-scheme: dark;
+    --bg: var(--color-ink);
+    --fg: var(--color-mist);
+    --muted: var(--color-steel);
+    --panel: var(--color-dusk);
+  }
+
   ::selection {
-    background-color: var(--color-emerald-400);
-    color: var(--color-neutral-600);
+    background-color: var(--color-accent);
+    color: var(--color-mist);
   }
 
-  .hover-dotted-grid:hover::before {
-    --dot-bg: var(--color-neutral-100);
-    --dot-color: var(--color-neutral-600);
-    --dot-size: 1.5px;
-    --dot-space: 16px;
+  /* Turn off anti-aliasing where the browser allows it, so the pixel font has hard edges. */
+  .font-display {
+    -webkit-font-smoothing: none;
+  }
+
+  /* On hover, a checkerboard strip marks the entry in the gutter to its left. */
+  .hover-marker:is(:hover, :focus-within)::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    z-index: -1;
-    background:
-      linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%)
-        bottom right / var(--dot-space) var(--dot-space),
-      linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) bottom
-        right / var(--dot-space) var(--dot-space),
-      var(--dot-color);
+    inset: 0 auto 0 -1rem;
+    width: 8px;
+    background: conic-gradient(
+        var(--color-accent) 25%,
+        transparent 0 50%,
+        var(--color-accent) 0 75%,
+        transparent 0
+      )
+      0 0 / 4px 4px;
     pointer-events: none;
-  }
-
-  :where(.dark, .dark *) .hover-dotted-grid:hover::before {
-    --dot-bg: var(--color-neutral-900);
-    --dot-color: var(--color-neutral-400);
-  }
-
-  .hover-dotted-grid:hover::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    z-index: -1;
-    background: linear-gradient(
-      159deg,
-      var(--color-neutral-100) 0%,
-      var(--color-neutral-100) 50%,
-      oklch(from var(--color-neutral-100) l c h / 0.5) 100%
-    );
-    pointer-events: none;
-  }
-
-  :where(.dark, .dark *) .hover-dotted-grid:hover::after {
-    background: linear-gradient(
-      159deg,
-      var(--color-neutral-900) 0%,
-      var(--color-neutral-900) 50%,
-      oklch(from var(--color-neutral-900) l c h / 0.5) 100%
-    );
-  }
-
-  .opsz {
-    font-variation-settings: "opsz" 72;
   }
 }
 
 @layer utilities {
   @media (prefers-reduced-motion: no-preference) {
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes fade-in-up {
+    /* Entrances move in whole 2px steps, like sprite frames, instead of easing. */
+    @keyframes step-in-up {
       from {
         opacity: 0;
         transform: translateY(8px);
@@ -96,12 +94,8 @@
       }
     }
 
-    .animate-in {
-      animation: fade-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-
     .animate-in-up {
-      animation: fade-in-up 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: step-in-up 280ms steps(4, jump-none) both;
     }
 
     .delay-0 {
@@ -136,12 +130,6 @@
 
 @layer components {
   .blog-prose {
-    font-family: var(--font-serif);
-
-    & :where(h1, h2, h3, h4, h5, h6) {
-      font-family: var(--font-mono);
-    }
-
     & :where(h1) {
       font-size: var(--text-3xl);
     }
@@ -166,72 +154,67 @@
     }
 
     & :where(a) {
+      text-decoration-thickness: 2px;
       text-underline-offset: 6px;
     }
     & :where(a):hover {
-      color: var(--color-emerald-600);
+      text-decoration-color: var(--color-accent);
+      text-decoration-thickness: 4px;
     }
-    :where(.dark, .dark *) & :where(a):hover {
-      color: var(--color-emerald-400);
-    }
-    & :where(a):focus {
-      outline: 2px solid var(--color-neutral-900);
+    & :where(a):focus-visible {
+      outline: 2px solid var(--fg);
       outline-offset: 2px;
-    }
-    :where(.dark, .dark *) & :where(a):focus {
-      outline-color: var(--color-neutral-100);
     }
 
     & :where(blockquote) {
-      border-left: 3px solid var(--color-neutral-400);
       padding-left: 1rem;
       font-style: italic;
-      color: var(--color-neutral-700);
-    }
-    :where(.dark, .dark *) & :where(blockquote) {
-      border-left-color: var(--color-neutral-600);
-      color: var(--color-neutral-300);
     }
 
     & :where(pre) {
-      border: 1px solid var(--color-neutral-300);
-      border-radius: 0.375rem;
       white-space: pre-wrap;
       overflow-wrap: break-word;
     }
-    :where(.dark, .dark *) & :where(pre) {
-      border-color: var(--color-neutral-700);
-    }
 
     & :where(:not(pre) > code) {
-      background-color: var(--color-neutral-200);
+      background-color: var(--panel);
       padding: 0.125rem 0.375rem;
-      border-radius: 0.25rem;
       font-size: 0.875em;
-    }
-    :where(.dark, .dark *) & :where(:not(pre) > code) {
-      background-color: var(--color-neutral-800);
     }
   }
 }
 
-@utility tag {
-  white-space: nowrap;
-  background-color: var(--color-neutral-900);
-  :where(.dark, .dark *) & {
-    background-color: var(--color-neutral-100);
+/* Unlayered so it wins over what the typography plugin sets on `.prose`. */
+.blog-prose {
+  --tw-prose-body: var(--fg);
+  --tw-prose-headings: var(--fg);
+  --tw-prose-lead: var(--fg);
+  --tw-prose-links: var(--fg);
+  --tw-prose-bold: var(--fg);
+  --tw-prose-counters: var(--muted);
+  --tw-prose-bullets: var(--muted);
+  --tw-prose-hr: var(--panel);
+  --tw-prose-quotes: var(--fg);
+  --tw-prose-quote-borders: var(--color-accent);
+  --tw-prose-captions: var(--muted);
+  --tw-prose-kbd: var(--fg);
+  --tw-prose-code: var(--fg);
+  --tw-prose-th-borders: var(--fg);
+  --tw-prose-td-borders: var(--panel);
+
+  & :where(pre) {
+    border-radius: 0;
+    @apply pixel-frame;
   }
-  color: var(--color-neutral-100);
-  :where(.dark, .dark *) & {
-    color: var(--color-neutral-900);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    transition:
-      background-color 0.15s ease-in-out,
-      color 0.15s ease-in-out,
-      fill 0.15s ease-in-out,
-      border-color 0.15s ease-in-out,
-      transform 0.15s ease-in-out;
-  }
-  @apply px-2 py-1 text-sm font-semibold;
+}
+
+/* A 4px outline with the corner pixels left out, and a hard shadow down and to the right. */
+@utility pixel-frame {
+  box-shadow:
+    -4px 0 0 0 var(--fg),
+    4px 0 0 0 var(--fg),
+    0 -4px 0 0 var(--fg),
+    0 4px 0 0 var(--fg),
+    8px 4px 0 0 var(--frame-shadow, var(--panel)),
+    4px 8px 0 0 var(--frame-shadow, var(--panel));
 }

@@ -63,11 +63,11 @@ const loadAssets = () =>
 const escapeHtml = (text: string) => text.replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
 
 const template = ({ title, subtitle, cta, avatar }: Props) => `
-  <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 80px;background:#171717;border-left:6px solid #10b981;font-family:'IBM Plex Mono'">
+  <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 80px;background:#1a1c2c;border-left:8px solid #3264c9;font-family:'IBM Plex Mono'">
     ${avatar ? `<img src="avatar.jpeg" style="width:96px;height:96px;border-radius:9999px;object-fit:cover;margin-bottom:32px" />` : ""}
-    <div style="font-size:56px;font-weight:700;color:#f5f5f5;line-height:1.25">${escapeHtml(title)}</div>
-    <div style="font-size:26px;font-weight:400;color:#a3a3a3;margin-top:36px">${escapeHtml(subtitle)}</div>
-    <div style="font-size:32px;font-weight:700;color:#10b981;margin-top:18px">${escapeHtml(cta)}</div>
+    <div style="font-size:56px;font-weight:700;color:#e8ecf1;line-height:1.25">${escapeHtml(title)}</div>
+    <div style="font-size:26px;font-weight:400;color:#94b0c2;margin-top:36px">${escapeHtml(subtitle)}</div>
+    <div style="font-size:32px;font-weight:700;color:#e8ecf1;margin-top:18px">${escapeHtml(cta)}</div>
   </div>`;
 
 export const GET: APIRoute<Props> = async ({ props }) => {

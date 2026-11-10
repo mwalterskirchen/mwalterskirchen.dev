@@ -1,26 +1,24 @@
 ---
 import { config } from "../config";
 import Anchor from "./Anchor.astro";
-import { Sun, Moon } from "@lucide/astro";
+import PixelIcon from "./PixelIcon.astro";
 ---
 
-<header class="sticky top-0 z-10 w-full border-b-2 border-neutral-900 bg-neutral-100 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:border-neutral-100 dark:bg-neutral-900">
-  <nav class="inset-x-0 top-0 mx-auto flex h-auto max-w-2xl justify-between gap-8 border-b-2 border-neutral-900 bg-neutral-100 px-4 py-4 text-xl transition-colors duration-150 ease-in-out motion-reduce:transition-none sm:flex-row sm:border-none sm:px-4 sm:pt-4 dark:border-neutral-100 dark:bg-neutral-900">
+<header class="border-fg bg-bg sticky top-0 z-10 w-full border-b-4">
+  <nav class="mx-auto flex max-w-2xl items-center justify-between gap-8 px-4 py-3 text-xl">
     <div class="flex gap-4 font-mono font-medium">
       {config.nav.map((item) => (
         <Anchor url={item.href}>{item.label}</Anchor>
       ))}
     </div>
-    <div class="justify-between gap-4 sm:flex">
-      <button
-        class="border-none bg-none focus:outline-2 focus:outline-offset-2 focus:outline-neutral-900 dark:focus:outline-neutral-100"
-        id="themeToggle"
-        aria-label="Theme Toggle"
-      >
-        <Sun class="stroke-neutral-900 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:hidden dark:stroke-transparent" />
-        <Moon class="hidden stroke-transparent transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:block dark:stroke-neutral-100" />
-      </button>
-    </div>
+    <button
+      class="focus-visible:outline-fg cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2"
+      id="themeToggle"
+      aria-label="Theme Toggle"
+    >
+      <PixelIcon name="sun" class="dark:hidden" />
+      <PixelIcon name="moon" class="hidden dark:block" />
+    </button>
   </nav>
 </header>
 

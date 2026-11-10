@@ -31,11 +31,9 @@ const pageTitle = `${frontmatter.title} • ${config.personal.name}`;
   </Fragment>
   <Section class="pt-8">
     <article>
-      <header class="mt-8 mb-16 border-b border-neutral-300 pb-8 dark:border-neutral-700">
-        <h1 class="font-display text-2xl leading-normal sm:text-3xl sm:leading-normal">
-          {frontmatter.title}
-        </h1>
-        <div class="mt-4 flex items-center gap-2 text-sm text-neutral-500">
+      <header class="border-panel mt-8 mb-16 border-b-4 pb-8">
+        <h1 class="font-display text-pixel-sm">{frontmatter.title}</h1>
+        <div class="text-muted mt-4 flex items-center gap-2 text-sm">
           <time datetime={isoDate}>{articleDate}</time>
           {frontmatter.readTime && (
             <>
@@ -44,19 +42,12 @@ const pageTitle = `${frontmatter.title} • ${config.personal.name}`;
             </>
           )}
         </div>
-        {frontmatter.tags && frontmatter.tags.length > 0 && (
-          <div class="mt-4 flex flex-wrap gap-2">
-            {frontmatter.tags.map((t: string) => (
-              <span class="tag">{t}</span>
-            ))}
-          </div>
-        )}
       </header>
-      <div class="prose dark:prose-invert blog-prose w-full">
+      <div class="prose blog-prose w-full">
         <slot />
       </div>
-      <footer class="mt-16 border-t border-neutral-300 pt-8 dark:border-neutral-700">
-        <p class="font-mono text-sm text-neutral-500">~{config.personal.name}</p>
+      <footer class="border-panel mt-16 border-t-4 pt-8">
+        <p class="text-muted font-mono text-sm">~{config.personal.name}</p>
       </footer>
     </article>
   </Section>
