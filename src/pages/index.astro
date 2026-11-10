@@ -35,7 +35,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
   </Fragment>
 
   <Section class="mt-8">
-    <div class="flex flex-col items-center gap-8 sm:flex-row">
+    <div class="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
       <Image
         src={avatar}
         alt="Maximilian Walterskirchen Profile Image"
@@ -44,13 +44,11 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
         class="pixel-frame mb-4 size-40 shrink-0 [--frame-shadow:var(--color-accent)] sm:mb-0"
       />
       <div>
-        <h1 class="font-display text-pixel-sm min-[340px]:text-pixel-md sm:text-pixel-lg text-center sm:text-left">
+        <h1 class="font-display text-pixel-sm min-[340px]:text-pixel-md sm:text-pixel-lg">
           Maximilian Walterskirchen
         </h1>
-        <h2 class="text-center font-mono text-xl font-medium sm:text-left sm:text-2xl">
-          Senior Software Engineer
-        </h2>
-        <h3 class="flex items-center justify-center gap-2 font-mono text-sm sm:justify-start sm:text-base">
+        <h2 class="font-mono text-xl font-medium sm:text-2xl">Senior Software Engineer</h2>
+        <h3 class="flex items-center gap-2 font-mono text-sm sm:text-base">
           Zurich, Switzerland
           <PixelIcon name="swissFlag" />
         </h3>
@@ -59,7 +57,6 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
   </Section>
 
   <Section>
-    <h3 class="font-display text-pixel-sm">About Me</h3>
     <div class="flex flex-col gap-4">
       <p>
         I build production software with AI in the loop and write about the engineering side of

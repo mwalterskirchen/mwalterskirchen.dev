@@ -5,20 +5,25 @@ export type Props = {
   url: string;
   class?: string;
   external?: boolean;
+  /** Set to false for links that are obvious without it, such as nav items and entry titles. */
+  underline?: boolean;
   "aria-label"?: string;
+  "aria-current"?: "page";
 };
 
-const { url, external, class: className } = Astro.props;
+const { url, external, underline = true, class: className } = Astro.props;
 ---
 
 <a
   href={url}
   class:list={[
-    "hover:decoration-accent hover:decoration-4 focus-visible:outline-fg flex items-center gap-1 font-medium underline decoration-2 underline-offset-[6px] focus-visible:outline-2 focus-visible:outline-offset-2",
+    "hover:decoration-accent focus-visible:outline-fg flex items-center gap-1 font-medium decoration-2 underline-offset-[6px] hover:underline hover:decoration-4 focus-visible:outline-2 focus-visible:outline-offset-2",
+    underline && "underline",
     className,
   ]}
   target={external ? "_blank" : "_self"}
   aria-label={Astro.props["aria-label"]}
+  aria-current={Astro.props["aria-current"]}
 >
   <slot />
   {external ? <PixelIcon name="external" /> : null}

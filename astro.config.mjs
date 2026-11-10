@@ -11,6 +11,8 @@ export default defineConfig({
   // `/blog/<slug>` directly instead of redirecting it to `/blog/<slug>/`.
   trailingSlash: "never",
   build: { format: "file" },
+  // Code colours come from the `--astro-code-*` variables in `src/styles/global.css`.
+  markdown: { shikiConfig: { theme: "css-variables" } },
   vite: {
     plugins: [tailwindcss()],
   },

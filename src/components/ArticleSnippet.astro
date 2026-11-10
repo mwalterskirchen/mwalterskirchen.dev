@@ -1,5 +1,6 @@
 ---
 import Anchor from "./Anchor.astro";
+import PixelIcon from "./PixelIcon.astro";
 
 export type Props = {
   title: string;
@@ -17,8 +18,13 @@ const formattedDate = timestamp
   : null;
 ---
 
-<div class="hover-marker relative mb-8 flex flex-col gap-3">
-  <Anchor url={url} external={external} class="text-xl">
+<div class="group relative mb-8 flex flex-col gap-3">
+  {/* The same selection cursor as the 404 menu. It needs the wide gutter, so it is desktop only. */}
+  <PixelIcon
+    name="cursor"
+    class="text-accent invisible absolute top-1.5 -left-7 hidden group-focus-within:visible group-hover:visible md:block"
+  />
+  <Anchor url={url} external={external} underline={false} class="text-xl">
     {title}
   </Anchor>
   <p>{description}</p>

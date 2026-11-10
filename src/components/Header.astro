@@ -2,13 +2,25 @@
 import { config } from "../config";
 import Anchor from "./Anchor.astro";
 import PixelIcon from "./PixelIcon.astro";
+
+// The build emits `blog.html` and `index.html`, so strip those before comparing paths.
+const path = Astro.url.pathname.replace(/(\/index)?\.html$/, "").replace(/\/$/, "") || "/";
+const isCurrent = (href: string) =>
+  href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
 ---
 
 <header class="border-fg bg-bg sticky top-0 z-10 w-full border-b-4">
   <nav class="mx-auto flex max-w-2xl items-center justify-between gap-8 px-4 py-3 text-xl">
-    <div class="flex gap-4 font-mono font-medium">
+    <div class="-ml-2 flex gap-2 font-mono font-medium">
       {config.nav.map((item) => (
-        <Anchor url={item.href}>{item.label}</Anchor>
+        <Anchor
+          url={item.href}
+          underline={false}
+          aria-current={isCurrent(item.href) ? "page" : undefined}
+          class:list={["px-2 py-1", isCurrent(item.href) && "bg-fg text-bg"]}
+        >
+          {item.label}
+        </Anchor>
       ))}
     </div>
     <button

@@ -45,6 +45,23 @@
     --panel: var(--color-steel);
   }
 
+  /* Code blocks are ink in both themes, so their colours do not swap. Code is drawn in two
+     tones: literals and comments are dimmed, and the rules below set keywords in bold and
+     comments in italic. */
+  :root {
+    --astro-code-background: var(--color-ink);
+    --astro-code-foreground: var(--color-mist);
+    --astro-code-token-keyword: var(--color-mist);
+    --astro-code-token-function: var(--color-mist);
+    --astro-code-token-parameter: var(--color-mist);
+    --astro-code-token-punctuation: var(--color-mist);
+    --astro-code-token-constant: var(--color-steel);
+    --astro-code-token-string: var(--color-steel);
+    --astro-code-token-string-expression: var(--color-steel);
+    --astro-code-token-comment: var(--color-steel);
+    --astro-code-token-link: var(--color-steel);
+  }
+
   .dark {
     color-scheme: dark;
     --bg: var(--color-ink);
@@ -61,22 +78,6 @@
   /* Turn off anti-aliasing where the browser allows it, so the pixel font has hard edges. */
   .font-display {
     -webkit-font-smoothing: none;
-  }
-
-  /* On hover, a checkerboard strip marks the entry in the gutter to its left. */
-  .hover-marker:is(:hover, :focus-within)::before {
-    content: "";
-    position: absolute;
-    inset: 0 auto 0 -1rem;
-    width: 8px;
-    background: conic-gradient(
-        var(--color-accent) 25%,
-        transparent 0 50%,
-        var(--color-accent) 0 75%,
-        transparent 0
-      )
-      0 0 / 4px 4px;
-    pointer-events: none;
   }
 }
 
@@ -205,6 +206,18 @@
   & :where(pre) {
     border-radius: 0;
     @apply pixel-frame;
+  }
+  & :where(pre [style*="token-keyword"]) {
+    font-weight: 600;
+  }
+  & :where(pre [style*="token-comment"]) {
+    font-style: italic;
+  }
+
+  /* The filled background already marks inline code, so drop the plugin's backticks. */
+  & :where(code)::before,
+  & :where(code)::after {
+    content: none;
   }
 }
 

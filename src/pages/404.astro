@@ -1,4 +1,5 @@
 ---
+import PixelIcon from "../components/PixelIcon.astro";
 import Section from "../components/Section.astro";
 import Layout from "../layouts/Layout.astro";
 import SEO from "../components/SEO.astro";
@@ -17,17 +18,37 @@ const canonicalUrl = new URL("/", Astro.site).href;
     />
   </Fragment>
   <Section class="mt-16">
-    <h1 class="font-display text-pixel-md pb-8">Well, this is awkward</h1>
-    <h2 class="pb-8 text-xl sm:text-2xl">404 - Page not found</h2>
-    <p>
-      It seems that this page does not exist. If you want to return to safety,{" "}
-      <a
-        class="hover:decoration-accent hover:decoration-4 font-medium underline decoration-2 underline-offset-4"
-        href="/"
-      >
-        click here to go home
-      </a>
-      .
-    </p>
+    <h1 class="font-display text-pixel-lg">Game over</h1>
+    <p class="pt-2 pb-12">404. This page does not exist. The link may be old or mistyped.</p>
+    <h2 class="font-display text-pixel-sm">Continue?</h2>
+    <ul class="continue pt-2 text-xl font-medium">
+      {[
+        { href: "/", label: "Go to the homepage" },
+        { href: "/blog", label: "Read the blog" },
+        { href: "/talks", label: "See the talks" },
+      ].map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class="focus-visible:outline-fg flex items-center gap-3 py-1 focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            <PixelIcon name="cursor" class="cursor text-accent" />
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
   </Section>
 </Layout>
+
+<style is:global>
+  /* Global because the cursor is drawn by a child component, which scoped styles do not reach.
+     The cursor sits on the first option until another one is hovered or focused. */
+  .continue .cursor {
+    visibility: hidden;
+  }
+  .continue li:is(:hover, :focus-within) .cursor,
+  .continue:not(:hover, :focus-within) li:first-child .cursor {
+    visibility: visible;
+  }
+</style>
