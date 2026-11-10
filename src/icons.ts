@@ -1,5 +1,6 @@
 // Pixel icons drawn as text: one string per row, one character per pixel.
 // "#" takes the text colour, "r" and "w" are fixed palette colours, "." is empty.
+// Lilly is not here: she is drawn from parts in `src/lilly.ts`.
 export const icons = {
   sun: [
     "................",
@@ -131,6 +132,8 @@ export const icons = {
     "rrrwwrrr",
     "rrrrrrrr",
   ],
+  // Lilly's ball.
+  ball: [".###.", "#####", "#####", "#####", ".###."],
 } as const satisfies Record<string, readonly string[]>;
 
 export type IconName = keyof typeof icons;

@@ -1,15 +1,19 @@
 ---
 import { icons, type IconName } from "../icons";
+import { colours } from "../lilly";
 
 type Props = {
-  name: IconName;
+  /** An icon from `src/icons.ts`. */
+  name?: IconName;
+  /** A bitmap to draw in place of a named icon. */
+  rows?: readonly string[];
   /** Screen pixels per icon pixel. Keep it a whole number so the edges stay sharp. */
   scale?: number;
   class?: string;
 };
 
 const { name, scale = 2, class: className } = Astro.props;
-const rows = icons[name];
+const rows = Astro.props.rows ?? (name ? icons[name] : []);
 const width = rows[0].length;
 const height = rows.length;
 
@@ -18,6 +22,12 @@ const fills = {
   // Swiss flag red, the one colour outside the site palette.
   r: "#b13e53",
   w: "var(--color-mist)",
+  // Lilly's coat is apricot (the text colour of her wrapper). These are its shade and the
+  // dark of her eye and nose.
+  s: colours.s,
+  n: colours.n,
+  // Her shadow on the grass.
+  d: "var(--shadow)",
 };
 
 // One path per colour, with each horizontal run of pixels drawn as a single rectangle.

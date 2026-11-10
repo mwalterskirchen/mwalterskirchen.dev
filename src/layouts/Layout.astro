@@ -41,9 +41,14 @@ import "../styles/global.css";
     </script>
     <slot name="head" />
   </head>
-  <body class="bg-bg text-fg font-mono md:text-lg">
+  <body class="bg-bg text-fg relative flex min-h-dvh flex-col font-mono md:text-lg">
+    {/* The body fills the screen so that the footer's ground sits at the bottom of a short page. */}
+    <div class="sky" aria-hidden="true">
+      <div class="sky-far"></div>
+      <div class="sky-near"></div>
+    </div>
     <Header />
-    <main>
+    <main class="grow">
       <slot />
     </main>
     <Footer />

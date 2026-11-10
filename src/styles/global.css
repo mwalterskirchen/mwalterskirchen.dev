@@ -18,6 +18,9 @@
      to carry mist text, but too dark for small text on ink: use it for fills, underlines and
      shadows, never as a text colour. */
   --color-accent: #3264c9;
+  /* Lilly's coat. Like the red of the Swiss flag, it is outside the palette and belongs to
+     one thing only. */
+  --color-apricot: #f2a65e;
 
   /* Jersey 10 is drawn on a grid of 56/3 px per em, so it is only sharp at multiples of that.
      These three sizes draw each font pixel as 2, 3 and 4 screen pixels. */
@@ -44,6 +47,8 @@
     --fg: var(--color-ink);
     --muted: var(--color-slate);
     --panel: var(--color-steel);
+    /* A shadow that falls on a panel: the next darker colour of the palette. */
+    --shadow: var(--color-slate);
   }
 
   /* Code blocks are ink in both themes, so their colours do not swap. Code is drawn in two
@@ -69,6 +74,7 @@
     --fg: var(--color-mist);
     --muted: var(--color-steel);
     --panel: var(--color-dusk);
+    --shadow: var(--color-ink);
   }
 
   /* Pixel cursors. scripts/pixel-cursors.mjs draws them and writes a `pixel-cursor-*` utility
@@ -187,6 +193,111 @@
 
   .bob {
     animation: bob 560ms ease-in-out infinite alternate;
+  }
+}
+
+/* The backdrop. scripts/pixel-backdrop.mjs draws its images. */
+@layer components {
+  /* The sky behind the page: clouds on the light theme and stars on the dark one, in two
+     layers. It is as tall as the document and scrolls with it. */
+  .sky {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: clip;
+    pointer-events: none;
+  }
+
+  /* A layer is as tall as the distance the page can scroll, so that the drift below can be a
+     share of that distance. */
+  .sky-far,
+  .sky-near {
+    position: absolute;
+    inset: 0 0 auto;
+    height: calc(100% - 100lvh);
+  }
+
+  /* The sky is drawn in the two margins only: ::before fills the one left of the text column
+     and ::after the one to its right. Each stops a little short of the column, which leaves
+     room for the menu cursor beside an entry, and a screen without margins has no sky. Both
+     cover the whole page and reach far enough above it to fill the gap that the drift opens. */
+  .sky-far::before,
+  .sky-far::after,
+  .sky-near::before,
+  .sky-near::after {
+    content: "";
+    position: absolute;
+    top: calc(-1 * var(--drift, 0%));
+    height: calc(100% + var(--drift, 0%) + 100lvh);
+    background-size: 384px;
+    image-rendering: pixelated;
+  }
+  /* The tiles start at the column's edge, where no cloud is cut off, and repeat outwards.
+     The right margin starts part of the way down its tile, so the two do not mirror. */
+  .sky-far::before,
+  .sky-near::before {
+    left: 0;
+    right: calc(50% + 26rem);
+    background-position: right top;
+  }
+  .sky-far::after,
+  .sky-near::after {
+    left: calc(50% + 26rem);
+    right: 0;
+    background-position: left 288px;
+  }
+
+  .sky-far::before,
+  .sky-far::after {
+    background-image: url("../assets/backdrop/clouds-far.png");
+  }
+  .sky-near::before,
+  .sky-near::after {
+    background-image: url("../assets/backdrop/clouds-near.png");
+  }
+  .dark .sky-far::before,
+  .dark .sky-far::after {
+    background-image: url("../assets/backdrop/stars-far.png");
+  }
+  .dark .sky-near::before,
+  .dark .sky-near::after {
+    background-image: url("../assets/backdrop/stars-near.png");
+    background-size: 640px;
+  }
+
+  /* The hills and grass that the footer stands on. The image is solid along its bottom edge
+     in the colour of `bg-panel`, which the footer continues. */
+  .ground {
+    height: 112px;
+    background: url("../assets/backdrop/ground.png") center bottom / 1920px repeat-x;
+    image-rendering: pixelated;
+    @variant dark {
+      background-image: url("../assets/backdrop/ground-dark.png");
+    }
+  }
+
+  /* Scrolling moves the sky more slowly than the page, and the far layer more slowly than
+     the near one. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      @keyframes drift {
+        to {
+          translate: 0 var(--drift);
+        }
+      }
+
+      .sky-far,
+      .sky-near {
+        animation: drift linear both;
+        animation-timeline: scroll(root block);
+      }
+      .sky-far {
+        --drift: 85%;
+      }
+      .sky-near {
+        --drift: 60%;
+      }
+    }
   }
 }
 
