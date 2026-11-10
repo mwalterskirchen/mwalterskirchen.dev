@@ -17,7 +17,9 @@ const { url, external, underline = true, class: className } = Astro.props;
 <a
   href={url}
   class:list={[
-    "hover:decoration-accent focus-visible:outline-fg flex items-center gap-1 font-medium decoration-2 underline-offset-[6px] hover:underline hover:decoration-4 focus-visible:outline-2 focus-visible:outline-offset-2",
+    "hover:decoration-accent focus-visible:outline-fg decoration-2 underline-offset-[6px] hover:underline hover:decoration-4 focus-visible:outline-2 focus-visible:outline-offset-2",
+    // An external link stays inline so that its arrow follows the last word when the text wraps.
+    external ? "inline" : "flex items-center gap-1",
     underline && "underline",
     className,
   ]}
@@ -26,5 +28,5 @@ const { url, external, underline = true, class: className } = Astro.props;
   aria-current={Astro.props["aria-current"]}
 >
   <slot />
-  {external ? <PixelIcon name="external" /> : null}
+  {external ? <PixelIcon name="external" class="ml-2 inline-block" /> : null}
 </a>

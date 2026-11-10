@@ -5,26 +5,29 @@ import PixelIcon from "./PixelIcon.astro";
 import Section from "./Section.astro";
 
 const year = new Date().getFullYear();
+
+const links = [
+  { icon: "github", label: "GitHub", url: config.personal.githubProfile },
+  { icon: "linkedin", label: "LinkedIn", url: config.personal.linkedinProfile },
+  { icon: "rss", label: "RSS feed", url: "/rss.xml" },
+] as const;
 ---
 
 <footer class="mt-16 mb-8">
-  <Section class="mb-4">
-    <div class="border-fg flex items-center justify-center gap-4 border-b-4 pb-4">
-      <Anchor
-        url={config.personal.githubProfile}
-        aria-label={`${config.personal.name} GitHub Profile`}
-      >
-        <PixelIcon name="github" />
-      </Anchor>
-      <Anchor
-        url={config.personal.linkedinProfile}
-        aria-label={`${config.personal.name} LinkedIn Profile`}
-      >
-        <PixelIcon name="linkedin" />
-      </Anchor>
+  <Section>
+    <div class="border-fg flex items-center justify-between gap-4 border-t-4 pt-6">
+      <p class="text-sm">
+        &copy; {year} {config.personal.name}
+      </p>
+      <ul class="flex items-center gap-4">
+        {links.map((link) => (
+          <li>
+            <Anchor url={link.url} aria-label={link.label}>
+              <PixelIcon name={link.icon} />
+            </Anchor>
+          </li>
+        ))}
+      </ul>
     </div>
   </Section>
-  <p class="text-center text-sm font-medium">
-    &copy; {year} {config.personal.name}. All rights reserved.
-  </p>
 </footer>

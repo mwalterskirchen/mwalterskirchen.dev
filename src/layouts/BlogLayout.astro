@@ -1,6 +1,7 @@
 ---
 import { config } from "../config";
 import type { ArticleFrontmatter } from "../content.config";
+import Anchor from "../components/Anchor.astro";
 import Section from "../components/Section.astro";
 import SEO from "../components/SEO.astro";
 import Layout from "./Layout.astro";
@@ -31,23 +32,21 @@ const pageTitle = `${frontmatter.title} • ${config.personal.name}`;
   </Fragment>
   <Section class="pt-8">
     <article>
-      <header class="border-panel mt-8 mb-16 border-b-4 pb-8">
-        <h1 class="font-display text-pixel-sm">{frontmatter.title}</h1>
-        <div class="text-muted mt-4 flex items-center gap-2 text-sm">
+      <header class="border-panel mt-4 mb-12 border-b-4 pb-6">
+        <p class="text-muted flex flex-wrap gap-x-6 text-sm md:text-base">
           <time datetime={isoDate}>{articleDate}</time>
-          {frontmatter.readTime && (
-            <>
-              <span>&middot;</span>
-              <span>{frontmatter.readTime} min read</span>
-            </>
-          )}
-        </div>
+          {frontmatter.readTime && <span>{frontmatter.readTime} min read</span>}
+        </p>
+        <h1 class="font-display text-pixel-sm md:text-pixel-md mt-4">{frontmatter.title}</h1>
       </header>
       <div class="prose md:prose-lg blog-prose max-w-none">
         <slot />
       </div>
-      <footer class="border-panel mt-16 border-t-4 pt-8">
-        <p class="text-muted font-mono text-sm">~{config.personal.name}</p>
+      <footer class="border-panel mt-16 flex flex-wrap items-center justify-between gap-4 border-t-4 pt-6">
+        <p class="text-muted text-base">~{config.personal.name}</p>
+        <Anchor url="/blog" class="text-base font-medium">
+          All articles
+        </Anchor>
       </footer>
     </article>
   </Section>

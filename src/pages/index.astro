@@ -9,6 +9,7 @@ import ArticleSnippet from "../components/ArticleSnippet.astro";
 import SEO from "../components/SEO.astro";
 import { config } from "../config";
 import avatar from "../../public/avatar.jpeg";
+import frames from "../assets/avatar-frames.png";
 
 const featuredArticles = (await getCollection("blog", (e) => e.data.featured)).map((e) => ({
   ...e.data,
@@ -34,31 +35,35 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
     />
   </Fragment>
 
-  <Section class="mt-8">
-    <div class="flex flex-col items-start gap-8 sm:flex-row sm:items-center">
-      <Image
-        src={avatar}
-        alt="Maximilian Walterskirchen Profile Image"
-        width={320}
-        height={320}
-        class="pixel-frame mb-4 size-40 shrink-0 [--frame-shadow:var(--color-accent)] sm:mb-0"
-      />
+  <Section class="mt-8 md:mt-12">
+    <div class="flex flex-col items-start gap-8 md:flex-row md:items-center">
+      <div class="pixel-frame relative ml-1 size-42 shrink-0 [--frame-shadow:var(--color-accent)] sm:size-56">
+        <Image
+          src={avatar}
+          alt="Portrait of Maximilian Walterskirchen"
+          width={448}
+          height={448}
+          class="size-full"
+        />
+        {/* A sprite sheet of three coarse copies of the photo, which covers it while it sharpens. */}
+        <img src={frames.src} alt="" aria-hidden="true" class="frames absolute inset-0 size-full" />
+      </div>
       <div>
         <h1 class="font-display text-pixel-sm min-[340px]:text-pixel-md sm:text-pixel-lg">
           Maximilian Walterskirchen
         </h1>
-        <h2 class="font-mono text-xl font-medium sm:text-2xl">Senior Software Engineer</h2>
-        <h3 class="flex items-center gap-2 font-mono text-sm sm:text-base">
+        <p class="mt-2 text-xl font-medium">Senior Software Engineer</p>
+        <p class="text-muted mt-1 flex items-center gap-2 text-base">
           Zurich, Switzerland
           <PixelIcon name="swissFlag" />
-        </h3>
+        </p>
       </div>
     </div>
   </Section>
 
-  <Section>
-    <div class="flex flex-col gap-4">
-      <p>
+  <Section class="mt-4">
+    <div class="flex flex-col items-start gap-4">
+      <p class="mb-2 text-xl font-medium md:text-2xl md:leading-9">
         I build production software with AI in the loop and write about the engineering side of
         doing it well.
       </p>
@@ -80,92 +85,108 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
           href="https://zurichjs.com"
           target="_blank"
           rel="noopener noreferrer"
-          class="hover:decoration-accent hover:decoration-4 underline decoration-2 underline-offset-[6px]"
+          class="hover:decoration-accent focus-visible:outline-fg underline decoration-2 underline-offset-[6px] hover:decoration-4 focus-visible:outline-2 focus-visible:outline-offset-2"
         >
           ZurichJS
         </a>
         .
       </p>
+
+      {/* Pressing the button moves it onto its own shadow. */}
       <a
         href={`mailto:${config.personal.email}`}
-        class="hover:decoration-accent hover:decoration-4 flex items-center gap-2 underline decoration-2 underline-offset-8"
+        class="pixel-frame hover:bg-fg hover:text-bg focus-visible:outline-fg mt-4 ml-1 flex items-center gap-3 px-4 py-2 font-medium [--frame-shadow:var(--color-accent)] focus-visible:outline-2 focus-visible:outline-offset-[10px] active:translate-x-1 active:translate-y-1 active:[--frame-shadow:transparent]"
       >
         <PixelIcon name="mail" />
-        Let's chat: {config.personal.email}
+        {config.personal.email}
       </a>
     </div>
   </Section>
 
-  <Section>
-    <div class="flex w-full items-center justify-between">
-      <h3 class="font-display text-pixel-sm">Articles</h3>
-      <Anchor url="/blog" class="text-base">
-        View All
+  <Section class="mt-12">
+    <div class="border-panel flex items-end justify-between gap-4 border-b-4 pb-2">
+      <h2 class="font-display text-pixel-sm">Articles</h2>
+      <Anchor url="/blog" class="mb-1 text-base font-medium">
+        All articles
       </Anchor>
     </div>
-    <ul class="my-8">
-      {(featuredArticles.length === 0 && <p>No articles found.</p>) ||
-        featuredArticles.map((article, index) => (
-          <li
-            class:list={[
-              "animate-in-up",
-              index % 9 === 0 && "delay-0",
-              index % 9 === 1 && "delay-1",
-              index % 9 === 2 && "delay-2",
-              index % 9 === 3 && "delay-3",
-              index % 9 === 4 && "delay-4",
-              index % 9 === 5 && "delay-5",
-              index % 9 === 6 && "delay-6",
-              index % 9 === 7 && "delay-7",
-              index % 9 === 8 && "delay-8",
-            ]}
-          >
+    {featuredArticles.length === 0 ? (
+      <p class="mt-8">No articles yet.</p>
+    ) : (
+      <ul class="mt-8 flex flex-col gap-10">
+        {featuredArticles.map((article) => (
+          <li>
             <ArticleSnippet
               title={article.title}
               description={article.description}
               url={article.url}
               timestamp={article.timestamp}
-              duration={`${article.readTime} min`}
+              detail={article.readTime ? `${article.readTime} min read` : undefined}
             />
           </li>
         ))}
-    </ul>
+      </ul>
+    )}
   </Section>
 
-  <Section>
-    <div class="flex w-full items-center justify-between">
-      <h3 class="font-display text-pixel-sm">Talks</h3>
-      <Anchor url="/talks" class="text-base">
-        View All
+  <Section class="mt-12">
+    <div class="border-panel flex items-end justify-between gap-4 border-b-4 pb-2">
+      <h2 class="font-display text-pixel-sm">Talks</h2>
+      <Anchor url="/talks" class="mb-1 text-base font-medium">
+        All talks
       </Anchor>
     </div>
-    <ul class="my-8">
-      {(featuredTalks.length === 0 && <p>No talks found.</p>) ||
-        featuredTalks.map((talk, index) => (
-          <li
-            class:list={[
-              "animate-in-up",
-              index % 9 === 0 && "delay-0",
-              index % 9 === 1 && "delay-1",
-              index % 9 === 2 && "delay-2",
-              index % 9 === 3 && "delay-3",
-              index % 9 === 4 && "delay-4",
-              index % 9 === 5 && "delay-5",
-              index % 9 === 6 && "delay-6",
-              index % 9 === 7 && "delay-7",
-              index % 9 === 8 && "delay-8",
-            ]}
-          >
+    {featuredTalks.length === 0 ? (
+      <p class="mt-8">No talks yet.</p>
+    ) : (
+      <ul class="mt-8 flex flex-col gap-10">
+        {featuredTalks.map((talk) => (
+          <li>
             <ArticleSnippet
               title={talk.data.title}
               description={talk.data.description}
               url={talk.data.slidesUrl ?? talk.data.repoUrl}
               timestamp={talk.data.timestamp}
-              duration={talk.data.event}
+              detail={talk.data.event}
               external
             />
           </li>
         ))}
-    </ul>
+      </ul>
+    )}
   </Section>
 </Layout>
+
+<style>
+  .frames {
+    object-fit: cover;
+    image-rendering: pixelated;
+    visibility: hidden;
+  }
+
+  /* The one entrance on the site: the portrait sharpens in four steps as the page loads. Each
+     keyframe holds until the next one, and the last one uncovers the photo. */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes sharpen {
+      0% {
+        object-position: 0 0;
+        visibility: visible;
+      }
+      25% {
+        object-position: 50% 0;
+        visibility: visible;
+      }
+      50% {
+        object-position: 100% 0;
+        visibility: visible;
+      }
+      75% {
+        visibility: hidden;
+      }
+    }
+
+    .frames {
+      animation: sharpen 640ms step-end 160ms backwards;
+    }
+  }
+</style>

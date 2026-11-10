@@ -34,6 +34,8 @@ The look is pixel art, and `global.css` holds its rules:
 - Colours come from a fixed palette: five blue-greys and one accent. Use the role classes (`bg-bg`, `text-fg`, `text-muted`, `border-panel`), which swap with the theme, instead of `dark:` colour variants. The accent is the same in both themes and is only for fills, underlines and shadows (`bg-accent`, `decoration-accent`), never text colour. Do not add gradients, opacity, rounded corners or eased transitions.
 - Jersey 10 (`font-display`) is only sharp at multiples of 56/3 px. Set it with `text-pixel-sm`, `text-pixel-md` or `text-pixel-lg`, and never bold.
 - Icons are text bitmaps in `src/icons.ts`, rendered by `PixelIcon.astro`. Add an icon there instead of importing an icon library.
+- The homepage portrait sharpens in four steps on load: three coarse frames from `src/assets/avatar-frames.png`, then the photo. `scripts/pixel-avatar.mjs` draws the frames from `public/avatar.jpeg`, so run `node scripts/pixel-avatar.mjs` after changing the photo.
+- The portrait sharpening is the only entrance animation. Do not add entrances to sections or list items. Motion that answers an action, such as the pressed email button, steps instead of easing.
 
 ## Deployment
 

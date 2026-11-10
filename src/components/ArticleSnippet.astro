@@ -6,30 +6,37 @@ export type Props = {
   title: string;
   description: string;
   url: string;
-  duration?: string;
+  /** Shown after the date: the reading time of an article or the event of a talk. */
+  detail?: string;
   timestamp?: Date;
   external?: boolean;
 };
 
-const { title, description, url, duration, timestamp, external } = Astro.props;
+const { title, description, url, detail, timestamp, external } = Astro.props;
 
 const formattedDate = timestamp
   ? `${timestamp.toLocaleString("default", { month: "short" })} ${timestamp.getDate()}, ${timestamp.getFullYear()}`
   : null;
 ---
 
-<div class="group relative mb-8 flex flex-col gap-3">
+<div class="group relative flex flex-col gap-2">
   {/* The same selection cursor as the 404 menu. It needs the wide gutter, so it is desktop only. */}
   <PixelIcon
     name="cursor"
-    class="text-accent invisible absolute top-2 -left-7 hidden group-focus-within:visible group-hover:visible md:block"
+    class="text-accent invisible absolute top-10 -left-7 hidden group-focus-within:visible group-hover:visible md:block"
   />
-  <Anchor url={url} external={external} underline={false} class="text-xl md:text-2xl">
+  <p class="text-muted flex flex-wrap gap-x-6 text-sm md:text-base">
+    {formattedDate ? <time datetime={timestamp?.toISOString()}>{formattedDate}</time> : null}
+    {detail ? <span>{detail}</span> : null}
+  </p>
+  {/* The link's ::after covers the whole entry, so a click anywhere on it follows the link. */}
+  <Anchor
+    url={url}
+    external={external}
+    underline={false}
+    class="text-xl font-bold after:absolute after:-inset-x-4 after:-inset-y-4 md:text-2xl"
+  >
     {title}
   </Anchor>
-  <p>{description}</p>
-  <div class="text-muted flex items-center justify-between">
-    {formattedDate ? <p>{formattedDate}</p> : null}
-    {duration ? <p>{duration}</p> : null}
-  </div>
+  <p class="text-muted">{description}</p>
 </div>

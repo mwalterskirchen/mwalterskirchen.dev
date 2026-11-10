@@ -81,54 +81,6 @@
   }
 }
 
-@layer utilities {
-  @media (prefers-reduced-motion: no-preference) {
-    /* Entrances move in whole 2px steps, like sprite frames, instead of easing. */
-    @keyframes step-in-up {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .animate-in-up {
-      animation: step-in-up 280ms steps(4, jump-none) both;
-    }
-
-    .delay-0 {
-      animation-delay: 0ms;
-    }
-    .delay-1 {
-      animation-delay: 60ms;
-    }
-    .delay-2 {
-      animation-delay: 120ms;
-    }
-    .delay-3 {
-      animation-delay: 180ms;
-    }
-    .delay-4 {
-      animation-delay: 240ms;
-    }
-    .delay-5 {
-      animation-delay: 300ms;
-    }
-    .delay-6 {
-      animation-delay: 360ms;
-    }
-    .delay-7 {
-      animation-delay: 420ms;
-    }
-    .delay-8 {
-      animation-delay: 480ms;
-    }
-  }
-}
-
 @layer components {
   .blog-prose {
     & :where(h1) {
