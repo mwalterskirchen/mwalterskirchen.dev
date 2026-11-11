@@ -126,16 +126,34 @@ const lying = [
   "..################.###ss",
 ];
 
+/** Copies the drawn pixels of `part` onto `grid` with its top left at `left`, `top`. */
+const stamp = (grid: string[][], part: readonly string[], left: number, top: number) => {
+  part.forEach((row, dy) =>
+    [...row].forEach((char, dx) => {
+      const line = grid[top + dy];
+      if (char !== "." && line && left + dx >= 0 && left + dx < width) line[left + dx] = char;
+    }),
+  );
+};
+
+// A walk drops her body by a pixel as each pair of legs lands, and a gallop lifts it.
+const gaits = {
+  walk: [
+    [legs.apart, 1],
+    [legs.stand, 0],
+    [legs.crossed, 1],
+    [legs.stand, 0],
+  ],
+  run: [
+    [legs.stretched, -1],
+    [legs.gathered, 0],
+  ],
+  stand: [[legs.stand, 0]],
+} as const;
+
 export const draw = ({ pose, step, wag, blink, pant }: Look): string[] => {
   const grid = Array.from({ length: height }, () => new Array<string>(width).fill("."));
-  const stamp = (part: readonly string[], left: number, top: number) => {
-    part.forEach((row, dy) =>
-      [...row].forEach((char, dx) => {
-        const line = grid[top + dy];
-        if (char !== "." && line && left + dx >= 0 && left + dx < width) line[left + dx] = char;
-      }),
-    );
-  };
+  const put = (part: readonly string[], left: number, top: number) => stamp(grid, part, left, top);
 
   // Where the head goes, and whether the ear is lifted. Everything is two pixels in from
   // the left and one down from the top, which leaves room for the tail's swing and a leap.
@@ -143,49 +161,31 @@ export const draw = ({ pose, step, wag, blink, pant }: Look): string[] => {
   let lifted = false;
 
   if (pose === "sit") {
-    stamp(sitting, 2, 10);
-    stamp(wag ? tailWag : tail, 2, 12);
+    put(sitting, 2, 10);
+    put(wag ? tailWag : tail, 2, 12);
   } else if (pose === "lie") {
     // She breathes: every other frame her back is a pixel higher. Her paw, in the last row,
     // stays where it is.
     const rise = step % 2;
-    stamp(lying.slice(0, -1), 2, 15 - rise);
-    stamp(lying.slice(1), 2, 16);
-    stamp(wag ? tuftWag : tuft, 0, 17);
+    put(lying.slice(0, -1), 2, 15 - rise);
+    put(lying.slice(1), 2, 16);
+    put(wag ? tuftWag : tuft, 0, 17);
     at = { x: 14, y: 11 };
   } else {
-    // A walk drops her body by a pixel as each pair of legs lands, and a gallop lifts it.
-    const gait =
-      pose === "walk"
-        ? (
-            [
-              [legs.apart, 1],
-              [legs.stand, 0],
-              [legs.crossed, 1],
-              [legs.stand, 0],
-            ] as const
-          )[step % 4]
-        : pose === "run"
-          ? (
-              [
-                [legs.stretched, -1],
-                [legs.gathered, 0],
-              ] as const
-            )[step % 2]
-          : ([legs.stand, 0] as const);
-    const [stride, drop] = gait;
-    stamp(stride, 2, height - stride.length);
-    stamp(torso, 2, 10 + drop);
-    stamp(wag ? tailWag : tail, 2, 3 + drop);
+    const gait = gaits[pose];
+    const [stride, drop] = gait[step % gait.length];
+    put(stride, 2, height - stride.length);
+    put(torso, 2, 10 + drop);
+    put(wag ? tailWag : tail, 2, 3 + drop);
     at = { x: 11, y: 1 + drop };
     lifted = stride === legs.stretched;
   }
 
-  stamp(head, at.x, at.y);
-  if (lifted) stamp(ear.slice(0, -1), at.x, at.y + 4);
-  else stamp(ear, at.x, at.y + 5);
-  if (blink) stamp(["s"], at.x + 7, at.y + 5);
-  if (pant > 0) stamp(pant === 2 ? ["rr", "rr", ".r"] : ["rr", ".r"], at.x + 9, at.y + 8);
+  put(head, at.x, at.y);
+  if (lifted) put(ear.slice(0, -1), at.x, at.y + 4);
+  else put(ear, at.x, at.y + 5);
+  if (blink) put(["s"], at.x + 7, at.y + 5);
+  if (pant > 0) put(pant === 2 ? ["rr", "rr", ".r"] : ["rr", ".r"], at.x + 9, at.y + 8);
 
   return grid.map((row) => row.join(""));
 };
@@ -194,12 +194,7 @@ export const draw = ({ pose, step, wag, blink, pant }: Look): string[] => {
 export const picture = (look: Look, lift = 0): string[] => {
   const sprite = draw(look);
   const grid = Array.from({ length: pictureHeight }, () => new Array<string>(width).fill("."));
-  sprite.forEach((row, y) =>
-    [...row].forEach((char, x) => {
-      const line = grid[headroom + y - lift];
-      if (char !== "." && line) line[x] = char;
-    }),
-  );
+  stamp(grid, sprite, 0, headroom - lift);
 
   // The shadow is as wide as the lowest part of her, and narrower while she is in the air,
   // which she is in a hop and at the top of a gallop. Its second row is a checkerboard.

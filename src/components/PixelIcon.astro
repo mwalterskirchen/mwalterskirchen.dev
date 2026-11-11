@@ -19,13 +19,10 @@ const height = rows.length;
 
 const fills = {
   "#": "currentColor",
-  // Swiss flag red, the one colour outside the site palette.
-  r: "#b13e53",
   w: "var(--color-mist)",
-  // Lilly's coat is apricot (the text colour of her wrapper). These are its shade and the
-  // dark of her eye and nose.
-  s: colours.s,
-  n: colours.n,
+  // Lilly's coat is apricot (the text colour of her wrapper). These are its shade, the dark of
+  // her eye and nose, and the red of her tongue, which is also the red of the Swiss flag.
+  ...colours,
   // Her shadow on the grass.
   d: "var(--shadow)",
 };
