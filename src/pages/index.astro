@@ -95,10 +95,11 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       {/* Pressing the button moves it onto its own shadow. */}
       <a
         href={`mailto:${config.personal.email}`}
-        class="pixel-frame bg-bg hover:bg-fg hover:text-bg focus-visible:outline-fg mt-4 ml-1 flex items-center gap-3 px-4 py-2 font-medium transition-[translate,box-shadow,background-color,color] duration-100 ease-out [--frame-shadow:var(--color-accent)] focus-visible:outline-2 focus-visible:outline-offset-[10px] active:translate-x-1 active:translate-y-1 active:[--frame-shadow:transparent]"
+        class="pixel-frame bg-bg hover:bg-fg hover:text-bg focus-visible:outline-fg mt-4 ml-1 flex items-center gap-3 px-3 py-2 sm:px-4 font-medium transition-[translate,box-shadow,background-color,color] duration-100 ease-out [--frame-shadow:var(--color-accent)] focus-visible:outline-2 focus-visible:outline-offset-[10px] active:translate-x-1 active:translate-y-1 active:[--frame-shadow:transparent]"
       >
         <PixelIcon name="mail" />
-        {config.personal.email}
+        {/* The address is one long word, so on a narrow screen it has to break inside. */}
+        <span class="min-w-0 break-all">{config.personal.email}</span>
       </a>
     </div>
   </Section>

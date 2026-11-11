@@ -31,6 +31,21 @@ const scale = 3;
 <span class="ball text-accent pointer-events-none absolute bottom-6">
   <PixelIcon name="ball" scale={scale} />
 </span>
+{/* Before the first paint, the still image stands where the last page left her, so that she
+     does not jump when the script below takes over. */}
+<script is:inline>
+  try {
+    const saved = JSON.parse(sessionStorage.getItem("lilly") ?? "null");
+    if (saved) {
+      const lilly = document.querySelector(".lilly");
+      lilly.style.left = `${Math.round(saved.x)}px`;
+      if (saved.facing < 0) lilly.querySelector(".lilly-still").style.scale = "-1 1";
+      document.querySelector(".ball").style.left = `${Math.round(saved.ballX)}px`;
+    }
+  } catch {
+    // Without storage she starts each page at the text column.
+  }
+</script>
 
 <style>
   /* Where the two stand until the script takes over: at the left of the text column. Her
@@ -106,6 +121,8 @@ const scale = 3;
     let target = x;
     // Where she was when the ball was thrown, which is where she brings it back to.
     let home = x;
+    // Which way she has to face at the end of a run for her mouth to be over the ball.
+    let toward = 1;
     // `clock` only runs while the ground is on screen. `until` is when a rest ends, she
     // blinks from `blink` for a moment, and a hop starts at `hop`.
     let clock = 0;
@@ -164,7 +181,9 @@ const scale = 3;
     const arrive = () => {
       if (mode === "walk") return rest("stand", between(800, 2500));
       // She got to the ball's landing place. If it is still in the air she waits for it.
+      // A ball that landed close to her made her step away from it, so she turns back to it.
       if (mode === "fetch") {
+        facing = toward;
         if (flight) mode = "wait";
         else pick();
         return;
@@ -205,9 +224,13 @@ const scale = 3;
       return { ...shared, pose: mode === "wait" ? "stand" : mode, step: 0 };
     };
 
-    // The canvas is redrawn only when the picture changes. She is drawn mirrored when she
-    // faces left, but the "z"s of her sleep are not, so that they still read as "z".
+    // The canvas is redrawn only when the picture changes, or the theme, which changes the
+    // colours of her shadow and the "z"s. She is drawn mirrored when she faces left, but the
+    // "z"s of her sleep are not, so that they still read as "z".
     let drawn = "";
+    new MutationObserver(() => (drawn = "")).observe(document.documentElement, {
+      attributeFilter: ["class"],
+    });
     const paint = () => {
       const rows = picture(look(), lift());
       const dreams = mode === "sleep" ? snores(Math.floor(clock / 700)) : [];
@@ -246,6 +269,11 @@ const scale = 3;
       clock += elapsed;
       if (clock >= blink + 130) blink = clock + between(1800, 5000);
 
+      // A resized window can leave her, or the places she is heading for, off the grass.
+      x = limit(x, size);
+      target = limit(target, size);
+      home = limit(home, size);
+
       if (mode === "walk" || mode === "fetch" || mode === "carry") {
         const distance = target - x;
         const reach = (speeds[mode] * elapsed) / 1000;
@@ -261,9 +289,6 @@ const scale = 3;
       } else if (clock >= until) {
         wander();
       }
-
-      // A resized window can leave either of them off the grass.
-      x = limit(x, size);
 
       if (mode === "carry") {
         // The ball is in her mouth, and dips with her head as she trots.
@@ -296,8 +321,10 @@ const scale = 3;
 
     // Pressing the ground throws the ball there, from wherever it is, and Lilly runs to it.
     // Pressing Lilly herself is a pat: she wakes up if she was asleep, and wags and pants.
+    // A click, unlike a pointer press, leaves out the other mouse buttons and a finger that
+    // starts to scroll the page.
     ground.classList.add("pixel-cursor-pointer");
-    ground.addEventListener("pointerdown", (event) => {
+    ground.addEventListener("click", (event) => {
       const busy = mode === "fetch" || mode === "wait" || mode === "carry";
       if (lilly.contains(event.target as Node)) {
         if (!busy) rest("stand", 2500, true, true);
@@ -320,7 +347,8 @@ const scale = 3;
       };
       // A ball thrown again while she is still busy with it comes back to the same place.
       if (!busy) home = x;
-      target = over(to, to + ballSize / 2 > x + size / 2 ? 1 : -1);
+      toward = to + ballSize / 2 > x + size / 2 ? 1 : -1;
+      target = over(to, toward);
       mode = "fetch";
       wagging = false;
       panting = false;
@@ -331,7 +359,8 @@ const scale = 3;
       if (mode !== "sleep" && mode !== "fetch" && clock - hop > 300) hop = clock;
     });
 
-    // The loop runs only while the ground is on screen.
+    // She is drawn once at the start, and from then on only while the ground is on screen.
+    step(0);
     let frame = 0;
     let last = 0;
     const loop = (now: number) => {

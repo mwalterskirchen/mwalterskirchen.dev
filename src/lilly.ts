@@ -81,8 +81,11 @@ const legs = {
     ".sss.####.####.sss......",
   ],
   // The two halves of a gallop: stretched out in the air, then gathered under her. The far
-  // legs sit inside the near ones, so that all four show.
+  // legs sit inside the near ones, so that all four show. The stretched legs have a row more
+  // than the others: its empty last row is the air under her, and its first reaches her body,
+  // which is a pixel higher in that frame.
   stretched: [
+    "...###.ss.ss.###........",
     "..###.ss...ss.###.......",
     ".###.ss.....ss.###......",
     "####sss......sss####....",
@@ -143,9 +146,10 @@ export const draw = ({ pose, step, wag, blink, pant }: Look): string[] => {
     stamp(sitting, 2, 10);
     stamp(wag ? tailWag : tail, 2, 12);
   } else if (pose === "lie") {
-    // She breathes: every other frame her back is a pixel higher.
+    // She breathes: every other frame her back is a pixel higher. Her paw, in the last row,
+    // stays where it is.
     const rise = step % 2;
-    stamp(lying, 2, 15 - rise);
+    stamp(lying.slice(0, -1), 2, 15 - rise);
     stamp(lying.slice(1), 2, 16);
     stamp(wag ? tuftWag : tuft, 0, 17);
     at = { x: 14, y: 11 };
@@ -170,7 +174,7 @@ export const draw = ({ pose, step, wag, blink, pant }: Look): string[] => {
             )[step % 2]
           : ([legs.stand, 0] as const);
     const [stride, drop] = gait;
-    stamp(stride, 2, 17);
+    stamp(stride, 2, height - stride.length);
     stamp(torso, 2, 10 + drop);
     stamp(wag ? tailWag : tail, 2, 3 + drop);
     at = { x: 11, y: 1 + drop };
