@@ -87,6 +87,11 @@ const scale = 3;
   const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (ground && lilly && image && canvas && ball && pen && !still) {
+    // The inline script above has already put her, her ball and the way she faces where the
+    // last page left them.
+    let x = lilly.offsetLeft;
+    let facing = image.style.scale === "-1 1" ? -1 : 1;
+    let ballX = ball.offsetLeft;
     canvas.hidden = false;
     image.remove();
 
@@ -99,19 +104,8 @@ const scale = 3;
     const speeds = { walk: 9 * unit, carry: 18 * unit, fetch: 42 * unit };
     const between = (min: number, max: number) => min + Math.random() * (max - min);
     const chance = (odds: number) => Math.random() < odds;
-    const limit = (value: number, width: number) =>
-      Math.max(edge, Math.min(value, ground.clientWidth - width - edge));
-
-    let x = lilly.offsetLeft;
-    let facing = 1;
-    let ballX = ball.offsetLeft;
-    // She is where the last page left her.
-    try {
-      const saved = JSON.parse(sessionStorage.getItem("lilly") ?? "null");
-      if (saved) ({ x, facing, ballX } = saved);
-    } catch {
-      // Without storage she starts each page at the text column.
-    }
+    const limit = (value: number, span: number) =>
+      Math.max(edge, Math.min(value, ground.clientWidth - span - edge));
 
     // "fetch" is the run to the ball, "wait" is standing where it will land, and "carry" is
     // the trot back with it in her mouth.
@@ -142,14 +136,15 @@ const scale = 3;
       bounce: number;
     } | null = null;
 
+    // How far her mouth is from her left edge when she faces `side`.
+    const mouthAt = (side: number) => (side > 0 ? mouth.x * unit : size - mouth.x * unit);
     // Where the ball is while it is in her mouth.
     const held = (dip: number) => ({
-      x: x + (facing > 0 ? mouth.x * unit : size - mouth.x * unit) - ballSize / 2,
+      x: x + mouthAt(facing) - ballSize / 2,
       up: (mouth.up - dip) * unit - ballSize / 2,
     });
     // Where she has to stand for her mouth to be over a ball at `at`.
-    const over = (at: number, side: number) =>
-      limit(at + ballSize / 2 - (side > 0 ? mouth.x * unit : size - mouth.x * unit), size);
+    const over = (at: number, side: number) => limit(at + ballSize / 2 - mouthAt(side), size);
 
     const rest = (pose: "stand" | "sit" | "sleep", length: number, wag = false, pant = false) => {
       mode = pose;
@@ -225,28 +220,46 @@ const scale = 3;
     };
 
     // The canvas is redrawn only when the picture changes, or the theme, which changes the
-    // colours of her shadow and the "z"s. She is drawn mirrored when she faces left, but the
-    // "z"s of her sleep are not, so that they still read as "z".
+    // colours of her coat, her shadow and the "z"s. The key is built from what the picture is
+    // drawn from, so an unchanged frame costs no drawing at all. Every pose repeats within
+    // four steps. She is drawn mirrored when she faces left, but the "z"s of her sleep are
+    // not, so that they still read as "z".
     let drawn = "";
-    new MutationObserver(() => (drawn = "")).observe(document.documentElement, {
-      attributeFilter: ["class"],
-    });
+    let fills: Record<string, string> | null = null;
+    new MutationObserver(() => {
+      drawn = "";
+      fills = null;
+    }).observe(document.documentElement, { attributeFilter: ["class"] });
     const paint = () => {
-      const rows = picture(look(), lift());
+      const now = look();
+      const up = lift();
       const dreams = mode === "sleep" ? snores(Math.floor(clock / 700)) : [];
-      const key = `${facing}${dreams.length}${rows.join("")}`;
+      const key = [
+        now.pose,
+        now.step % 4,
+        now.wag,
+        now.blink,
+        now.pant,
+        up,
+        facing,
+        dreams.length,
+      ].join();
       if (key === drawn) return;
       drawn = key;
 
-      const style = getComputedStyle(lilly);
-      const fills: Record<string, string> = {
-        ...colours,
-        "#": style.color,
-        d: style.getPropertyValue("--shadow"),
-        z: getComputedStyle(ground).color,
-      };
+      const rows = picture(now, up);
+      if (!fills) {
+        const style = getComputedStyle(lilly);
+        fills = {
+          ...colours,
+          "#": style.color,
+          d: style.getPropertyValue("--shadow"),
+          z: getComputedStyle(ground).color,
+        };
+      }
+      const colour = fills;
       const dot = (char: string, column: number, row: number) => {
-        pen.fillStyle = fills[char];
+        pen.fillStyle = colour[char];
         pen.fillRect(column, row, 1, 1);
       };
       pen.clearRect(0, 0, width, pictureHeight);
@@ -380,7 +393,7 @@ const scale = 3;
       try {
         sessionStorage.setItem("lilly", JSON.stringify({ x, facing, ballX }));
       } catch {
-        // Without storage she starts each page at the text column.
+        // Without storage, the next page starts her at the text column.
       }
     });
   }

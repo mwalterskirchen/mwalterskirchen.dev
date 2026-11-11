@@ -27,12 +27,9 @@ const canonicalUrl = new URL("/", Astro.site).href;
         { href: "/blog", label: "Read the blog" },
         { href: "/talks", label: "See the talks" },
       ].map((item) => (
-        <li>
-          <a
-            href={item.href}
-            class="focus-visible:outline-fg flex items-center gap-3 py-1 focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            <PixelIcon name="cursor" class="cursor bob text-accent" />
+        <li class="menu-item">
+          <a href={item.href} class="flex items-center gap-3 py-1">
+            <PixelIcon name="cursor" class="menu-cursor" />
             {item.label}
           </a>
         </li>
@@ -44,12 +41,7 @@ const canonicalUrl = new URL("/", Astro.site).href;
 <style is:global>
   /* Global because the cursor is drawn by a child component, which scoped styles do not reach.
      The cursor sits on the first option until another one is hovered or focused. */
-  .continue .cursor {
-    opacity: 0;
-    transition: opacity 150ms ease-out;
-  }
-  .continue li:is(:hover, :focus-within) .cursor,
-  .continue:not(:hover, :focus-within) li:first-child .cursor {
+  .continue:not(:hover, :focus-within) li:first-child .menu-cursor {
     opacity: 1;
   }
 </style>

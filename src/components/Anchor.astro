@@ -17,7 +17,7 @@ const { url, external, underline = true, class: className } = Astro.props;
 <a
   href={url}
   class:list={[
-    "hover:decoration-accent focus-visible:outline-fg underline decoration-2 underline-offset-[6px] transition-[text-decoration-color,text-decoration-thickness] duration-150 ease-out hover:decoration-4 focus-visible:outline-2 focus-visible:outline-offset-2",
+    "pixel-link",
     // An external link stays inline so that its arrow follows the last word when the text wraps.
     external ? "inline" : "flex items-center gap-1",
     // Without an underline at rest, the line is still there but clear, so that it can fade in.

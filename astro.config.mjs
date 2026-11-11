@@ -15,6 +15,11 @@ export default defineConfig({
   markdown: { shikiConfig: { theme: "css-variables" } },
   vite: {
     plugins: [tailwindcss()],
+    // Leave the cursor images as files instead of inlining them into the stylesheet, so a page
+    // fetches only the ones for its theme and pixel density.
+    build: {
+      assetsInlineLimit: (file) => (file.includes("/assets/cursors/") ? false : undefined),
+    },
   },
   integrations: [sitemap()],
   adapter: cloudflare({ imageService: "compile", prerenderEnvironment: "node" }),

@@ -1,5 +1,6 @@
 ---
 import Anchor from "./Anchor.astro";
+import EntryMeta from "./EntryMeta.astro";
 import PixelIcon from "./PixelIcon.astro";
 
 export type Props = {
@@ -13,22 +14,12 @@ export type Props = {
 };
 
 const { title, description, url, detail, timestamp, external } = Astro.props;
-
-const formattedDate = timestamp
-  ? `${timestamp.toLocaleString("default", { month: "short" })} ${timestamp.getDate()}, ${timestamp.getFullYear()}`
-  : null;
 ---
 
-<div class="group relative flex flex-col gap-2">
+<div class="menu-item relative flex flex-col gap-2">
   {/* The same selection cursor as the 404 menu. It needs the wide gutter, so it is desktop only. */}
-  <PixelIcon
-    name="cursor"
-    class="bob text-accent absolute top-10 -left-7 hidden opacity-0 transition-opacity duration-150 ease-out group-focus-within:opacity-100 group-hover:opacity-100 md:block"
-  />
-  <p class="text-muted flex flex-wrap gap-x-6 text-sm md:text-base">
-    {formattedDate ? <time datetime={timestamp?.toISOString()}>{formattedDate}</time> : null}
-    {detail ? <span>{detail}</span> : null}
-  </p>
+  <PixelIcon name="cursor" class="menu-cursor absolute top-10 -left-7 hidden md:block" />
+  <EntryMeta timestamp={timestamp} detail={detail} />
   {/* The link's ::after covers the whole entry, so a click anywhere on it follows the link. */}
   <Anchor
     url={url}
