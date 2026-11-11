@@ -17,8 +17,9 @@ export const pictureHeight = headroom + height + footing;
 export const colours = { s: "#c9783f", n: "#4a2a22", r: "#b13e53" } as const;
 
 export type Look = {
-  pose: "stand" | "walk" | "run" | "sit" | "lie";
-  /** Which frame of the pose: a walk has four, a run two, and lying down two (breathing). */
+  pose: "stand" | "walk" | "run" | "jump" | "sit" | "lie";
+  /** Which frame of the pose: a walk has four, a run two, and lying down two (breathing). A
+   *  jump is one frame: the stretched half of a gallop, held. */
   step: number;
   /** The tail is to one side. */
   wag: boolean;
@@ -148,6 +149,7 @@ const gaits = {
     [legs.stretched, -1],
     [legs.gathered, 0],
   ],
+  jump: [[legs.stretched, -1]],
   stand: [[legs.stand, 0]],
 } as const;
 
@@ -214,6 +216,10 @@ export const picture = (look: Look, lift = 0): string[] => {
 
 /** Where her mouth is, in pixels from the left of the picture and up from her feet. */
 export const mouth = { x: 24, up: 12 };
+
+/** The part of her that bumps into things in her run (run.ts): the columns from `left` up to
+ *  `right`, and the rows from her feet up to `up`. Her head is above anything she jumps. */
+export const body = { left: 4, right: 21, up: 11 };
 
 /** The "z"s that rise from her while she sleeps: where each one's top left pixel goes. */
 export const snores = (step: number): { x: number; y: number }[] =>

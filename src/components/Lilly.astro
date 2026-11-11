@@ -11,6 +11,16 @@ const standing = picture({ pose: "stand", step: 0, wag: false, blink: false, pan
 const scale = 3;
 ---
 
+{/* Her run (run.ts) draws the things she jumps on this canvas, behind her. */}
+<canvas class="run-field text-fg pointer-events-none absolute inset-0 size-full" hidden></canvas>
+{/* The score and a hint, at the right of the text column, a little above the hills. */}
+<div
+  class="run-board pointer-events-none absolute inset-x-0 -top-4 mx-auto max-w-3xl px-4 text-right"
+  hidden
+>
+  <p class="run-score font-display text-pixel-sm whitespace-pre"></p>
+  <p class="run-hint text-sm font-medium"></p>
+</div>
 {/* Lilly and her ball. The grass is the bottom 24px of `.ground`: the ball and her feet stand
      on top of it, and her shadow, which is the bottom of her picture, lies on it. */}
 <span class="lilly group text-apricot absolute" style={`bottom: ${24 - footing * scale}px`}>
@@ -57,7 +67,8 @@ const scale = 3;
     left: max(7rem, calc(50% - 17rem));
   }
 
-  .lilly-live {
+  .lilly-live,
+  .run-field {
     image-rendering: pixelated;
   }
 </style>
@@ -66,6 +77,9 @@ const scale = 3;
   // Lilly wanders along the grass, sits, wags her tail, pants, blinks and falls asleep. A press
   // anywhere on the ground throws her ball there: she runs after it, carries it back to where
   // she set off, and drops it. She stays still for people who ask for reduced motion.
+  //
+  // Three quick pats, or the "lilly:play" event (the 404 page sends it), start her run: a game
+  // in which she jumps over things in the garden (run.ts).
   import {
     colours,
     headroom,
@@ -77,16 +91,35 @@ const scale = 3;
     width,
     type Look,
   } from "../lilly";
+  import { createRun } from "../run";
 
   const ground = document.querySelector<HTMLElement>(".ground");
   const lilly = document.querySelector<HTMLElement>(".lilly");
   const image = document.querySelector<SVGElement>(".lilly-still");
   const canvas = document.querySelector<HTMLCanvasElement>(".lilly-live");
   const ball = document.querySelector<HTMLElement>(".ball");
+  const field = document.querySelector<HTMLCanvasElement>(".run-field");
+  const board = document.querySelector<HTMLElement>(".run-board");
+  const scoreText = document.querySelector<HTMLElement>(".run-score");
+  const hintText = document.querySelector<HTMLElement>(".run-hint");
   const pen = canvas?.getContext("2d");
+  const fieldPen = field?.getContext("2d");
   const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (ground && lilly && image && canvas && ball && pen && !still) {
+  if (
+    ground &&
+    lilly &&
+    image &&
+    canvas &&
+    ball &&
+    pen &&
+    field &&
+    board &&
+    scoreText &&
+    hintText &&
+    fieldPen &&
+    !still
+  ) {
     // The inline script above has already put her, her ball and the way she faces where the
     // last page left them.
     let x = lilly.offsetLeft;
@@ -135,6 +168,26 @@ const scale = 3;
       height: number;
       bounce: number;
     } | null = null;
+
+    // Her run. `play` is null while she is just being a dog. In it she first runs to the
+    // left of the text column ("lineup"), then runs on the spot while the ground moves ("run"),
+    // and sits down when she bumps into something ("over").
+    const run = createRun(unit);
+    let play: { phase: "lineup" | "run" | "over"; since: number } | null = null;
+    let pats: number[] = [];
+    let onScreen = false;
+    let best = 0;
+    try {
+      best = Number(localStorage.getItem("lilly-best")) || 0;
+    } catch {
+      // Without storage the best score lasts until the page is left.
+    }
+    const touch = window.matchMedia("(pointer: coarse)").matches;
+    const hints = {
+      start: touch ? "Tap to jump" : "Space or ↑ to jump · Esc to stop",
+      over: touch ? "Game over · tap to play again" : "Game over · Space to play again",
+    };
+    const padded = (score: number) => String(score).padStart(5, "0");
 
     // How far her mouth is from her left edge when she faces `side`.
     const mouthAt = (side: number) => (side > 0 ? mouth.x * unit : size - mouth.x * unit);
@@ -208,6 +261,9 @@ const scale = 3;
         blink: clock >= blink && clock < blink + 130,
         pant,
       };
+      if (play?.phase === "over") return { ...shared, pose: "sit", step: 0 };
+      if (play && run.lift > 0) return { ...shared, pose: "jump", step: 0, pant: 1 };
+      if (play) return { ...shared, pose: "run", step: Math.floor(clock / 90), pant: 1 };
       if (mode === "walk") return { ...shared, pose: "walk", step: Math.floor(clock / 150) };
       if (mode === "carry") return { ...shared, pose: "walk", step: Math.floor(clock / 110) };
       // Her tongue is out for the whole run.
@@ -232,7 +288,9 @@ const scale = 3;
     }).observe(document.documentElement, { attributeFilter: ["class"] });
     const paint = () => {
       const now = look();
-      const up = lift();
+      const up = play ? 0 : lift();
+      // In the air in her run, her shadow is drawn on the grass by run.ts instead.
+      const airborne = play !== null && run.lift > 0;
       const dreams = mode === "sleep" ? snores(Math.floor(clock / 700)) : [];
       const key = [
         now.pose,
@@ -243,6 +301,7 @@ const scale = 3;
         up,
         facing,
         dreams.length,
+        airborne,
       ].join();
       if (key === drawn) return;
       drawn = key;
@@ -265,7 +324,9 @@ const scale = 3;
       pen.clearRect(0, 0, width, pictureHeight);
       rows.forEach((row, y) =>
         [...row].forEach((char, column) => {
-          if (char !== ".") dot(char, facing > 0 ? column : width - 1 - column, y);
+          if (char !== "." && !(airborne && char === "d")) {
+            dot(char, facing > 0 ? column : width - 1 - column, y);
+          }
         }),
       );
       for (const dream of dreams) {
@@ -278,6 +339,90 @@ const scale = 3;
       }
     };
 
+    const say = (hint: string) => {
+      hintText.textContent = hint;
+    };
+
+    const start = () => {
+      if (play && (play.phase !== "over" || clock - play.since < 600)) return;
+      if (!play) {
+        ball.style.visibility = "hidden";
+        field.hidden = false;
+        board.hidden = false;
+        flight = null;
+        ground.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+      run.reset();
+      play = { phase: "lineup", since: clock };
+      wagging = false;
+      panting = false;
+      say(hints.start);
+    };
+
+    const stop = () => {
+      play = null;
+      field.hidden = true;
+      board.hidden = true;
+      ground.style.backgroundPositionX = "";
+      ball.style.visibility = "";
+      ballUp = 0;
+      rest("sit", 3000, true, true);
+    };
+
+    // One step of her run.
+    const advance = (elapsed: number) => {
+      if (!play) return;
+      const span = ground.clientWidth;
+      if (play.phase === "lineup") {
+        // She runs to where she stands at the start of a visit, and turns to the right.
+        const spot = limit(span / 2 - 374, size);
+        const distance = spot - x;
+        const reach = (speeds.fetch * elapsed) / 1000;
+        if (Math.abs(distance) <= reach) {
+          x = spot;
+          facing = 1;
+          play = { phase: "run", since: clock };
+        } else {
+          facing = Math.sign(distance);
+          x += facing * reach;
+        }
+      } else if (play.phase === "run") {
+        if (run.update(elapsed, x, span)) {
+          play = { phase: "over", since: clock };
+          wagging = true;
+          panting = true;
+          if (run.score > best) {
+            best = run.score;
+            try {
+              localStorage.setItem("lilly-best", String(best));
+            } catch {
+              // The best score lasts until the page is left.
+            }
+          }
+          say(hints.over);
+        } else if (clock - play.since > 2000) {
+          say("");
+        }
+        // The ground moves in whole pixels of the scene, which is drawn at four.
+        const scrolled = (Math.round(run.distance / 4) * 4) % 1920;
+        ground.style.backgroundPositionX = `calc(50% - ${scrolled}px)`;
+      } else {
+        run.update(elapsed, x, span, false);
+        // Left alone after a game, she goes back to her own business.
+        if (clock - play.since > 10000) return stop();
+      }
+
+      if (field.width !== span) field.width = span;
+      if (field.height !== ground.clientHeight) field.height = ground.clientHeight;
+      paint();
+      run.paint(fieldPen, x, field.height - 24, {
+        hurdle: getComputedStyle(field).color,
+        shadow: fills?.d ?? "",
+      });
+      const record = best > 0 ? `  HI ${padded(best)}` : "";
+      scoreText.textContent = `${padded(run.score)}${record}`;
+    };
+
     const step = (elapsed: number) => {
       clock += elapsed;
       if (clock >= blink + 130) blink = clock + between(1800, 5000);
@@ -287,7 +432,9 @@ const scale = 3;
       target = limit(target, size);
       home = limit(home, size);
 
-      if (mode === "walk" || mode === "fetch" || mode === "carry") {
+      if (play) {
+        advance(elapsed);
+      } else if (mode === "walk" || mode === "fetch" || mode === "carry") {
         const distance = target - x;
         const reach = (speeds[mode] * elapsed) / 1000;
         if (Math.abs(distance) <= reach) {
@@ -327,6 +474,7 @@ const scale = 3;
       }
 
       lilly.style.left = `${Math.round(x)}px`;
+      lilly.style.translate = play ? `0 ${-Math.round(run.lift)}px` : "";
       ball.style.left = `${Math.round(ballX)}px`;
       ball.style.translate = `0 ${-Math.round(ballUp)}px`;
       paint();
@@ -338,9 +486,14 @@ const scale = 3;
     // starts to scroll the page.
     ground.classList.add("pixel-cursor-pointer");
     ground.addEventListener("click", (event) => {
+      if (play) return;
       const busy = mode === "fetch" || mode === "wait" || mode === "carry";
       if (lilly.contains(event.target as Node)) {
-        if (!busy) rest("stand", 2500, true, true);
+        pats = [...pats.filter((at) => clock - at < 1500), clock];
+        if (pats.length >= 3) {
+          pats = [];
+          start();
+        } else if (!busy) rest("stand", 2500, true, true);
         return;
       }
       const to = limit(
@@ -369,8 +522,27 @@ const scale = 3;
 
     // She hops when the pointer reaches her, unless she is asleep or running.
     lilly.addEventListener("pointerenter", () => {
-      if (mode !== "sleep" && mode !== "fetch" && clock - hop > 300) hop = clock;
+      if (!play && mode !== "sleep" && mode !== "fetch" && clock - hop > 300) hop = clock;
     });
+
+    // In her run, a press on the ground or a key makes her jump, and once it is over, starts
+    // the next run. A press, unlike a click, does not wait for the button to come up.
+    const press = () => {
+      if (play?.phase === "run") run.jump();
+      else if (play?.phase === "over") start();
+    };
+    ground.addEventListener("pointerdown", (event) => {
+      if (play && event.button === 0) press();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (!play || !onScreen) return;
+      if (event.key === "Escape") return stop();
+      if (event.key !== " " && event.key !== "ArrowUp") return;
+      // The keys would otherwise scroll the page, or press the button that started the run.
+      event.preventDefault();
+      if (!event.repeat) press();
+    });
+    window.addEventListener("lilly:play", start);
 
     // She is drawn once at the start, and from then on only while the ground is on screen.
     step(0);
@@ -384,7 +556,8 @@ const scale = 3;
     };
     new IntersectionObserver(([entry]) => {
       cancelAnimationFrame(frame);
-      if (!entry.isIntersecting) return;
+      onScreen = entry.isIntersecting;
+      if (!onScreen) return;
       last = performance.now();
       frame = requestAnimationFrame(loop);
     }).observe(ground);
