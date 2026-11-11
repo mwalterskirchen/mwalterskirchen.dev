@@ -34,9 +34,26 @@ const canonicalUrl = new URL("/", Astro.site).href;
           </a>
         </li>
       ))}
+      {/* Starts Lilly's run on the grass below (Lilly.astro). Shown only where she moves. */}
+      <li class="menu-item play-lilly" hidden>
+        <button type="button" class="flex items-center gap-3 py-1">
+          <PixelIcon name="cursor" class="menu-cursor" />
+          Play with Lilly
+        </button>
+      </li>
     </ul>
   </Section>
 </Layout>
+
+<script>
+  const item = document.querySelector<HTMLElement>(".play-lilly");
+  if (item && window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+    item.hidden = false;
+    item.querySelector("button")?.addEventListener("click", () => {
+      window.dispatchEvent(new Event("lilly:play"));
+    });
+  }
+</script>
 
 <style is:global>
   /* Global because the cursor is drawn by a child component, which scoped styles do not reach.
