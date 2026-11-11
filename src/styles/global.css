@@ -381,15 +381,20 @@
   }
 }
 
-/* A 4px outline with the corner pixels left out, and a hard shadow down and to the right. */
+/* A 4px outline with the corner pixels left out, and a hard shadow down and to the right.
+   `--frame-depth` is how far the shadow reaches past the outline. To lift a frame off the
+   page, move it up and left and deepen the shadow by the same amount, so the shadow stays
+   where it was. */
 @utility pixel-frame {
   box-shadow:
     -4px 0 0 0 var(--fg),
     4px 0 0 0 var(--fg),
     0 -4px 0 0 var(--fg),
     0 4px 0 0 var(--fg),
-    8px 4px 0 0 var(--frame-shadow, var(--panel)),
-    4px 8px 0 0 var(--frame-shadow, var(--panel));
+    calc(4px + var(--frame-depth, 4px)) var(--frame-depth, 4px) 0 0
+      var(--frame-shadow, var(--panel)),
+    var(--frame-depth, 4px) calc(4px + var(--frame-depth, 4px)) 0 0
+      var(--frame-shadow, var(--panel));
 }
 
 /* A link underline that thickens and turns accent while the pointer is on it. */
