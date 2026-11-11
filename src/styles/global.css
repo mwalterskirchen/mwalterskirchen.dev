@@ -391,8 +391,10 @@
     4px 0 0 0 var(--fg),
     0 -4px 0 0 var(--fg),
     0 4px 0 0 var(--fg),
-    calc(4px + var(--frame-depth, 4px)) var(--frame-depth, 4px) 0 0 var(--frame-shadow, var(--panel)),
-    var(--frame-depth, 4px) calc(4px + var(--frame-depth, 4px)) 0 0 var(--frame-shadow, var(--panel));
+    calc(4px + var(--frame-depth, 4px)) var(--frame-depth, 4px) 0 0
+      var(--frame-shadow, var(--panel)),
+    var(--frame-depth, 4px) calc(4px + var(--frame-depth, 4px)) 0 0
+      var(--frame-shadow, var(--panel));
 }
 
 /* A link underline that thickens and turns accent while the pointer is on it. */
