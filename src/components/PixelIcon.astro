@@ -1,0 +1,60 @@
+---
+import { icons, type IconName } from "../icons";
+import { colours } from "../lilly";
+
+type Props = {
+  /** An icon from `src/icons.ts`. */
+  name?: IconName;
+  /** A bitmap to draw in place of a named icon. */
+  rows?: readonly string[];
+  /** Screen pixels per icon pixel. Keep it a whole number so the edges stay sharp. */
+  scale?: number;
+  class?: string;
+};
+
+const { name, scale = 2, class: className } = Astro.props;
+const rows = Astro.props.rows ?? (name ? icons[name] : []);
+const width = rows[0].length;
+const height = rows.length;
+
+const fills = {
+  "#": "currentColor",
+  // Swiss flag red, the one colour outside the site palette.
+  r: "#b13e53",
+  w: "var(--color-mist)",
+  // Lilly's coat is apricot (the text colour of her wrapper). These are its shade and the
+  // dark of her eye and nose.
+  s: colours.s,
+  n: colours.n,
+  // Her shadow on the grass.
+  d: "var(--shadow)",
+};
+
+// One path per colour, with each horizontal run of pixels drawn as a single rectangle.
+const paths = Object.entries(fills)
+  .map(([char, fill]) => ({
+    fill,
+    d: rows
+      .flatMap((row, y) =>
+        [...row.matchAll(new RegExp(`${char}+`, "g"))].map(
+          (run) => `M${run.index} ${y}h${run[0].length}v1h-${run[0].length}z`,
+        ),
+      )
+      .join(""),
+  }))
+  .filter((path) => path.d);
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox={`0 0 ${width} ${height}`}
+  width={width * scale}
+  height={height * scale}
+  shape-rendering="crispEdges"
+  aria-hidden="true"
+  class:list={["shrink-0", className]}
+>
+  {paths.map((path) => (
+    <path fill={path.fill} d={path.d} />
+  ))}
+</svg>

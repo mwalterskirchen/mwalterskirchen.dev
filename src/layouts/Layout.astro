@@ -6,10 +6,8 @@ import "@fontsource/ibm-plex-mono/latin-400-italic";
 import "@fontsource/ibm-plex-mono/latin-500";
 import "@fontsource/ibm-plex-mono/latin-600";
 import "@fontsource/ibm-plex-mono/latin-700";
-import "@fontsource-variable/literata/opsz.css";
-import "@fontsource/press-start-2p";
+import "@fontsource/jersey-10/latin-400.css";
 import plexMono from "@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url";
-import literata from "@fontsource-variable/literata/files/literata-latin-opsz-normal.woff2?url";
 import "../styles/global.css";
 ---
 
@@ -21,7 +19,6 @@ import "../styles/global.css";
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <link rel="preload" as="font" type="font/woff2" href={plexMono} crossorigin="anonymous" />
-    <link rel="preload" as="font" type="font/woff2" href={literata} crossorigin="anonymous" />
     <!-- Theme detection script - runs before page renders -->
     <script is:inline>
       const theme = (() => {
@@ -44,9 +41,14 @@ import "../styles/global.css";
     </script>
     <slot name="head" />
   </head>
-  <body class="bg-neutral-100 font-mono text-neutral-900 transition-colors duration-150 ease-in-out motion-reduce:transition-none dark:bg-neutral-900 dark:text-neutral-100">
+  <body class="bg-bg text-fg relative flex min-h-dvh flex-col font-mono md:text-lg">
+    {/* The body fills the screen so that the footer's ground sits at the bottom of a short page. */}
+    <div class="sky" aria-hidden="true">
+      <div class="sky-far"></div>
+      <div class="sky-near"></div>
+    </div>
     <Header />
-    <main>
+    <main class="grow">
       <slot />
     </main>
     <Footer />

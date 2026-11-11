@@ -1,0 +1,387 @@
+---
+import { footing, picture, pictureHeight, width } from "../lilly";
+import PixelIcon from "./PixelIcon.astro";
+
+// What a page shows before the script runs, and all it shows to people who ask for reduced
+// motion: Lilly standing still.
+const standing = picture({ pose: "stand", step: 0, wag: false, blink: false, pant: 0 });
+
+// Screen pixels per drawn pixel, for Lilly and her ball. The scene around them is drawn at
+// four, so at three she is a little smaller than her surroundings.
+const scale = 3;
+---
+
+{/* Lilly and her ball. The grass is the bottom 24px of `.ground`: the ball and her feet stand
+     on top of it, and her shadow, which is the bottom of her picture, lies on it. */}
+<span class="lilly group text-apricot absolute" style={`bottom: ${24 - footing * scale}px`}>
+  {/* Her name tag, which shows while the pointer is on her. */}
+  <span class="pixel-frame bg-bg text-fg pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 px-2 py-0.5 text-sm font-medium opacity-0 transition-opacity duration-150 ease-out group-hover:opacity-100 [--frame-shadow:var(--color-accent)]">
+    Lilly
+  </span>
+  {/* The script draws her on the canvas and removes the still image. */}
+  <PixelIcon rows={standing} scale={scale} class="lilly-still" />
+  <canvas
+    class="lilly-live block"
+    width={width}
+    height={pictureHeight}
+    style={`width: ${width * scale}px; height: ${pictureHeight * scale}px`}
+    hidden
+  ></canvas>
+</span>
+<span class="ball text-accent pointer-events-none absolute bottom-6">
+  <PixelIcon name="ball" scale={scale} />
+</span>
+{/* Before the first paint, the still image stands where the last page left her, so that she
+     does not jump when the script below takes over. */}
+<script is:inline>
+  try {
+    const saved = JSON.parse(sessionStorage.getItem("lilly") ?? "null");
+    if (saved) {
+      const lilly = document.querySelector(".lilly");
+      lilly.style.left = `${Math.round(saved.x)}px`;
+      if (saved.facing < 0) lilly.querySelector(".lilly-still").style.scale = "-1 1";
+      document.querySelector(".ball").style.left = `${Math.round(saved.ballX)}px`;
+    }
+  } catch {
+    // Without storage she starts each page at the text column.
+  }
+</script>
+
+<style>
+  /* Where the two stand until the script takes over: at the left of the text column. Her
+     image has 6px of empty space on each side. */
+  .lilly {
+    left: max(0.625rem, calc(50% - 23.375rem));
+  }
+  .ball {
+    left: max(7rem, calc(50% - 17rem));
+  }
+
+  .lilly-live {
+    image-rendering: pixelated;
+  }
+</style>
+
+<script>
+  // Lilly wanders along the grass, sits, wags her tail, pants, blinks and falls asleep. A press
+  // anywhere on the ground throws her ball there: she runs after it, carries it back to where
+  // she set off, and drops it. She stays still for people who ask for reduced motion.
+  import {
+    colours,
+    headroom,
+    mouth,
+    picture,
+    pictureHeight,
+    snore,
+    snores,
+    width,
+    type Look,
+  } from "../lilly";
+
+  const ground = document.querySelector<HTMLElement>(".ground");
+  const lilly = document.querySelector<HTMLElement>(".lilly");
+  const image = document.querySelector<SVGElement>(".lilly-still");
+  const canvas = document.querySelector<HTMLCanvasElement>(".lilly-live");
+  const ball = document.querySelector<HTMLElement>(".ball");
+  const pen = canvas?.getContext("2d");
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (ground && lilly && image && canvas && ball && pen && !still) {
+    canvas.hidden = false;
+    image.remove();
+
+    // Sizes and distances are in screen pixels, speeds in pixels per second, times in ms.
+    // `unit` is one pixel of her drawing.
+    const size = lilly.offsetWidth;
+    const unit = size / width;
+    const ballSize = ball.offsetWidth;
+    const edge = 8;
+    const speeds = { walk: 9 * unit, carry: 18 * unit, fetch: 42 * unit };
+    const between = (min: number, max: number) => min + Math.random() * (max - min);
+    const chance = (odds: number) => Math.random() < odds;
+    const limit = (value: number, width: number) =>
+      Math.max(edge, Math.min(value, ground.clientWidth - width - edge));
+
+    let x = lilly.offsetLeft;
+    let facing = 1;
+    let ballX = ball.offsetLeft;
+    // She is where the last page left her.
+    try {
+      const saved = JSON.parse(sessionStorage.getItem("lilly") ?? "null");
+      if (saved) ({ x, facing, ballX } = saved);
+    } catch {
+      // Without storage she starts each page at the text column.
+    }
+
+    // "fetch" is the run to the ball, "wait" is standing where it will land, and "carry" is
+    // the trot back with it in her mouth.
+    let mode: "stand" | "sit" | "sleep" | "walk" | "fetch" | "wait" | "carry" = "stand";
+    let wagging = false;
+    let panting = false;
+    let target = x;
+    // Where she was when the ball was thrown, which is where she brings it back to.
+    let home = x;
+    // Which way she has to face at the end of a run for her mouth to be over the ball.
+    let toward = 1;
+    // `clock` only runs while the ground is on screen. `until` is when a rest ends, she
+    // blinks from `blink` for a moment, and a hop starts at `hop`.
+    let clock = 0;
+    let until = 1200;
+    let blink = 2000;
+    let hop = -1000;
+    // The ball's height above the grass, and its flight if it is in the air. A flight starts
+    // at the height `base`, rises by `height` on the way, and ends in a bounce of `bounce`.
+    let ballUp = 0;
+    let flight: {
+      from: number;
+      to: number;
+      start: number;
+      length: number;
+      base: number;
+      height: number;
+      bounce: number;
+    } | null = null;
+
+    // Where the ball is while it is in her mouth.
+    const held = (dip: number) => ({
+      x: x + (facing > 0 ? mouth.x * unit : size - mouth.x * unit) - ballSize / 2,
+      up: (mouth.up - dip) * unit - ballSize / 2,
+    });
+    // Where she has to stand for her mouth to be over a ball at `at`.
+    const over = (at: number, side: number) =>
+      limit(at + ballSize / 2 - (side > 0 ? mouth.x * unit : size - mouth.x * unit), size);
+
+    const rest = (pose: "stand" | "sit" | "sleep", length: number, wag = false, pant = false) => {
+      mode = pose;
+      wagging = wag;
+      panting = pant;
+      until = clock + length;
+    };
+
+    const wander = () => {
+      const roll = Math.random();
+      target = limit(x + between(-320, 320), size);
+      panting = false;
+      if (roll < 0.45 && Math.abs(target - x) > 40) mode = "walk";
+      else if (roll < 0.7) rest("sit", between(3000, 6000), chance(0.5), chance(0.3));
+      else if (roll < 0.85) rest("stand", between(1000, 3000), chance(0.5), chance(0.3));
+      // She does not nap twice in a row, or in the first moments of a visit.
+      else if (mode === "sleep" || clock < 15000) rest("stand", between(800, 2000));
+      else rest("sleep", between(8000, 14000));
+    };
+
+    // She takes the ball in her mouth and sets off for where she came from.
+    const pick = () => {
+      mode = "carry";
+      wagging = true;
+      panting = false;
+      target = home;
+    };
+
+    const arrive = () => {
+      if (mode === "walk") return rest("stand", between(800, 2500));
+      // She got to the ball's landing place. If it is still in the air she waits for it.
+      // A ball that landed close to her made her step away from it, so she turns back to it.
+      if (mode === "fetch") {
+        facing = toward;
+        if (flight) mode = "wait";
+        else pick();
+        return;
+      }
+      // Back home she drops the ball in front of her, sits down, and wags and pants.
+      const from = held(0);
+      flight = {
+        from: from.x,
+        to: limit(from.x + facing * 2 * unit, ballSize),
+        start: clock,
+        length: 180,
+        base: from.up,
+        height: 0,
+        bounce: 16,
+      };
+      rest("sit", 4500, true, true);
+    };
+
+    // How far a hop has lifted her, in pixels of her drawing. A hop takes 300ms.
+    const lift = () => [1, 2, 2, 1][Math.floor((clock - hop) / 75)] ?? 0;
+
+    // What she looks like right now.
+    const look = (): Look => {
+      const pant = panting ? ((1 + (Math.floor(clock / 170) % 2)) as 1 | 2) : 0;
+      const shared = {
+        wag: wagging && Math.floor(clock / 140) % 2 === 1,
+        blink: clock >= blink && clock < blink + 130,
+        pant,
+      };
+      if (mode === "walk") return { ...shared, pose: "walk", step: Math.floor(clock / 150) };
+      if (mode === "carry") return { ...shared, pose: "walk", step: Math.floor(clock / 110) };
+      // Her tongue is out for the whole run.
+      if (mode === "fetch")
+        return { ...shared, pose: "run", step: Math.floor(clock / 110), pant: 1 };
+      if (mode === "sleep") {
+        return { pose: "lie", step: Math.floor(clock / 900), wag: false, blink: true, pant: 0 };
+      }
+      return { ...shared, pose: mode === "wait" ? "stand" : mode, step: 0 };
+    };
+
+    // The canvas is redrawn only when the picture changes, or the theme, which changes the
+    // colours of her shadow and the "z"s. She is drawn mirrored when she faces left, but the
+    // "z"s of her sleep are not, so that they still read as "z".
+    let drawn = "";
+    new MutationObserver(() => (drawn = "")).observe(document.documentElement, {
+      attributeFilter: ["class"],
+    });
+    const paint = () => {
+      const rows = picture(look(), lift());
+      const dreams = mode === "sleep" ? snores(Math.floor(clock / 700)) : [];
+      const key = `${facing}${dreams.length}${rows.join("")}`;
+      if (key === drawn) return;
+      drawn = key;
+
+      const style = getComputedStyle(lilly);
+      const fills: Record<string, string> = {
+        ...colours,
+        "#": style.color,
+        d: style.getPropertyValue("--shadow"),
+        z: getComputedStyle(ground).color,
+      };
+      const dot = (char: string, column: number, row: number) => {
+        pen.fillStyle = fills[char];
+        pen.fillRect(column, row, 1, 1);
+      };
+      pen.clearRect(0, 0, width, pictureHeight);
+      rows.forEach((row, y) =>
+        [...row].forEach((char, column) => {
+          if (char !== ".") dot(char, facing > 0 ? column : width - 1 - column, y);
+        }),
+      );
+      for (const dream of dreams) {
+        const left = facing > 0 ? dream.x : width - dream.x - snore[0].length;
+        snore.forEach((row, dy) =>
+          [...row].forEach((char, dx) => {
+            if (char !== ".") dot("z", left + dx, headroom + dream.y + dy);
+          }),
+        );
+      }
+    };
+
+    const step = (elapsed: number) => {
+      clock += elapsed;
+      if (clock >= blink + 130) blink = clock + between(1800, 5000);
+
+      // A resized window can leave her, or the places she is heading for, off the grass.
+      x = limit(x, size);
+      target = limit(target, size);
+      home = limit(home, size);
+
+      if (mode === "walk" || mode === "fetch" || mode === "carry") {
+        const distance = target - x;
+        const reach = (speeds[mode] * elapsed) / 1000;
+        if (Math.abs(distance) <= reach) {
+          x = target;
+          arrive();
+        } else {
+          facing = Math.sign(distance);
+          x += facing * reach;
+        }
+      } else if (mode === "wait") {
+        if (!flight) pick();
+      } else if (clock >= until) {
+        wander();
+      }
+
+      if (mode === "carry") {
+        // The ball is in her mouth, and dips with her head as she trots.
+        const dip = Math.floor(clock / 110) % 2 === 0 ? 1 : 0;
+        ({ x: ballX, up: ballUp } = held(dip));
+      } else if (flight) {
+        // A thrown or dropped ball falls in an arc and bounces once where it lands.
+        const part = (clock - flight.start) / flight.length;
+        const bounce = (clock - flight.start - flight.length) / 220;
+        if (part < 1) {
+          ballX = flight.from + (flight.to - flight.from) * part;
+          ballUp = flight.base * (1 - part * part) + flight.height * 4 * part * (1 - part);
+        } else if (bounce < 1) {
+          ballX = flight.to;
+          ballUp = flight.bounce * 4 * bounce * (1 - bounce);
+        } else {
+          ballX = flight.to;
+          ballUp = 0;
+          flight = null;
+        }
+      } else {
+        ballX = limit(ballX, ballSize);
+      }
+
+      lilly.style.left = `${Math.round(x)}px`;
+      ball.style.left = `${Math.round(ballX)}px`;
+      ball.style.translate = `0 ${-Math.round(ballUp)}px`;
+      paint();
+    };
+
+    // Pressing the ground throws the ball there, from wherever it is, and Lilly runs to it.
+    // Pressing Lilly herself is a pat: she wakes up if she was asleep, and wags and pants.
+    // A click, unlike a pointer press, leaves out the other mouse buttons and a finger that
+    // starts to scroll the page.
+    ground.classList.add("pixel-cursor-pointer");
+    ground.addEventListener("click", (event) => {
+      const busy = mode === "fetch" || mode === "wait" || mode === "carry";
+      if (lilly.contains(event.target as Node)) {
+        if (!busy) rest("stand", 2500, true, true);
+        return;
+      }
+      const to = limit(
+        event.clientX - ground.getBoundingClientRect().left - ballSize / 2,
+        ballSize,
+      );
+      const distance = Math.abs(to - ballX);
+      const height = Math.min(64, 24 + distance * 0.12);
+      flight = {
+        from: ballX,
+        to,
+        start: clock,
+        length: Math.min(900, 350 + distance * 0.6),
+        base: ballUp,
+        height,
+        bounce: height / 4,
+      };
+      // A ball thrown again while she is still busy with it comes back to the same place.
+      if (!busy) home = x;
+      toward = to + ballSize / 2 > x + size / 2 ? 1 : -1;
+      target = over(to, toward);
+      mode = "fetch";
+      wagging = false;
+      panting = false;
+    });
+
+    // She hops when the pointer reaches her, unless she is asleep or running.
+    lilly.addEventListener("pointerenter", () => {
+      if (mode !== "sleep" && mode !== "fetch" && clock - hop > 300) hop = clock;
+    });
+
+    // She is drawn once at the start, and from then on only while the ground is on screen.
+    step(0);
+    let frame = 0;
+    let last = 0;
+    const loop = (now: number) => {
+      // A long gap, such as a tab that was in the background, counts as a single short step.
+      step(Math.min(now - last, 50));
+      last = now;
+      frame = requestAnimationFrame(loop);
+    };
+    new IntersectionObserver(([entry]) => {
+      cancelAnimationFrame(frame);
+      if (!entry.isIntersecting) return;
+      last = performance.now();
+      frame = requestAnimationFrame(loop);
+    }).observe(ground);
+
+    window.addEventListener("pagehide", () => {
+      try {
+        sessionStorage.setItem("lilly", JSON.stringify({ x, facing, ballX }));
+      } catch {
+        // Without storage she starts each page at the text column.
+      }
+    });
+  }
+</script>

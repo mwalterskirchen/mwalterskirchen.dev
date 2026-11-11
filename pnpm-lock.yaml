@@ -17,18 +17,12 @@ importers:
       '@astrojs/sitemap':
         specifier: ^3.7.4
         version: 3.7.4
-      '@fontsource-variable/literata':
-        specifier: ^5.3.0
-        version: 5.3.0
       '@fontsource/ibm-plex-mono':
         specifier: ^5.3.0
         version: 5.3.0
-      '@fontsource/press-start-2p':
+      '@fontsource/jersey-10':
         specifier: ^5.3.0
         version: 5.3.0
-      '@lucide/astro':
-        specifier: ^1.71.0
-        version: 1.71.0(astro@7.4.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))
       '@tailwindcss/typography':
         specifier: ^0.5.20
         version: 0.5.20(tailwindcss@4.3.5)
@@ -720,14 +714,11 @@ packages:
     resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@fontsource-variable/literata@5.3.0':
-    resolution: {integrity: sha512-1Jw7xvOcoGyB83lxB2nG4bfNbqtX2/TTbdh9sHAOmU064SvmSdulDtA5RBu5JYWf64fdaKX7xU+z3GO1T2bCHA==}
-
   '@fontsource/ibm-plex-mono@5.3.0':
     resolution: {integrity: sha512-eTgnZjZEGk1QtD3ZstF+Vclo2HLAni8YMy34/DxllwZvyz1lR/1RF/xTiAquOBO7MvqBx8D2Ig2WCPMVfdZu7Q==}
 
-  '@fontsource/press-start-2p@5.3.0':
-    resolution: {integrity: sha512-gxWFxdeDglPhEYSwEeooomcaFK8kSQYLQwVxfnOJeYRj2sPEHXjpVtFgEaYfqzOjuAJGrIcJOipu2KY5YkbyuQ==}
+  '@fontsource/jersey-10@5.3.0':
+    resolution: {integrity: sha512-1dOTUg3JXm/Ls6j4BEPLRF5DHGadCGQy/sIHS7L0SWauB2rEd2W6614Xufxoc+TVXtrt8kVR6IWh3RFkXmy/Cw==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -938,11 +929,6 @@ packages:
 
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
-
-  '@lucide/astro@1.71.0':
-    resolution: {integrity: sha512-GbA5r1RrGA8/C0bpjNoh39DDve2hnXsLGAjE7+TJMnXWF1X13RIboO3jErfwaEeHB+nm//V+MmCk3fifr90IoA==}
-    peerDependencies:
-      astro: ^4 || ^5 || ^6 || ^7
 
   '@napi-rs/wasm-runtime@1.2.5':
     resolution: {integrity: sha512-HshSvXzmBxNzqejd3k/KemgQ3hdREUYFRRrgxOZ+gPljDIsO2SDZrVZMd4Z/HsxudQbE62OVyVFE8z9BCurfjA==}
@@ -3166,11 +3152,9 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@fontsource-variable/literata@5.3.0': {}
-
   '@fontsource/ibm-plex-mono@5.3.0': {}
 
-  '@fontsource/press-start-2p@5.3.0': {}
+  '@fontsource/jersey-10@5.3.0': {}
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -3325,10 +3309,6 @@ snapshots:
       keyv: 5.6.0
 
   '@keyv/serialize@1.1.1': {}
-
-  '@lucide/astro@1.71.0(astro@7.4.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1))':
-    dependencies:
-      astro: 7.4.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.1)
 
   '@napi-rs/wasm-runtime@1.2.5(@emnapi/core@1.11.3)(@emnapi/runtime@1.11.3)':
     dependencies:
