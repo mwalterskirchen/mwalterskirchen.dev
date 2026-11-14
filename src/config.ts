@@ -15,10 +15,10 @@ export const config = {
     name: "Thought Terminating",
     url: "https://thought-terminating.com",
   },
+  // The home page is not here: the header links to it with Lilly's head.
   nav: [
-    { label: "home", href: "/" },
     { label: "blog", href: "/blog" },
     { label: "talks", href: "/talks" },
-    { label: "news", href: "/newsletter" },
+    { label: "letter", href: "/newsletter" },
   ],
 } as const;
