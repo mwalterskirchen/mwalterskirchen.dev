@@ -334,18 +334,6 @@
       @apply pixel-link;
     }
 
-    /* A link that opens in a new tab (src/external-links.mjs) says so to screen readers. The
-       text is hidden from the screen in the same way as Tailwind's `sr-only`. */
-    & :where(a[target="_blank"])::after {
-      content: " (opens in a new tab)";
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-
     & :where(pre) {
       white-space: pre-wrap;
       overflow-wrap: break-word;

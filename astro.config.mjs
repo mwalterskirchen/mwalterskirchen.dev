@@ -5,8 +5,6 @@ import sitemap from "@astrojs/sitemap";
 import cloudflare from "@astrojs/cloudflare";
 import { readdirSync, readFileSync } from "node:fs";
 import { parse } from "yaml";
-import { satteri } from "@astrojs/markdown-satteri";
-import { externalLinks } from "./src/external-links.mjs";
 
 const site = "https://mwalterskirchen.dev";
 
@@ -36,10 +34,7 @@ export default defineConfig({
   trailingSlash: "never",
   build: { format: "file" },
   // Code colours come from the `--astro-code-*` variables in `src/styles/global.css`.
-  markdown: {
-    shikiConfig: { theme: "css-variables" },
-    processor: satteri({ hastPlugins: [externalLinks(site)] }),
-  },
+  markdown: { shikiConfig: { theme: "css-variables" } },
   vite: {
     plugins: [tailwindcss()],
     // Leave the cursor images as files instead of inlining them into the stylesheet, so a page
