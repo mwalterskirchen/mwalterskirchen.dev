@@ -3,7 +3,7 @@ export const config = {
     name: "Maximilian Walterskirchen",
     url: "https://mwalterskirchen.dev",
     description:
-      "Senior Software Engineer based in Zurich. Building AI-powered products with TypeScript.",
+      "Senior Software Engineer in Zurich. I build production software with AI in the loop and write about making it reliable.",
   },
   personal: {
     name: "Maximilian Walterskirchen",
