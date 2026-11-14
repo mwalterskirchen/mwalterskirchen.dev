@@ -3,6 +3,11 @@ name: Deploy
 on:
   push:
     branches: [main]
+  # The newsletter issues are fetched at build time. An issue goes out on Monday around
+  # 07:30 UTC; the daily build also picks up one that is late.
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
 
 jobs:
   deploy:

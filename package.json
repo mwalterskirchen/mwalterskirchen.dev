@@ -22,6 +22,7 @@
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.4.11",
+    "fast-xml-parser": "^5.12.0",
     "tailwindcss": "^4.3.5"
   },
   "devDependencies": {

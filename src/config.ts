@@ -9,9 +9,14 @@ export const config = {
     githubProfile: "https://github.com/mwalterskirchen",
     linkedinProfile: "https://linkedin.com/in/mwalterskirchen",
   },
+  newsletter: {
+    name: "Thought Terminating",
+    url: "https://thought-terminating.com",
+  },
   nav: [
     { label: "home", href: "/" },
     { label: "blog", href: "/blog" },
     { label: "talks", href: "/talks" },
+    { label: "news", href: "/newsletter" },
   ],
 } as const;

@@ -5,6 +5,7 @@ import Layout from "../layouts/Layout.astro";
 import Section from "../components/Section.astro";
 import Anchor from "../components/Anchor.astro";
 import PixelIcon from "../components/PixelIcon.astro";
+import PixelButton from "../components/PixelButton.astro";
 import ArticleSnippet from "../components/ArticleSnippet.astro";
 import SEO from "../components/SEO.astro";
 import { config } from "../config";
@@ -19,6 +20,10 @@ const featuredArticles = (await getCollection("blog", (e) => e.data.featured)).m
 const featuredTalks = (await getCollection("talks", (e) => e.data.featured)).sort(
   (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
 );
+
+const latestIssue = (await getCollection("newsletter")).sort(
+  (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
+)[0];
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
@@ -87,19 +92,14 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
         .
       </p>
 
-      {/* Hovering lifts the button off its shadow and sends the envelope forward. Pressing
-          moves the button onto its shadow. */}
-      <a
-        href={`mailto:${config.personal.email}`}
-        class="group pixel-frame bg-bg hover:bg-fg hover:text-bg mt-4 ml-1 flex items-center gap-3 px-3 py-2 sm:px-4 font-medium transition-[translate,box-shadow,background-color,color] duration-150 ease-out [--frame-shadow:var(--color-accent)] focus-visible:outline-offset-[10px] motion-safe:hover:not-active:-translate-1 motion-safe:hover:not-active:[--frame-depth:8px] active:translate-1 active:duration-100 active:[--frame-depth:0px] active:[--frame-shadow:transparent]"
-      >
+      <PixelButton url={`mailto:${config.personal.email}`} class="mt-4">
         <PixelIcon
           name="mail"
           class="transition-[translate] duration-200 ease-out motion-safe:group-hover:translate-x-1 group-active:translate-x-0"
         />
         {/* The address is one long word, so on a narrow screen it has to break inside. */}
         <span class="min-w-0 break-all">{config.personal.email}</span>
-      </a>
+      </PixelButton>
     </div>
   </Section>
 
@@ -128,6 +128,27 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       </ul>
     )}
   </Section>
+
+  {latestIssue && (
+    <Section class="mt-12">
+      <div class="border-panel flex items-end justify-between gap-4 border-b-4 pb-2">
+        <h2 class="font-display text-pixel-sm">Newsletter</h2>
+        <Anchor url="/newsletter" class="mb-1 text-base font-medium">
+          All issues
+        </Anchor>
+      </div>
+      <div class="mt-8">
+        <ArticleSnippet
+          title={latestIssue.data.title}
+          description={latestIssue.data.description}
+          url={latestIssue.data.url}
+          timestamp={latestIssue.data.timestamp}
+          detail={config.newsletter.name}
+          external
+        />
+      </div>
+    </Section>
+  )}
 
   <Section class="mt-12">
     <div class="border-panel flex items-end justify-between gap-4 border-b-4 pb-2">
