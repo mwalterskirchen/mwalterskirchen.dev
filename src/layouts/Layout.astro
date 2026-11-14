@@ -63,5 +63,17 @@ import "../styles/global.css";
       <slot />
     </main>
     <Footer />
+    {
+      /* Cloudflare Web Analytics: no cookies and nothing stored in the browser. Only the deployed
+         site reports, so that local visits are not counted. */
+      import.meta.env.PROD && (
+        <script
+          is:inline
+          type="module"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "80b00cfc4bee44c4825b126f196fec6a"}'
+        />
+      )
+    }
   </body>
 </html>
