@@ -21,23 +21,20 @@ import "../styles/global.css";
     <link rel="preload" as="font" type="font/woff2" href={plexMono} crossorigin="anonymous" />
     <!-- Theme detection script - runs before page renders -->
     <script is:inline>
-      const theme = (() => {
-        if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
-          return localStorage.getItem("theme") ?? "light";
+      // A theme is stored only once the toggle is used (Header.astro). Until then the page
+      // follows the system setting.
+      {
+        let stored = null;
+        try {
+          stored = localStorage.getItem("theme");
+        } catch {
+          // Without storage the page follows the system setting.
         }
-        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-          return "dark";
-        }
-        return "light";
-      })();
-
-      if (theme === "light") {
-        document.documentElement.classList.remove("dark");
-      } else {
-        document.documentElement.classList.add("dark");
+        const dark = stored
+          ? stored === "dark"
+          : window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.classList.toggle("dark", dark);
       }
-
-      window.localStorage.setItem("theme", theme);
     </script>
     <slot name="head" />
   </head>

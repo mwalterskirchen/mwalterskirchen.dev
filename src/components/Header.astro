@@ -61,7 +61,11 @@ const isPost = path.startsWith("/blog/");
 
   const toggleTheme = () => {
     root.classList.toggle("dark");
-    localStorage.setItem("theme", root.classList.contains("dark") ? "dark" : "light");
+    try {
+      localStorage.setItem("theme", root.classList.contains("dark") ? "dark" : "light");
+    } catch {
+      // Without storage the choice lasts until the page is left.
+    }
   };
 
   // The themes cross-fade where the browser can do it and the person has not asked for

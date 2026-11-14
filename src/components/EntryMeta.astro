@@ -6,8 +6,14 @@ type Props = {
 };
 
 const { timestamp, detail } = Astro.props;
+// The locale and time zone are fixed, so a build gives the same dates on any machine.
 const formattedDate = timestamp
-  ? `${timestamp.toLocaleString("default", { month: "short" })} ${timestamp.getDate()}, ${timestamp.getFullYear()}`
+  ? timestamp.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "Europe/Zurich",
+    })
   : null;
 ---
 
