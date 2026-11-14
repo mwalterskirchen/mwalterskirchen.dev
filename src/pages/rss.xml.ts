@@ -9,8 +9,7 @@ export async function GET(context: { site: URL }) {
 
   return rss({
     title: config.site.name,
-    description:
-      "Senior Full Stack Engineer based in Zurich. Passionate about AI, Web Development and Cybersecurity.",
+    description: config.site.description,
     site: context.site,
     trailingSlash: false,
     items: posts.map((post) => ({

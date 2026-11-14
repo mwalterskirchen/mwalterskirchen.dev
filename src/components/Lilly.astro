@@ -255,7 +255,7 @@ const scale = 3;
 
     // What she looks like right now.
     const look = (): Look => {
-      const pant = panting ? ((1 + (Math.floor(clock / 170) % 2)) as 1 | 2) : 0;
+      const pant: Look["pant"] = panting ? ((1 + (Math.floor(clock / 170) % 2)) as 1 | 2) : 0;
       const shared = {
         wag: wagging && Math.floor(clock / 140) % 2 === 1,
         blink: clock >= blink && clock < blink + 130,

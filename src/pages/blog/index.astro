@@ -8,8 +8,6 @@ import SEO from "../../components/SEO.astro";
 const articles = (await getCollection("blog")).sort(
   (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
 );
-
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <Layout>
@@ -19,8 +17,6 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       description="Practical wisdom, unfiltered thoughts, and hot takes."
       longDescription="AI, Web Development, and the occasional programming mishap."
       cardImage="/og/site.png"
-      keywords={["web development", "design", "technology"]}
-      canonicalUrl={canonicalUrl}
     />
   </Fragment>
   <Section class="my-8">

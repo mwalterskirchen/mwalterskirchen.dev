@@ -1,11 +1,12 @@
 ---
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import "@fontsource/ibm-plex-mono/latin-400";
-import "@fontsource/ibm-plex-mono/latin-400-italic";
-import "@fontsource/ibm-plex-mono/latin-500";
-import "@fontsource/ibm-plex-mono/latin-600";
-import "@fontsource/ibm-plex-mono/latin-700";
+import { config } from "../config";
+import "@fontsource/ibm-plex-mono/latin-400.css";
+import "@fontsource/ibm-plex-mono/latin-400-italic.css";
+import "@fontsource/ibm-plex-mono/latin-500.css";
+import "@fontsource/ibm-plex-mono/latin-600.css";
+import "@fontsource/ibm-plex-mono/latin-700.css";
 import "@fontsource/jersey-10/latin-400.css";
 import plexMono from "@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url";
 import "../styles/global.css";
@@ -16,7 +17,12 @@ import "../styles/global.css";
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title={config.site.name} href="/rss.xml" />
     <meta name="generator" content={Astro.generator} />
     <link rel="preload" as="font" type="font/woff2" href={plexMono} crossorigin="anonymous" />
     <!-- Theme detection script - runs before page renders -->
@@ -44,8 +50,15 @@ import "../styles/global.css";
       <div class="sky-far"></div>
       <div class="sky-near"></div>
     </div>
+    {/* The first stop for the Tab key. It is above the screen until it has focus. */}
+    <a
+      href="#main"
+      class="pixel-frame bg-bg fixed top-4 left-4 z-20 -translate-y-24 px-3 py-2 font-medium focus:translate-y-0"
+    >
+      Skip to content
+    </a>
     <Header />
-    <main class="grow">
+    <main id="main" class="grow">
       <slot />
     </main>
     <Footer />

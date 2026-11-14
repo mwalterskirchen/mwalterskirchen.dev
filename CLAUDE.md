@@ -3,7 +3,8 @@
 ## Workflow
 
 - Work on a branch and open a PR. A push to `main` deploys.
-- Wrangler deploys the adapter-generated `dist/client/wrangler.json`, so `assets.directory` in `wrangler.jsonc` has no effect.
+- Wrangler deploys the adapter-generated `dist/client/wrangler.json`. The adapter sets `assets.directory` there, so `wrangler.jsonc` leaves it out.
+- Response headers are in `public/_headers`. The adapter appends the cache rule for `/_astro/*` at build time.
 - Keep `typescript` on 6.0.x when bumping dependencies: typescript-eslint supports only `<6.1`, and `^6.0.3` would allow 6.1.
 
 ## Content

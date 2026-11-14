@@ -26,20 +26,11 @@ const featuredTalks = (await getCollection("talks", (e) => e.data.featured)).sor
 const latestIssue = (await getCollection("newsletter")).sort(
   (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
 )[0];
-
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <Layout>
   <Fragment slot="head">
-    <SEO
-      title="Maximilian Walterskirchen"
-      description="Senior Software Engineer based in Zurich. Building AI-powered products with TypeScript."
-      longDescription="Senior Software Engineer based in Zurich. Building AI-powered products with TypeScript."
-      cardImage="/og/site.png"
-      keywords={["software engineer", "AI", "LLM", "typescript", "web development"]}
-      canonicalUrl={canonicalUrl}
-    />
+    <SEO title={config.site.name} description={config.site.description} cardImage="/og/site.png" />
   </Fragment>
 
   <Section class="mt-8 md:mt-12">
@@ -121,6 +112,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
         {featuredArticles.map((article) => (
           <li>
             <ArticleSnippet
+              heading="h3"
               title={article.title}
               description={article.description}
               url={article.url}
@@ -143,6 +135,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       </div>
       <div class="mt-8">
         <ArticleSnippet
+          heading="h3"
           title={latestIssue.data.title}
           description={latestIssue.data.description}
           url={latestIssue.data.url}
@@ -168,6 +161,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
         {featuredTalks.map((talk) => (
           <li>
             <ArticleSnippet
+              heading="h3"
               title={talk.data.title}
               description={talk.data.description}
               url={talk.data.slidesUrl ?? talk.data.repoUrl}

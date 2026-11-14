@@ -11,8 +11,6 @@ import { config } from "../../config";
 const issues = (await getCollection("newsletter")).sort(
   (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
 );
-
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <Layout>
@@ -21,8 +19,6 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       title="Newsletter"
       description="Thought Terminating: a weekly newsletter that helps you keep up with the AI coding world."
       cardImage="/og/site.png"
-      keywords={["newsletter", "AI", "coding agents", "LLM"]}
-      canonicalUrl={canonicalUrl}
     />
   </Fragment>
   <Section class="my-8">

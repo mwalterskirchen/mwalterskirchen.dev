@@ -11,9 +11,12 @@ export type Props = {
   detail?: string;
   timestamp?: Date;
   external?: boolean;
+  /** The level of the title's heading: one below the heading that the list stands under. */
+  heading?: "h2" | "h3";
 };
 
-const { title, description, url, detail, timestamp, external } = Astro.props;
+const { title, description, url, detail, timestamp, external, heading = "h2" } = Astro.props;
+const Heading = heading;
 ---
 
 <div class="menu-item relative flex flex-col gap-2">
@@ -21,13 +24,15 @@ const { title, description, url, detail, timestamp, external } = Astro.props;
   <PixelIcon name="cursor" class="menu-cursor absolute top-10 -left-7 hidden md:block" />
   <EntryMeta timestamp={timestamp} detail={detail} />
   {/* The link's ::after covers the whole entry, so a click anywhere on it follows the link. */}
-  <Anchor
-    url={url}
-    external={external}
-    underline={false}
-    class="text-xl font-bold after:absolute after:-inset-x-4 after:-inset-y-4 md:text-2xl"
-  >
-    {title}
-  </Anchor>
+  <Heading>
+    <Anchor
+      url={url}
+      external={external}
+      underline={false}
+      class="text-xl font-bold after:absolute after:-inset-x-4 after:-inset-y-4 md:text-2xl"
+    >
+      {title}
+    </Anchor>
+  </Heading>
   <p class="text-muted">{description}</p>
 </div>

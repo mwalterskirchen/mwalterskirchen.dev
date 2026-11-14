@@ -8,8 +8,6 @@ import SEO from "../../components/SEO.astro";
 const talks = (await getCollection("talks")).sort(
   (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
 );
-
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <Layout>
@@ -18,8 +16,6 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       title="Talks"
       description="Talks I've given at meetups and conferences."
       cardImage="/og/site.png"
-      keywords={["talks", "speaking", "conferences", "meetups"]}
-      canonicalUrl={canonicalUrl}
     />
   </Fragment>
   <Section class="my-8">
