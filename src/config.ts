@@ -15,10 +15,11 @@ export const config = {
     name: "Thought Terminating",
     url: "https://thought-terminating.com",
   },
-  // The home page is not here: the header links to it with a house.
+  // The options of the menu (TitleMenu.astro).
   nav: [
+    { label: "home", href: "/" },
     { label: "blog", href: "/blog" },
     { label: "talks", href: "/talks" },
-    { label: "letter", href: "/newsletter" },
+    { label: "newsletter", href: "/newsletter" },
   ],
 } as const;

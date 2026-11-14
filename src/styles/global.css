@@ -214,6 +214,23 @@
   }
 }
 
+/* The menu (TitleMenu.astro) covers the screen, so the page behind it does not scroll. It
+   fades in where motion is welcome. */
+@layer components {
+  html:has(.title-menu[open]) {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .title-menu[open] {
+      transition: opacity 150ms ease-out;
+      @starting-style {
+        opacity: 0;
+      }
+    }
+  }
+}
+
 /* The backdrop. scripts/pixel-backdrop.mjs draws its images. */
 @layer components {
   /* The sky behind the page: clouds on the light theme and stars on the dark one, in two
