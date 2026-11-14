@@ -8,6 +8,8 @@ export const config = {
   personal: {
     name: "Maximilian Walterskirchen",
     email: "contact@mwalterskirchen.dev",
+    jobTitle: "Senior Software Engineer",
+    employer: "Staffgenius",
     githubProfile: "https://github.com/mwalterskirchen",
     linkedinProfile: "https://linkedin.com/in/mwalterskirchen",
   },
