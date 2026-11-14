@@ -1,4 +1,5 @@
-import { defineCollection, z, type CollectionEntry } from "astro:content";
+import { defineCollection, type CollectionEntry } from "astro:content";
+import { z } from "astro/zod";
 import { glob } from "astro/loaders";
 import { XMLParser } from "fast-xml-parser";
 import { config } from "./config";
@@ -7,43 +8,33 @@ export type ArticleFrontmatter = CollectionEntry<"blog">["data"] & {
   url: string;
 };
 
-const slugify = (title: string) =>
-  title
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]/g, "");
-
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/blogs" }),
-  schema: z
-    .object({
-      title: z.string(),
-      slug: z.string().optional(),
-      description: z.string(),
-      longDescription: z.string().optional(),
-      cardImage: z.string().optional(),
-      tags: z.array(z.string()).optional(),
-      readTime: z.number().optional(),
-      featured: z.boolean().default(false),
-      timestamp: z.date().transform((val) => new Date(val)),
-    })
-    .transform((data) => ({ ...data, slug: data.slug ?? slugify(data.title) })),
+  schema: z.object({
+    title: z.string(),
+    // Required, so that a post's address never depends on its title.
+    slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+    description: z.string(),
+    longDescription: z.string().optional(),
+    cardImage: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    readTime: z.number().optional(),
+    featured: z.boolean().default(false),
+    timestamp: z.date(),
+  }),
 });
 
 const talks = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/talks" }),
-  schema: z
-    .object({
-      title: z.string(),
-      slug: z.string().optional(),
-      event: z.string(),
-      description: z.string(),
-      timestamp: z.date().transform((val) => new Date(val)),
-      repoUrl: z.string().url(),
-      slidesUrl: z.string().url().optional(),
-      featured: z.boolean().default(false),
-    })
-    .transform((data) => ({ ...data, slug: data.slug ?? slugify(data.title) })),
+  schema: z.object({
+    title: z.string(),
+    event: z.string(),
+    description: z.string(),
+    timestamp: z.date(),
+    repoUrl: z.url(),
+    slidesUrl: z.url().optional(),
+    featured: z.boolean().default(false),
+  }),
 });
 
 type FeedItem = {
@@ -89,7 +80,7 @@ const newsletter = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    url: z.string().url(),
+    url: z.url(),
     author: z.string(),
     timestamp: z.date(),
   }),

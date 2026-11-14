@@ -1,10 +1,10 @@
 ---
 import { config } from "../config";
+import { pagePath } from "../paths";
 import Anchor from "./Anchor.astro";
 import PixelIcon from "./PixelIcon.astro";
 
-// The build emits `blog.html` and `index.html`, so strip those before comparing paths.
-const path = Astro.url.pathname.replace(/(\/index)?\.html$/, "").replace(/\/$/, "") || "/";
+const path = pagePath(Astro.url);
 const isCurrent = (href: string) =>
   href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
 const isPost = path.startsWith("/blog/");
@@ -25,7 +25,7 @@ const isPost = path.startsWith("/blog/");
         </Anchor>
       ))}
     </div>
-    <button id="themeToggle" aria-label="Theme Toggle">
+    <button id="themeToggle" aria-label="Dark theme" aria-pressed="false">
       <PixelIcon name="sun" class="dark:hidden" />
       <PixelIcon name="moon" class="hidden dark:block" />
     </button>
@@ -58,9 +58,15 @@ const isPost = path.startsWith("/blog/");
 
 <script is:inline>
   const root = document.documentElement;
+  const themeToggle = document.getElementById("themeToggle");
+  // The button is a switch for the dark theme, so it says whether that theme is on.
+  const showState = () =>
+    themeToggle?.setAttribute("aria-pressed", String(root.classList.contains("dark")));
+  showState();
 
   const toggleTheme = () => {
     root.classList.toggle("dark");
+    showState();
     try {
       localStorage.setItem("theme", root.classList.contains("dark") ? "dark" : "light");
     } catch {
@@ -82,5 +88,5 @@ const isPost = path.startsWith("/blog/");
       .finished.finally(() => root.classList.remove("theme-fade"));
   };
 
-  document.getElementById("themeToggle")?.addEventListener("click", handleToggleClick);
+  themeToggle?.addEventListener("click", handleToggleClick);
 </script>

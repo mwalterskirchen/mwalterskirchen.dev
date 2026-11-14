@@ -1,11 +1,17 @@
 ---
+import { config } from "../config";
+import { pagePath } from "../paths";
+
 type Props = {
+  /** The page's own title. The site name is added to the document title. */
   title: string;
   description: string;
   longDescription?: string;
   cardImage?: string;
-  keywords?: string[];
-  canonicalUrl: string;
+  /** The tags of an article. */
+  tags?: string[];
+  /** Keeps the page out of search results, for a page with no address of its own (404). */
+  noindex?: boolean;
   type?: "website" | "article";
   publishedTime?: string;
   authorName?: string;
@@ -16,13 +22,19 @@ const {
   description,
   longDescription,
   cardImage,
-  keywords,
-  canonicalUrl,
+  tags,
+  noindex = false,
   type = "website",
   publishedTime,
   authorName,
 } = Astro.props;
 
+const path = pagePath(Astro.url);
+const canonicalUrl = noindex ? undefined : new URL(path, Astro.site).href;
+
+const siteName = config.site.name;
+const isHome = path === "/";
+const documentTitle = isHome ? title : `${title} • ${siteName}`;
 const metaDescription = longDescription ?? description;
 const resolvedCardImage = cardImage ? new URL(cardImage, Astro.site).href : undefined;
 
@@ -36,33 +48,37 @@ const jsonLd =
         url: canonicalUrl,
         ...(resolvedCardImage && { image: resolvedCardImage }),
         ...(publishedTime && { datePublished: publishedTime }),
+        ...(tags && { keywords: tags.join(", ") }),
         ...(authorName && {
           author: { "@type": "Person", name: authorName },
         }),
       }
     : {
         "@context": "https://schema.org",
-        "@type": "WebSite",
+        "@type": isHome ? "WebSite" : "WebPage",
         name: title,
         description,
         url: canonicalUrl,
       };
+
+// Escaped so that no text in the data can close the script element.
+const jsonLdHtml = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 ---
 
-<title>{title}</title>
+<title>{documentTitle}</title>
 <meta name="description" content={metaDescription} />
+{noindex && <meta name="robots" content="noindex" />}
+<meta property="og:site_name" content={siteName} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:type" content={type} />
-<meta property="og:url" content={canonicalUrl} />
+{canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
 {resolvedCardImage && <meta property="og:image" content={resolvedCardImage} />}
-{keywords && <meta name="keywords" content={keywords.join(", ")} />}
 {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{type === "article" && tags?.map((tag) => <meta property="article:tag" content={tag} />)}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 {resolvedCardImage && <meta name="twitter:image" content={resolvedCardImage} />}
-<meta http-equiv="content-language" content="en" />
-<meta name="language" content="English" />
-<link rel="canonical" href={canonicalUrl} />
-<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+{canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+{!noindex && <script type="application/ld+json" set:html={jsonLdHtml} />}

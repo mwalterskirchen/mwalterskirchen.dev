@@ -1,15 +1,12 @@
 ---
 import { getCollection } from "astro:content";
+import { byNewest } from "../../entries";
 import Layout from "../../layouts/Layout.astro";
 import ArticleSnippet from "../../components/ArticleSnippet.astro";
 import Section from "../../components/Section.astro";
 import SEO from "../../components/SEO.astro";
 
-const talks = (await getCollection("talks")).sort(
-  (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
-);
-
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+const talks = (await getCollection("talks")).sort(byNewest);
 ---
 
 <Layout>
@@ -18,8 +15,6 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
       title="Talks"
       description="Talks I've given at meetups and conferences."
       cardImage="/og/site.png"
-      keywords={["talks", "speaking", "conferences", "meetups"]}
-      canonicalUrl={canonicalUrl}
     />
   </Fragment>
   <Section class="my-8">

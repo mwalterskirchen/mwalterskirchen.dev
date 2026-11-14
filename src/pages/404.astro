@@ -3,8 +3,6 @@ import PixelIcon from "../components/PixelIcon.astro";
 import Section from "../components/Section.astro";
 import Layout from "../layouts/Layout.astro";
 import SEO from "../components/SEO.astro";
-
-const canonicalUrl = new URL("/", Astro.site).href;
 ---
 
 <Layout>
@@ -14,7 +12,7 @@ const canonicalUrl = new URL("/", Astro.site).href;
       description="The page you are looking for does not exist."
       longDescription="The page you are looking for does not exist. Maybe it never existed. Spooky."
       cardImage="/og/site.png"
-      canonicalUrl={canonicalUrl}
+      noindex
     />
   </Fragment>
   <Section class="mt-16">

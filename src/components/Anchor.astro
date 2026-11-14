@@ -24,10 +24,16 @@ const { url, external, underline = true, class: className } = Astro.props;
     !underline && "decoration-transparent",
     className,
   ]}
-  target={external ? "_blank" : "_self"}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
   aria-label={Astro.props["aria-label"]}
   aria-current={Astro.props["aria-current"]}
 >
   <slot />
-  {external ? <PixelIcon name="external" class="ml-2 inline-block" /> : null}
+  {external ? (
+    <>
+      <PixelIcon name="external" class="ml-2 inline-block" />
+      <span class="sr-only"> (opens in a new tab)</span>
+    </>
+  ) : null}
 </a>

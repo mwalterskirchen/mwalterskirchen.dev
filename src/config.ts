@@ -2,6 +2,8 @@ export const config = {
   site: {
     name: "Maximilian Walterskirchen",
     url: "https://mwalterskirchen.dev",
+    description:
+      "Senior Software Engineer based in Zurich. Building AI-powered products with TypeScript.",
   },
   personal: {
     name: "Maximilian Walterskirchen",

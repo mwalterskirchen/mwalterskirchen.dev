@@ -12,19 +12,16 @@ type Props = { frontmatter: ArticleFrontmatter };
 const { frontmatter } = Astro.props;
 const { timestamp } = frontmatter;
 const isoDate = timestamp.toISOString();
-const canonicalUrl = new URL(`/blog/${frontmatter.slug}`, Astro.site).href;
-const pageTitle = `${frontmatter.title} • ${config.personal.name}`;
 ---
 
 <Layout>
   <Fragment slot="head">
     <SEO
-      title={pageTitle}
+      title={frontmatter.title}
       description={frontmatter.description}
       longDescription={frontmatter.longDescription}
       cardImage={frontmatter.cardImage ?? `/og/${frontmatter.slug}.png`}
-      keywords={frontmatter.tags}
-      canonicalUrl={canonicalUrl}
+      tags={frontmatter.tags}
       type="article"
       publishedTime={isoDate}
       authorName={config.personal.name}
