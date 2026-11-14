@@ -9,7 +9,7 @@ const size = frames.at(-1);
 
 const tiles = await Promise.all(
   frames.map((side) =>
-    sharp("public/avatar.jpeg")
+    sharp("src/assets/avatar.jpeg")
       .resize(side, side)
       .toBuffer()
       .then((small) => sharp(small).resize(size, size, { kernel: "nearest" }).png().toBuffer()),

@@ -3,7 +3,9 @@ import { getCollection } from "astro:content";
 import { config } from "../config";
 
 export async function GET(context: { site: URL }) {
-  const posts = await getCollection("blog");
+  const posts = (await getCollection("blog")).sort(
+    (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
+  );
 
   return rss({
     title: config.site.name,

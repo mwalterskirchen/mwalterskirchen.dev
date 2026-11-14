@@ -9,13 +9,15 @@ import PixelButton from "../components/PixelButton.astro";
 import ArticleSnippet from "../components/ArticleSnippet.astro";
 import SEO from "../components/SEO.astro";
 import { config } from "../config";
-import avatar from "../../public/avatar.jpeg";
+import avatar from "../assets/avatar.jpeg";
 import frames from "../assets/avatar-frames.png";
 
-const featuredArticles = (await getCollection("blog", (e) => e.data.featured)).map((e) => ({
-  ...e.data,
-  url: `/blog/${e.data.slug}`,
-}));
+const featuredArticles = (await getCollection("blog", (e) => e.data.featured))
+  .sort((a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf())
+  .map((e) => ({
+    ...e.data,
+    url: `/blog/${e.data.slug}`,
+  }));
 
 const featuredTalks = (await getCollection("talks", (e) => e.data.featured)).sort(
   (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
@@ -48,6 +50,8 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
           alt="Portrait of Maximilian Walterskirchen"
           width={448}
           height={448}
+          loading="eager"
+          fetchpriority="high"
           class="size-full"
         />
         {/* A sprite sheet of three coarse copies of the photo, which covers it while it sharpens. */}

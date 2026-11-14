@@ -10,7 +10,7 @@ import { config } from "../../config";
 // so paths are relative to the project root.
 const FONT_DIR = "src/assets/fonts/ibm-plex-mono";
 const DISPLAY_FONT = "node_modules/@fontsource/jersey-10/files/jersey-10-latin-400-normal.woff2";
-const AVATAR = "public/avatar.jpeg";
+const AVATAR = "src/assets/avatar.jpeg";
 // The homepage and other pages link to /og/site.png.
 const SITE_SLUG = "site";
 
