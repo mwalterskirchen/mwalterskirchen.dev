@@ -13,24 +13,16 @@ export type ArticleFrontmatter = CollectionEntry<"blog">["data"] & {
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/blogs" }),
   // Strict, so that a mistyped key, or one that is no longer used, fails the build.
-  schema: z
-    .strictObject({
-      title: z.string(),
-      // Required, so that a post's address never depends on its title.
-      slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
-      description: z.string(),
-      cardImage: z.string().optional(),
-      tags: z.array(z.string()).optional(),
-      featured: z.boolean().default(false),
-      timestamp: z.date(),
-      // Set when a post changes after it is published. Search engines get it as the date the
-      // post last changed.
-      updated: z.date().optional(),
-    })
-    .refine((post) => !post.updated || post.updated >= post.timestamp, {
-      path: ["updated"],
-      message: "`updated` is before `timestamp`",
-    }),
+  schema: z.strictObject({
+    title: z.string(),
+    // Required, so that a post's address never depends on its title.
+    slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+    description: z.string(),
+    cardImage: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    featured: z.boolean().default(false),
+    timestamp: z.date(),
+  }),
 });
 
 const talks = defineCollection({

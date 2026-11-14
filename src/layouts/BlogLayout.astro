@@ -23,7 +23,6 @@ const isoDate = timestamp.toISOString();
       tags={frontmatter.tags}
       type="article"
       publishedTime={isoDate}
-      modifiedTime={frontmatter.updated?.toISOString()}
       authorName={config.personal.name}
     />
   </Fragment>

@@ -25,21 +25,10 @@ import "../styles/global.css";
     <link rel="alternate" type="application/rss+xml" title={config.site.name} href="/rss.xml" />
     <meta name="generator" content={Astro.generator} />
     <link rel="preload" as="font" type="font/woff2" href={plexMono} crossorigin="anonymous" />
-    {/* The colour of the browser's own bars: the page background. The script keeps it in step. */}
-    <meta name="theme-color" content="#e8ecf1" />
     <!-- Theme detection script - runs before page renders -->
     <script is:inline>
-      // Sets the theme, and the colour of the browser's bars with it. The toggle in
-      // Header.astro calls it too.
-      window.setTheme = (dark) => {
-        document.documentElement.classList.toggle("dark", dark);
-        document
-          .querySelector('meta[name="theme-color"]')
-          ?.setAttribute("content", dark ? "#1a1c2c" : "#e8ecf1");
-      };
-
-      // A theme is stored only once the toggle is used. Until then the page follows the
-      // system setting.
+      // A theme is stored only once the toggle is used (Header.astro). Until then the page
+      // follows the system setting.
       {
         let stored = null;
         try {
@@ -50,7 +39,7 @@ import "../styles/global.css";
         const dark = stored
           ? stored === "dark"
           : window.matchMedia("(prefers-color-scheme: dark)").matches;
-        window.setTheme(dark);
+        document.documentElement.classList.toggle("dark", dark);
       }
     </script>
     <slot name="head" />

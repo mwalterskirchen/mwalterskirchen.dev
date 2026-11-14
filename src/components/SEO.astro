@@ -13,8 +13,6 @@ type Props = {
   noindex?: boolean;
   type?: "website" | "article";
   publishedTime?: string;
-  /** When the article last changed, if it has changed since it was published. */
-  modifiedTime?: string;
   authorName?: string;
 };
 
@@ -26,7 +24,6 @@ const {
   noindex = false,
   type = "website",
   publishedTime,
-  modifiedTime,
   authorName,
 } = Astro.props;
 
@@ -49,10 +46,7 @@ const jsonLd =
         description,
         url: canonicalUrl,
         ...(resolvedCardImage && { image: resolvedCardImage }),
-        ...(publishedTime && {
-          datePublished: publishedTime,
-          dateModified: modifiedTime ?? publishedTime,
-        }),
+        ...(publishedTime && { datePublished: publishedTime }),
         ...(tags && { keywords: tags.join(", ") }),
         ...(authorName && {
           author: { "@type": "Person", name: authorName },
@@ -91,7 +85,6 @@ const jsonLdHtml = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
   </>
 )}
 {publishedTime && <meta property="article:published_time" content={publishedTime} />}
-{modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
 {type === "article" && tags?.map((tag) => <meta property="article:tag" content={tag} />)}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />

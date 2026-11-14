@@ -8,8 +8,7 @@
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-display: "Jersey 10", ui-monospace, monospace;
 
-  /* The whole site is drawn from five blue-greys and one accent. No gradients, no opacity.
-     Layout.astro repeats mist and ink for the browser's `theme-color`. */
+  /* The whole site is drawn from five blue-greys and one accent. No gradients, no opacity. */
   --color-ink: #1a1c2c;
   --color-dusk: #333c57;
   --color-slate: #566c86;

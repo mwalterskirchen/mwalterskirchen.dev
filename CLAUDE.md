@@ -10,7 +10,7 @@
 ## Content
 
 - Set `slug` in every post's frontmatter, in lowercase words joined by hyphens. The build fails without it, so that a title edit never changes the URL.
-- A post's reading time is worked out from its length. Set `updated` in the frontmatter when a post changes after it is published.
+- A post's reading time is worked out from its length, so there is no `readTime` in the frontmatter.
 - Write internal links without a trailing slash (`/blog/<slug>`). A trailing slash 404s in `astro dev`.
 
 ## Pixel art theme
