@@ -1,6 +1,5 @@
 ---
 import { config } from "../config";
-import { face } from "../lilly";
 import { pagePath } from "../paths";
 import Anchor from "./Anchor.astro";
 import PixelIcon from "./PixelIcon.astro";
@@ -11,20 +10,19 @@ const isPost = path.startsWith("/blog/");
 ---
 
 <header class="site-header border-fg bg-bg sticky top-0 z-10 w-full border-b-4">
-  {/* Lilly's head, three links and the theme toggle fit a 320px screen only at the smaller
+  {/* The house, three links and the theme toggle fit a 320px screen only at the smaller
       size, and a 360px one only with the narrow gap. */}
   <nav class="mx-auto flex max-w-3xl items-center justify-between gap-2 px-4 py-3 text-base min-[360px]:text-xl min-[400px]:gap-8">
     <div class="-ml-2 flex items-center gap-2 font-mono font-medium">
-      {/* Lilly's head is the way home. */}
       <Anchor
         url="/"
         underline={false}
         aria-label="Home"
         aria-current={path === "/" ? "page" : undefined}
-        class="group text-apricot px-2 py-1"
+        class:list={["group self-stretch px-2 py-1", path === "/" && "bg-fg text-bg"]}
       >
         <PixelIcon
-          rows={face()}
+          name="house"
           class="transition-transform duration-150 ease-out motion-safe:group-hover:-translate-y-1 motion-safe:group-focus-visible:-translate-y-1"
         />
       </Anchor>
