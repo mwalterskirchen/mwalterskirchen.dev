@@ -1,6 +1,8 @@
 ---
+import { getImage } from "astro:assets";
 import { config } from "../config";
 import { pagePath } from "../paths";
+import avatar from "../assets/avatar.jpeg";
 
 type Props = {
   /** The page's own title. The site name is added to the document title. */
@@ -37,6 +39,11 @@ const resolvedCardImage = cardImage ? new URL(cardImage, Astro.site).href : unde
 // The cards that the site draws itself (src/pages/og) all have one size.
 const isOwnCard = cardImage?.startsWith("/og/") ?? false;
 
+// The home page describes the person the site is about, so that a search for the name finds it.
+const personId = `${config.site.url}/#person`;
+// The same picture as the portrait on the home page, not the full-size photo.
+const portrait = await getImage({ src: avatar, width: 448, height: 448 });
+
 const jsonLd =
   type === "article"
     ? {
@@ -52,13 +59,40 @@ const jsonLd =
           author: { "@type": "Person", name: authorName },
         }),
       }
-    : {
-        "@context": "https://schema.org",
-        "@type": isHome ? "WebSite" : "WebPage",
-        name: title,
-        description,
-        url: canonicalUrl,
-      };
+    : isHome
+      ? {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              name: title,
+              description,
+              url: canonicalUrl,
+              author: { "@id": personId },
+            },
+            {
+              "@type": "Person",
+              "@id": personId,
+              name: config.personal.name,
+              url: config.site.url,
+              image: new URL(portrait.src, Astro.site).href,
+              jobTitle: config.personal.jobTitle,
+              worksFor: {
+                "@type": "Organization",
+                name: config.personal.employer,
+                url: config.personal.employerUrl,
+              },
+              sameAs: [config.personal.githubProfile, config.personal.linkedinProfile],
+            },
+          ],
+        }
+      : {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          name: title,
+          description,
+          url: canonicalUrl,
+        };
 
 // Escaped so that no text in the data can close the script element.
 const jsonLdHtml = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
