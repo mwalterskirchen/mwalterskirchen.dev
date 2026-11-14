@@ -67,8 +67,14 @@ const latestIssue = (await getCollection("newsletter")).sort(byNewest)[0];
       </p>
 
       <p>
-        Five years shipping scalable web apps in TypeScript. The last couple of years deep into
-        LLM-powered features and agent orchestration in real products, not demos.
+        At Staffgenius I work on{" "}
+        <a href="https://inplan.ch" target="_blank" rel="noopener noreferrer" class="pixel-link">
+          inplan
+        </a>
+        , where we use AI and agents to automate shift planning for Swiss hospitals. Before that I
+        co-founded a luxury real estate marketplace and spent four years building web apps for
+        Austrian enterprises. I've been building software professionally for six years, mostly in
+        TypeScript.
       </p>
 
       <p>
@@ -78,11 +84,20 @@ const latestIssue = (await getCollection("newsletter")).sort(byNewest)[0];
       </p>
 
       <p>
-        Speaker and CFP reviewer @
+        I co-write{" "}
+        <a
+          href={config.newsletter.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="pixel-link"
+        >
+          {config.newsletter.name}
+        </a>
+        , a weekly newsletter on agentic coding, and give the occasional talk. I also volunteer at{" "}
         <a href="https://zurichjs.com" target="_blank" rel="noopener noreferrer" class="pixel-link">
           ZurichJS
         </a>
-        .
+        , where I reviewed talk submissions for the conference.
       </p>
 
       <PixelButton url={`mailto:${config.personal.email}`} class="mt-4">
