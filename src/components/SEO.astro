@@ -6,7 +6,6 @@ type Props = {
   /** The page's own title. The site name is added to the document title. */
   title: string;
   description: string;
-  longDescription?: string;
   cardImage?: string;
   /** The tags of an article. */
   tags?: string[];
@@ -20,7 +19,6 @@ type Props = {
 const {
   title,
   description,
-  longDescription,
   cardImage,
   tags,
   noindex = false,
@@ -35,8 +33,9 @@ const canonicalUrl = noindex ? undefined : new URL(path, Astro.site).href;
 const siteName = config.site.name;
 const isHome = path === "/";
 const documentTitle = isHome ? title : `${title} • ${siteName}`;
-const metaDescription = longDescription ?? description;
 const resolvedCardImage = cardImage ? new URL(cardImage, Astro.site).href : undefined;
+// The cards that the site draws itself (src/pages/og) all have one size.
+const isOwnCard = cardImage?.startsWith("/og/") ?? false;
 
 const jsonLd =
   type === "article"
@@ -66,19 +65,31 @@ const jsonLdHtml = JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 ---
 
 <title>{documentTitle}</title>
-<meta name="description" content={metaDescription} />
+<meta name="description" content={description} />
 {noindex && <meta name="robots" content="noindex" />}
 <meta property="og:site_name" content={siteName} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:type" content={type} />
 {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
-{resolvedCardImage && <meta property="og:image" content={resolvedCardImage} />}
+{resolvedCardImage && (
+  <>
+    <meta property="og:image" content={resolvedCardImage} />
+    <meta property="og:image:alt" content={title} />
+  </>
+)}
+{isOwnCard && (
+  <>
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+  </>
+)}
 {publishedTime && <meta property="article:published_time" content={publishedTime} />}
 {type === "article" && tags?.map((tag) => <meta property="article:tag" content={tag} />)}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 {resolvedCardImage && <meta name="twitter:image" content={resolvedCardImage} />}
+{resolvedCardImage && <meta name="twitter:image:alt" content={title} />}
 {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
 {!noindex && <script type="application/ld+json" set:html={jsonLdHtml} />}

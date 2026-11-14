@@ -2,10 +2,8 @@
 title: Piloting Agentic Engineering - What Software Engineers Can Learn From The Aviation Industry
 slug: piloting-agentic-engineering
 description: AI coding agents are amazing, but lean on them too hard and your engineering skills atrophy. Aviation already lived through this. Here's what we can steal from how they fixed it.
-longDescription: Autopilot made flying safer overall but introduced a new failure mode where pilots couldn't take over when automation handed control back. The same shift is showing up in software engineering. Code churn, design flaws, and stability regressions are climbing as AI assistants get more pervasive. This piece draws the parallel, walks through the data (GitClear, Apiiro, DORA), and proposes how to keep engineers sharp without ditching the tools.
 tags: ["ai", "agentic-engineering", "career"]
 featured: true
-readTime: 9
 timestamp: 2026-05-01T17:45:00+00:00
 ---
 

@@ -6,19 +6,20 @@ import { config } from "./config";
 
 export type ArticleFrontmatter = CollectionEntry<"blog">["data"] & {
   url: string;
+  /** Minutes, worked out from the length of the post (src/entries.ts). */
+  readTime: number;
 };
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./content/blogs" }),
-  schema: z.object({
+  // Strict, so that a mistyped key, or one that is no longer used, fails the build.
+  schema: z.strictObject({
     title: z.string(),
     // Required, so that a post's address never depends on its title.
     slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
     description: z.string(),
-    longDescription: z.string().optional(),
     cardImage: z.string().optional(),
     tags: z.array(z.string()).optional(),
-    readTime: z.number().optional(),
     featured: z.boolean().default(false),
     timestamp: z.date(),
   }),
