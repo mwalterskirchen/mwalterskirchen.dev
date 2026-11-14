@@ -10,6 +10,8 @@ export const config = {
     email: "contact@mwalterskirchen.dev",
     jobTitle: "Senior Software Engineer",
     employer: "Staffgenius",
+    // Staffgenius has no site of its own, so this is the site of its product, inplan.
+    employerUrl: "https://inplan.ch",
     githubProfile: "https://github.com/mwalterskirchen",
     linkedinProfile: "https://linkedin.com/in/mwalterskirchen",
   },

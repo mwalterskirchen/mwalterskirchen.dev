@@ -77,7 +77,11 @@ const jsonLd =
               url: config.site.url,
               image: new URL(portrait.src, Astro.site).href,
               jobTitle: config.personal.jobTitle,
-              worksFor: { "@type": "Organization", name: config.personal.employer },
+              worksFor: {
+                "@type": "Organization",
+                name: config.personal.employer,
+                url: config.personal.employerUrl,
+              },
               sameAs: [config.personal.githubProfile, config.personal.linkedinProfile],
             },
           ],
