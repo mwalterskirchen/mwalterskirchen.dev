@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@astrojs/markdown-satteri": "0.4.9",
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.6.6",
     "eslint": "^10.14.0",

@@ -65,7 +65,7 @@ const isPost = path.startsWith("/blog/");
   showState();
 
   const toggleTheme = () => {
-    root.classList.toggle("dark");
+    window.setTheme(!root.classList.contains("dark"));
     showState();
     try {
       localStorage.setItem("theme", root.classList.contains("dark") ? "dark" : "light");

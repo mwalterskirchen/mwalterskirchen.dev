@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import { readTime } from "../../entries";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 
 export async function getStaticPaths() {
@@ -11,6 +12,7 @@ export async function getStaticPaths() {
         ...article,
         data: {
           ...article.data,
+          readTime: readTime(article),
           url: `/blog/${article.data.slug}`,
         },
       },

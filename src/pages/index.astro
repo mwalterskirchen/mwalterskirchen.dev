@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
-import { byNewest } from "../entries";
+import { byNewest, readTime } from "../entries";
 import Layout from "../layouts/Layout.astro";
 import Section from "../components/Section.astro";
 import Anchor from "../components/Anchor.astro";
@@ -17,6 +17,7 @@ const featuredArticles = (await getCollection("blog", (e) => e.data.featured))
   .sort(byNewest)
   .map((e) => ({
     ...e.data,
+    readTime: readTime(e),
     url: `/blog/${e.data.slug}`,
   }));
 
@@ -114,7 +115,7 @@ const latestIssue = (await getCollection("newsletter")).sort(byNewest)[0];
               description={article.description}
               url={article.url}
               timestamp={article.timestamp}
-              detail={article.readTime ? `${article.readTime} min read` : undefined}
+              detail={`${article.readTime} min read`}
             />
           </li>
         ))}

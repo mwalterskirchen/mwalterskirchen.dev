@@ -19,21 +19,18 @@ const isoDate = timestamp.toISOString();
     <SEO
       title={frontmatter.title}
       description={frontmatter.description}
-      longDescription={frontmatter.longDescription}
       cardImage={frontmatter.cardImage ?? `/og/${frontmatter.slug}.png`}
       tags={frontmatter.tags}
       type="article"
       publishedTime={isoDate}
+      modifiedTime={frontmatter.updated?.toISOString()}
       authorName={config.personal.name}
     />
   </Fragment>
   <Section class="pt-8">
     <article>
       <header class="border-panel mt-4 mb-12 border-b-4 pb-6">
-        <EntryMeta
-          timestamp={timestamp}
-          detail={frontmatter.readTime ? `${frontmatter.readTime} min read` : undefined}
-        />
+        <EntryMeta timestamp={timestamp} detail={`${frontmatter.readTime} min read`} />
         <h1 class="font-display text-pixel-sm md:text-pixel-md mt-4">{frontmatter.title}</h1>
       </header>
       <div class="prose md:prose-lg blog-prose max-w-none">

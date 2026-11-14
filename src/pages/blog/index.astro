@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import { byNewest } from "../../entries";
+import { byNewest, readTime } from "../../entries";
 import Layout from "../../layouts/Layout.astro";
 import ArticleSnippet from "../../components/ArticleSnippet.astro";
 import Section from "../../components/Section.astro";
@@ -14,7 +14,6 @@ const articles = (await getCollection("blog")).sort(byNewest);
     <SEO
       title="Blog"
       description="Practical wisdom, unfiltered thoughts, and hot takes."
-      longDescription="AI, Web Development, and the occasional programming mishap."
       cardImage="/og/site.png"
     />
   </Fragment>
@@ -26,7 +25,7 @@ const articles = (await getCollection("blog")).sort(byNewest);
           <ArticleSnippet
             title={article.data.title}
             description={article.data.description}
-            detail={article.data.readTime ? `${article.data.readTime} min read` : undefined}
+            detail={`${readTime(article)} min read`}
             url={`/blog/${article.data.slug}`}
             timestamp={article.data.timestamp}
           />
