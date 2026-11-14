@@ -214,18 +214,31 @@
   }
 }
 
-/* The menu (TitleMenu.astro) covers the screen, so the page behind it does not scroll. It
-   fades in where motion is welcome. */
+/* The menu (TitleMenu.astro) covers the screen, so the page behind it does not scroll. */
 @layer components {
   html:has(.title-menu[open]) {
     overflow: hidden;
   }
 
+  /* Where motion is welcome, the menu comes down from the header like a blind and goes back
+     up a little faster. `display` and `overlay` change only once it is up, so that the way out
+     can be seen. A menu shown by `#menu` in the address is not open, and is left alone. */
   @media (prefers-reduced-motion: no-preference) {
+    .title-menu {
+      transition:
+        clip-path 200ms ease-in,
+        display 200ms allow-discrete,
+        overlay 200ms allow-discrete;
+    }
+    .title-menu:not([open], :target) {
+      clip-path: inset(0 0 100% 0);
+    }
     .title-menu[open] {
-      transition: opacity 150ms ease-out;
+      clip-path: inset(0);
+      transition-duration: 280ms;
+      transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
       @starting-style {
-        opacity: 0;
+        clip-path: inset(0 0 100% 0);
       }
     }
   }

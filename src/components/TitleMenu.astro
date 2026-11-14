@@ -1,16 +1,12 @@
 ---
 import { config } from "../config";
-import { draw } from "../lilly";
 import { pagePath } from "../paths";
 import PixelIcon from "./PixelIcon.astro";
 
-// The site's menu, laid out like the title screen of a game: the name, Lilly, and the pages as
-// the options. The header's menu link opens it (Header.astro).
+// The site's menu, laid out like the title screen of a game, with the pages as the options. The header's menu link opens it (Header.astro).
 const path = pagePath(Astro.url);
 const isCurrent = (href: string) =>
   href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
-
-const sitting = draw({ pose: "sit", step: 0, wag: false, blink: false, pant: 0 });
 ---
 
 {/* The script opens this as a modal. Without the script, the menu link's `#menu` shows it
@@ -26,11 +22,7 @@ const sitting = draw({ pose: "sit", step: 0, wag: false, blink: false, pant: 0 }
       <PixelIcon name="close" />
     </a>
   </div>
-  <div class="flex grow flex-col items-center justify-center gap-8 px-4 pt-4 pb-12 text-center">
-    <PixelIcon rows={sitting} scale={3} class="text-apricot" />
-    <p class="font-display text-pixel-sm min-[340px]:text-pixel-md sm:text-pixel-lg">
-      {config.site.name}
-    </p>
+  <div class="flex grow flex-col items-center justify-center px-4 pt-4 pb-12">
     <ul class="font-display text-pixel-sm text-left capitalize">
       {config.nav.map((item) => (
         <li class="menu-item">
