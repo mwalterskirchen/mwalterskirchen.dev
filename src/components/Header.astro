@@ -2,14 +2,14 @@
 import { pagePath } from "../paths";
 import Anchor from "./Anchor.astro";
 import PixelIcon from "./PixelIcon.astro";
-import TitleMenu from "./TitleMenu.astro";
+import PauseMenu from "./PauseMenu.astro";
 
 const path = pagePath(Astro.url);
 const isPost = path.startsWith("/blog/");
 ---
 
 <header class="site-header border-fg bg-bg sticky top-0 z-10 w-full border-b-4">
-  {/* The house leads home, and the pages are in the menu (TitleMenu.astro). */}
+  {/* The house leads home, and the pages are in the menu (PauseMenu.astro). */}
   <nav class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-3">
     <Anchor
       url="/"
@@ -37,7 +37,7 @@ const isPost = path.startsWith("/blog/");
   {/* On a post, the header's bottom border fills up as the reader scrolls. */}
   {isPost && <div class="read-progress bg-accent absolute -bottom-1 left-0 h-1 w-full" />}
 </header>
-<TitleMenu />
+<PauseMenu />
 
 <style>
   /* Hidden where the browser cannot tie an animation to the scroll position. */

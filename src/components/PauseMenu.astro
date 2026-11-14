@@ -3,46 +3,51 @@ import { config } from "../config";
 import { pagePath } from "../paths";
 import PixelIcon from "./PixelIcon.astro";
 
-// The site's menu, laid out like the title screen of a game, with the pages as the options. The header's menu link opens it (Header.astro).
+// The site's menu, laid out like the pause menu of a game: the page stays where it is behind a
+// dither, and the pages are the options on a panel in front of it. The header's menu link
+// opens it (Header.astro).
 const path = pagePath(Astro.url);
 const isCurrent = (href: string) =>
   href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
+
+// The cursor shows which option has focus, in place of the focus ring.
+const option = "flex items-center gap-4 pr-10 focus-visible:outline-none";
 ---
 
 {/* The script opens this as a modal. Without the script, the menu link's `#menu` shows it
-    through `target:` and the close link's `#` hides it again. */}
+    through `target:` and the last option's `#` hides it again. */}
 <dialog
   id="menu"
   aria-label="Menu"
-  class="title-menu bg-bg text-fg fixed inset-0 z-30 m-0 size-full max-h-none max-w-none flex-col overflow-y-auto target:flex open:flex"
+  class="pause-menu text-fg fixed inset-0 z-30 m-0 size-full max-h-none max-w-none overflow-y-auto bg-transparent p-4 target:flex open:flex"
 >
-  {/* The close link is where the header's menu link is. */}
-  <div class="mx-auto flex w-full max-w-3xl justify-end px-4 py-3">
-    <a href="#" class="menu-close" aria-label="Close menu">
-      <PixelIcon name="close" />
-    </a>
-  </div>
-  <div class="flex grow flex-col items-center justify-center px-4 pt-4 pb-12">
-    <ul class="font-display text-pixel-sm text-left capitalize">
+  <div class="pause-panel pixel-frame bg-bg m-auto px-6 py-5 [--frame-shadow:var(--color-accent)]">
+    <ul class="font-display text-pixel-sm capitalize">
       {config.nav.map((item) => (
         <li class="menu-item">
-          {/* The cursor shows which option has focus, in place of the focus ring. */}
           <a
             href={item.href}
             aria-current={isCurrent(item.href) ? "page" : undefined}
-            class="flex items-center gap-4 pr-10 focus-visible:outline-none"
+            class={option}
           >
             <PixelIcon name="cursor" scale={3} class="menu-cursor" />
             {item.label}
           </a>
         </li>
       ))}
+      {/* The way back to the page, set a little apart from the pages. */}
+      <li class="menu-item mt-4">
+        <a href="#" class:list={["menu-close", option]}>
+          <PixelIcon name="cursor" scale={3} class="menu-cursor" />
+          Resume
+        </a>
+      </li>
     </ul>
+    {/* Only where there is a keyboard to press. */}
+    <p class="text-muted pointer-fine:block mt-5 hidden text-center text-sm font-medium">
+      ↑↓ select · esc back
+    </p>
   </div>
-  {/* Only where there is a keyboard to press. */}
-  <p class="text-muted pointer-fine:block hidden pb-6 text-center text-sm font-medium">
-    ↑↓ select · enter open · esc back
-  </p>
 </dialog>
 
 <script is:inline>
@@ -57,12 +62,17 @@ const isCurrent = (href: string) =>
       (menu.querySelector("[aria-current]") ?? options[0]).focus();
     });
 
-    // A menu shown by `#menu` in the address is not open as a modal, and its close link
+    // A menu shown by `#menu` in the address is not open as a modal, and its last option
     // works as a link.
     menu.querySelector(".menu-close").addEventListener("click", (event) => {
       if (!menu.open) return;
       event.preventDefault();
       menu.close();
+    });
+
+    // A press on the dither around the panel closes the menu too.
+    menu.addEventListener("click", (event) => {
+      if (menu.open && !event.target.closest(".pause-panel")) menu.close();
     });
 
     // The arrow keys move the cursor and wrap around at the ends. So does the pointer, so that
