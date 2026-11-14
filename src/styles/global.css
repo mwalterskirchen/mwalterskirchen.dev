@@ -8,7 +8,8 @@
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
   --font-display: "Jersey 10", ui-monospace, monospace;
 
-  /* The whole site is drawn from five blue-greys and one accent. No gradients, no opacity. */
+  /* The whole site is drawn from five blue-greys and one accent. No gradients, no opacity.
+     Layout.astro repeats mist and ink for the browser's `theme-color`. */
   --color-ink: #1a1c2c;
   --color-dusk: #333c57;
   --color-slate: #566c86;
@@ -331,6 +332,18 @@
 
     & :where(a) {
       @apply pixel-link;
+    }
+
+    /* A link that opens in a new tab (src/external-links.mjs) says so to screen readers. The
+       text is hidden from the screen in the same way as Tailwind's `sr-only`. */
+    & :where(a[target="_blank"])::after {
+      content: " (opens in a new tab)";
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     & :where(pre) {

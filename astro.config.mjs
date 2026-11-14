@@ -4,22 +4,27 @@ import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import cloudflare from "@astrojs/cloudflare";
 import { readdirSync, readFileSync } from "node:fs";
+import { parse } from "yaml";
 import { satteri } from "@astrojs/markdown-satteri";
 import { externalLinks } from "./src/external-links.mjs";
 
 const site = "https://mwalterskirchen.dev";
 
 // The date each post last changed, for the sitemap: `updated` from its frontmatter, or else
-// `timestamp`. The other pages are lists that change with their entries, so they get no date.
+// `timestamp`. The sitemap integration cannot query the collection, so this reads the files.
+// A post whose frontmatter cannot be read gets no date here: the collection's schema is what
+// reports it. The other pages are lists that change with their entries, so they get no date.
 const postDates = new Map(
   readdirSync("content/blogs", { recursive: true })
     .filter((file) => String(file).endsWith(".md"))
-    .map((file) => {
-      const frontmatter = readFileSync(`content/blogs/${file}`, "utf8").split("---")[1] ?? "";
-      /** @param {string} name */
-      const field = (name) =>
-        frontmatter.match(new RegExp(`^${name}:\\s*(.+)$`, "m"))?.[1].replace(/^["']|["']$/g, "");
-      return [`/blog/${field("slug")}`, new Date(field("updated") ?? field("timestamp") ?? "")];
+    .flatMap((file) => {
+      const text = readFileSync(`content/blogs/${file}`, "utf8");
+      const frontmatter = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/)?.[1] ?? "";
+      // Dates are read as the collection reads them: one without an offset is UTC.
+      const { slug, updated, timestamp } = parse(frontmatter, { customTags: ["timestamp"] }) ?? {};
+      const date = updated ?? timestamp;
+      const valid = typeof slug === "string" && date instanceof Date && !isNaN(date.valueOf());
+      return valid ? [[`/blog/${slug}`, date.toISOString()]] : [];
     }),
 );
 
@@ -46,7 +51,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       serialize: (item) => {
-        const lastmod = postDates.get(new URL(item.url).pathname)?.toISOString();
+        const lastmod = postDates.get(new URL(item.url).pathname);
         return lastmod ? { ...item, lastmod } : item;
       },
     }),
