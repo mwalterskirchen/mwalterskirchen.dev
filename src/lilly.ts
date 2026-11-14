@@ -214,6 +214,14 @@ export const picture = (look: Look, lift = 0): string[] => {
   return grid.map((row) => row.join(""));
 };
 
+/** Her head and ear alone, which the small favicons show (scripts/pixel-favicon.mjs). */
+export const face = (): string[] => {
+  const grid = Array.from({ length: 11 }, () => new Array<string>(head[0].length).fill("."));
+  stamp(grid, head, 0, 0);
+  stamp(grid, ear, 0, 5);
+  return grid.map((row) => row.join(""));
+};
+
 /** Where her mouth is, in pixels from the left of the picture and up from her feet. */
 export const mouth = { x: 24, up: 12 };
 
