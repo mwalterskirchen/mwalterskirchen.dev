@@ -1,38 +1,43 @@
 ---
-import { config } from "../config";
 import { pagePath } from "../paths";
 import Anchor from "./Anchor.astro";
 import PixelIcon from "./PixelIcon.astro";
+import PauseMenu from "./PauseMenu.astro";
 
 const path = pagePath(Astro.url);
-const isCurrent = (href: string) =>
-  href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
 const isPost = path.startsWith("/blog/");
 ---
 
 <header class="site-header border-fg bg-bg sticky top-0 z-10 w-full border-b-4">
-  {/* Four links and the theme toggle fit a 320px screen only at the smaller size. */}
-  <nav class="mx-auto flex max-w-3xl items-center justify-between gap-2 px-4 py-3 text-base min-[360px]:gap-8 min-[360px]:text-xl">
-    <div class="-ml-2 flex gap-2 font-mono font-medium">
-      {config.nav.map((item) => (
-        <Anchor
-          url={item.href}
-          underline={false}
-          aria-current={isCurrent(item.href) ? "page" : undefined}
-          class:list={["px-2 py-1", isCurrent(item.href) && "bg-fg text-bg"]}
-        >
-          {item.label}
-        </Anchor>
-      ))}
+  {/* The house leads home, and the pages are in the menu (PauseMenu.astro). */}
+  <nav class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-3">
+    <Anchor
+      url="/"
+      underline={false}
+      aria-label="Home"
+      aria-current={path === "/" ? "page" : undefined}
+      class="group -ml-2 px-2 py-1"
+    >
+      <PixelIcon
+        name="house"
+        class="transition-transform duration-150 ease-out motion-safe:group-hover:-translate-y-1 motion-safe:group-focus-visible:-translate-y-1"
+      />
+    </Anchor>
+    <div class="flex items-center gap-4">
+      <button id="themeToggle" aria-label="Dark theme" aria-pressed="false">
+        <PixelIcon name="sun" class="dark:hidden" />
+        <PixelIcon name="moon" class="hidden dark:block" />
+      </button>
+      {/* A link, so that it still leads to the menu where the script does not run. */}
+      <a id="menuOpen" href="#menu" aria-label="Menu">
+        <PixelIcon name="menu" />
+      </a>
     </div>
-    <button id="themeToggle" aria-label="Dark theme" aria-pressed="false">
-      <PixelIcon name="sun" class="dark:hidden" />
-      <PixelIcon name="moon" class="hidden dark:block" />
-    </button>
   </nav>
   {/* On a post, the header's bottom border fills up as the reader scrolls. */}
   {isPost && <div class="read-progress bg-accent absolute -bottom-1 left-0 h-1 w-full" />}
 </header>
+<PauseMenu />
 
 <style>
   /* Hidden where the browser cannot tie an animation to the scroll position. */

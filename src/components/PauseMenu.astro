@@ -1,0 +1,98 @@
+---
+import { config } from "../config";
+import { pagePath } from "../paths";
+import PixelIcon from "./PixelIcon.astro";
+
+// The site's menu, laid out like the pause menu of a game: the page stays where it is behind a
+// dither, and the pages are the options on a panel in front of it. The header's menu link
+// opens it (Header.astro).
+const path = pagePath(Astro.url);
+const isCurrent = (href: string) =>
+  href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
+
+// The cursor shows which option has focus, in place of the focus ring.
+const option = "flex items-center gap-4 pr-10 focus-visible:outline-none";
+---
+
+{/* The script opens this as a modal. Without the script, the menu link's `#menu` shows it
+    through `target:` and the last option's `#` hides it again. */}
+<dialog
+  id="menu"
+  aria-label="Menu"
+  class="pause-menu text-fg fixed inset-0 z-30 m-0 size-full max-h-none max-w-none overflow-y-auto bg-transparent p-4 target:flex open:flex"
+>
+  <div class="pause-panel pixel-frame bg-bg m-auto px-6 py-5 [--frame-shadow:var(--color-accent)]">
+    <ul class="font-display text-pixel-sm capitalize">
+      {config.nav.map((item) => (
+        <li class="menu-item">
+          <a
+            href={item.href}
+            aria-current={isCurrent(item.href) ? "page" : undefined}
+            class={option}
+          >
+            <PixelIcon name="cursor" scale={3} class="menu-cursor" />
+            {item.label}
+          </a>
+        </li>
+      ))}
+      {/* The way back to the page, set a little apart from the pages. */}
+      <li class="menu-item mt-4">
+        <a href="#" class:list={["menu-close", option]}>
+          <PixelIcon name="cursor" scale={3} class="menu-cursor" />
+          Resume
+        </a>
+      </li>
+    </ul>
+    {/* Only where there is a keyboard to press. */}
+    <p class="text-muted pointer-fine:block mt-5 hidden text-center text-sm font-medium">
+      ↑↓ select · esc back
+    </p>
+  </div>
+</dialog>
+
+<script is:inline>
+  {
+    const menu = document.getElementById("menu");
+    const options = [...menu.querySelectorAll("li a")];
+
+    // The cursor is on the option that has focus: at first the page the reader is on.
+    document.getElementById("menuOpen").addEventListener("click", (event) => {
+      event.preventDefault();
+      menu.showModal();
+      (menu.querySelector("[aria-current]") ?? options[0]).focus();
+    });
+
+    // A menu shown by `#menu` in the address is not open as a modal, and its last option
+    // works as a link.
+    menu.querySelector(".menu-close").addEventListener("click", (event) => {
+      if (!menu.open) return;
+      event.preventDefault();
+      menu.close();
+    });
+
+    // A press on the dither around the panel closes the menu too.
+    menu.addEventListener("click", (event) => {
+      if (menu.open && !event.target.closest(".pause-panel")) menu.close();
+    });
+
+    // The arrow keys move the cursor and wrap around at the ends. So does the pointer, so that
+    // there is never a second cursor.
+    menu.addEventListener("keydown", (event) => {
+      const step = { ArrowDown: 1, ArrowUp: -1 }[event.key];
+      if (!step) return;
+      event.preventDefault();
+      const at = options.indexOf(document.activeElement);
+      options[(at + step + options.length) % options.length].focus();
+    });
+    for (const option of options) {
+      option.addEventListener("pointerenter", (event) => {
+        if (event.pointerType === "mouse") option.focus();
+      });
+    }
+
+    // A page that the Back button brings back from the cache comes back with its menu closed.
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted && menu.open) menu.close();
+    });
+  }
+</script>

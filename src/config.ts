@@ -15,10 +15,11 @@ export const config = {
     name: "Thought Terminating",
     url: "https://thought-terminating.com",
   },
+  // The options of the menu (PauseMenu.astro).
   nav: [
     { label: "home", href: "/" },
     { label: "blog", href: "/blog" },
     { label: "talks", href: "/talks" },
-    { label: "news", href: "/newsletter" },
+    { label: "newsletter", href: "/newsletter" },
   ],
 } as const;
