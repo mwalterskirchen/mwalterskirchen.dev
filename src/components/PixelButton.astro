@@ -1,0 +1,23 @@
+---
+type Props = {
+  url: string;
+  external?: boolean;
+  class?: string;
+};
+
+const { url, external, class: className } = Astro.props;
+---
+
+{/* Hovering lifts the button off its shadow, and pressing moves it onto its shadow. The link is
+    a `group`, so an icon inside it can move with the hover. */}
+<a
+  href={url}
+  target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
+  class:list={[
+    "group pixel-frame bg-bg hover:bg-fg hover:text-bg ml-1 flex items-center gap-3 px-3 py-2 font-medium transition-[translate,box-shadow,background-color,color] duration-150 ease-out [--frame-shadow:var(--color-accent)] focus-visible:outline-offset-[10px] active:translate-1 active:duration-100 active:[--frame-depth:0px] active:[--frame-shadow:transparent] sm:px-4 motion-safe:hover:not-active:-translate-1 motion-safe:hover:not-active:[--frame-depth:8px]",
+    className,
+  ]}
+>
+  <slot />
+</a>

@@ -1,0 +1,66 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import ArticleSnippet from "../../components/ArticleSnippet.astro";
+import PixelButton from "../../components/PixelButton.astro";
+import PixelIcon from "../../components/PixelIcon.astro";
+import Section from "../../components/Section.astro";
+import SEO from "../../components/SEO.astro";
+import { config } from "../../config";
+
+const issues = (await getCollection("newsletter")).sort(
+  (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
+);
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<Layout>
+  <Fragment slot="head">
+    <SEO
+      title="Newsletter"
+      description="Thought Terminating: a weekly newsletter that helps you keep up with the AI coding world."
+      cardImage="/og/site.png"
+      keywords={["newsletter", "AI", "coding agents", "LLM"]}
+      canonicalUrl={canonicalUrl}
+    />
+  </Fragment>
+  <Section class="my-8">
+    <h1 class="font-display text-pixel-md border-panel border-b-4 pt-4 pb-2">Newsletter</h1>
+    <div class="mt-8 flex flex-col items-start gap-4">
+      <p>
+        <a
+          href={config.newsletter.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="pixel-link"
+        >
+          {config.newsletter.name}
+        </a>{" "}
+        helps you keep up with the AI coding world. Every Monday Hugo Sousa and I pick the handful
+        of links from the past week that are worth your time.
+      </p>
+      <PixelButton url={`${config.newsletter.url}/subscribe`} external class="mt-2">
+        <PixelIcon
+          name="mail"
+          class="transition-[translate] duration-200 ease-out group-active:translate-x-0 motion-safe:group-hover:translate-x-1"
+        />
+        Subscribe
+      </PixelButton>
+    </div>
+    <ul class="mt-12 flex flex-col gap-10">
+      {issues.map((issue) => (
+        <li>
+          <ArticleSnippet
+            title={issue.data.title}
+            description={issue.data.description}
+            detail={issue.data.author}
+            url={issue.data.url}
+            timestamp={issue.data.timestamp}
+            external
+          />
+        </li>
+      ))}
+    </ul>
+  </Section>
+</Layout>
