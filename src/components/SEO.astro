@@ -1,5 +1,6 @@
 ---
 import { config } from "../config";
+import { pagePath } from "../paths";
 
 type Props = {
   /** The page's own title. The site name is added to the document title. */
@@ -9,8 +10,6 @@ type Props = {
   cardImage?: string;
   /** The tags of an article. */
   tags?: string[];
-  /** The page's own address, unless this is set. */
-  canonicalUrl?: string;
   /** Keeps the page out of search results, for a page with no address of its own (404). */
   noindex?: boolean;
   type?: "website" | "article";
@@ -30,14 +29,11 @@ const {
   authorName,
 } = Astro.props;
 
-// The build emits `blog.html` and `index.html`, which are served as `/blog` and `/`.
-const ownPath = Astro.url.pathname.replace(/(\/index)?\.html$/, "").replace(/\/$/, "") || "/";
-const canonicalUrl = noindex
-  ? undefined
-  : (Astro.props.canonicalUrl ?? new URL(ownPath, Astro.site).href);
+const path = pagePath(Astro.url);
+const canonicalUrl = noindex ? undefined : new URL(path, Astro.site).href;
 
 const siteName = config.site.name;
-const isHome = title === siteName;
+const isHome = path === "/";
 const documentTitle = isHome ? title : `${title} • ${siteName}`;
 const metaDescription = longDescription ?? description;
 const resolvedCardImage = cardImage ? new URL(cardImage, Astro.site).href : undefined;

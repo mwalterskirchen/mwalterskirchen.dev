@@ -9,7 +9,7 @@
 
 ## Content
 
-- Set `slug` in every post's frontmatter. Without it the slug comes from the title, so a title edit changes the URL.
+- Set `slug` in every post's frontmatter, in lowercase words joined by hyphens. The build fails without it, so that a title edit never changes the URL.
 - Write internal links without a trailing slash (`/blog/<slug>`). A trailing slash 404s in `astro dev`.
 
 ## Pixel art theme

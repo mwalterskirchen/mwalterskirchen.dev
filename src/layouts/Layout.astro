@@ -58,7 +58,8 @@ import "../styles/global.css";
       Skip to content
     </a>
     <Header />
-    <main id="main" class="grow">
+    {/* The scroll margin keeps the sticky header off the top of the content after a skip. */}
+    <main id="main" class="grow scroll-mt-20">
       <slot />
     </main>
     <Footer />

@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { byNewest } from "../../entries";
 import Layout from "../../layouts/Layout.astro";
 import ArticleSnippet from "../../components/ArticleSnippet.astro";
 import PixelButton from "../../components/PixelButton.astro";
@@ -8,9 +9,7 @@ import Section from "../../components/Section.astro";
 import SEO from "../../components/SEO.astro";
 import { config } from "../../config";
 
-const issues = (await getCollection("newsletter")).sort(
-  (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
-);
+const issues = (await getCollection("newsletter")).sort(byNewest);
 ---
 
 <Layout>

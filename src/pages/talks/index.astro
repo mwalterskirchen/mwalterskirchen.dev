@@ -1,13 +1,12 @@
 ---
 import { getCollection } from "astro:content";
+import { byNewest } from "../../entries";
 import Layout from "../../layouts/Layout.astro";
 import ArticleSnippet from "../../components/ArticleSnippet.astro";
 import Section from "../../components/Section.astro";
 import SEO from "../../components/SEO.astro";
 
-const talks = (await getCollection("talks")).sort(
-  (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
-);
+const talks = (await getCollection("talks")).sort(byNewest);
 ---
 
 <Layout>

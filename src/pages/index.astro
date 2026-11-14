@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
+import { byNewest } from "../entries";
 import Layout from "../layouts/Layout.astro";
 import Section from "../components/Section.astro";
 import Anchor from "../components/Anchor.astro";
@@ -13,19 +14,15 @@ import avatar from "../assets/avatar.jpeg";
 import frames from "../assets/avatar-frames.png";
 
 const featuredArticles = (await getCollection("blog", (e) => e.data.featured))
-  .sort((a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf())
+  .sort(byNewest)
   .map((e) => ({
     ...e.data,
     url: `/blog/${e.data.slug}`,
   }));
 
-const featuredTalks = (await getCollection("talks", (e) => e.data.featured)).sort(
-  (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
-);
+const featuredTalks = (await getCollection("talks", (e) => e.data.featured)).sort(byNewest);
 
-const latestIssue = (await getCollection("newsletter")).sort(
-  (a, b) => b.data.timestamp.valueOf() - a.data.timestamp.valueOf(),
-)[0];
+const latestIssue = (await getCollection("newsletter")).sort(byNewest)[0];
 ---
 
 <Layout>

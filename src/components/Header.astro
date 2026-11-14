@@ -1,10 +1,10 @@
 ---
 import { config } from "../config";
+import { pagePath } from "../paths";
 import Anchor from "./Anchor.astro";
 import PixelIcon from "./PixelIcon.astro";
 
-// The build emits `blog.html` and `index.html`, so strip those before comparing paths.
-const path = Astro.url.pathname.replace(/(\/index)?\.html$/, "").replace(/\/$/, "") || "/";
+const path = pagePath(Astro.url);
 const isCurrent = (href: string) =>
   href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
 const isPost = path.startsWith("/blog/");

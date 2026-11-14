@@ -12,7 +12,6 @@ type Props = { frontmatter: ArticleFrontmatter };
 const { frontmatter } = Astro.props;
 const { timestamp } = frontmatter;
 const isoDate = timestamp.toISOString();
-const canonicalUrl = new URL(`/blog/${frontmatter.slug}`, Astro.site).href;
 ---
 
 <Layout>
@@ -23,7 +22,6 @@ const canonicalUrl = new URL(`/blog/${frontmatter.slug}`, Astro.site).href;
       longDescription={frontmatter.longDescription}
       cardImage={frontmatter.cardImage ?? `/og/${frontmatter.slug}.png`}
       tags={frontmatter.tags}
-      canonicalUrl={canonicalUrl}
       type="article"
       publishedTime={isoDate}
       authorName={config.personal.name}
