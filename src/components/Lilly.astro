@@ -28,6 +28,10 @@ const scale = 3;
   <span class="pixel-frame bg-bg text-fg pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 px-2 py-0.5 text-sm font-medium opacity-0 transition-opacity duration-150 ease-out group-hover:opacity-100 [--frame-shadow:var(--color-accent)]">
     Lilly
   </span>
+  {/* What she says to a visitor who has not thrown her ball yet. The script shows it. */}
+  <span class="lilly-hint pixel-frame bg-bg text-fg pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 px-2 py-0.5 text-sm font-medium whitespace-nowrap opacity-0 transition-opacity duration-150 ease-out [--frame-shadow:var(--color-accent)]">
+    Throw my ball!
+  </span>
   {/* The script draws her on the canvas and removes the still image. */}
   <PixelIcon rows={standing} scale={scale} class="lilly-still" />
   <canvas
@@ -67,6 +71,27 @@ const scale = 3;
     left: max(7rem, calc(50% - 17rem));
   }
 
+  /* While she asks for her ball, her words take the place of her name tag. */
+  .lilly.asking > .lilly-hint {
+    opacity: 1;
+  }
+  .lilly.asking > :first-child {
+    display: none;
+  }
+
+  /* Once the script runs, the ball can be picked up. It is small, so it is held by a wider
+     area around it, which at the ends of the ground stays on the page, and a finger on it
+     moves the ball and not the page. */
+  .ball.loose {
+    pointer-events: auto;
+    touch-action: none;
+  }
+  .ball.loose::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+  }
+
   .lilly-live,
   .run-field {
     image-rendering: pixelated;
@@ -74,9 +99,11 @@ const scale = 3;
 </style>
 
 <script>
-  // Lilly wanders along the grass, sits, wags her tail, pants, blinks and falls asleep. A press
-  // anywhere on the ground throws her ball there: she runs after it, carries it back to where
-  // she set off, and drops it. She stays still for people who ask for reduced motion.
+  // Lilly wanders along the grass, sits, wags her tail, pants, blinks and falls asleep. Her
+  // ball can be picked up, dragged and thrown: she watches it while it is held, runs after it
+  // when it is let go, carries it back to where she set off, and drops it. Until a visitor has
+  // thrown it once, she asks for it now and then. She stays still for people who ask for
+  // reduced motion.
   //
   // Three quick pats, or the "lilly:play" event (the 404 page sends it), start her run: a game
   // in which she jumps over things in the garden (run.ts).
@@ -96,6 +123,7 @@ const scale = 3;
   const ground = document.querySelector<HTMLElement>(".ground");
   const lilly = document.querySelector<HTMLElement>(".lilly");
   const image = document.querySelector<SVGElement>(".lilly-still");
+  const hint = document.querySelector<HTMLElement>(".lilly-hint");
   const canvas = document.querySelector<HTMLCanvasElement>(".lilly-live");
   const ball = document.querySelector<HTMLElement>(".ball");
   const field = document.querySelector<HTMLCanvasElement>(".run-field");
@@ -110,6 +138,7 @@ const scale = 3;
     ground &&
     lilly &&
     image &&
+    hint &&
     canvas &&
     ball &&
     pen &&
@@ -140,8 +169,8 @@ const scale = 3;
     const limit = (value: number, span: number) =>
       Math.max(edge, Math.min(value, ground.clientWidth - span - edge));
 
-    // "fetch" is the run to the ball, "wait" is standing where it will land, and "carry" is
-    // the trot back with it in her mouth.
+    // "fetch" is the run to the ball, "wait" is standing under a ball that is held or still
+    // in the air, and "carry" is the trot back with it in her mouth.
     let mode: "stand" | "sit" | "sleep" | "walk" | "fetch" | "wait" | "carry" = "stand";
     let wagging = false;
     let panting = false;
@@ -156,18 +185,30 @@ const scale = 3;
     let until = 1200;
     let blink = 2000;
     let hop = -1000;
-    // The ball's height above the grass, and its flight if it is in the air. A flight starts
-    // at the height `base`, rises by `height` on the way, and ends in a bounce of `bounce`.
+    // The ball's height above the grass. `drag` is set while a pointer holds the ball: where
+    // in the ball it took hold, and where the ball has been in the last moments, from which
+    // a throw gets its speed. A ball that was let go is `flying` until it lies still.
     let ballUp = 0;
-    let flight: {
-      from: number;
-      to: number;
-      start: number;
-      length: number;
-      base: number;
-      height: number;
-      bounce: number;
+    let drag: {
+      pointer: number;
+      dx: number;
+      dy: number;
+      trail: { at: number; x: number; up: number }[];
     } | null = null;
+    let flying = false;
+    let speedX = 0;
+    let speedUp = 0;
+    const gravity = 2200;
+    // Whether this visitor has ever thrown the ball, and when she next asks for it. She asks
+    // from `ask` until `asked`.
+    let thrown = false;
+    try {
+      thrown = localStorage.getItem("lilly-thrown") !== null;
+    } catch {
+      // Without storage she asks again on every page.
+    }
+    let ask = 1500;
+    let asked = 0;
 
     // Her run. `play` is null while she is just being a dog. In it she first runs to the
     // left of the text column ("lineup"), then runs on the spot while the ground moves ("run"),
@@ -228,26 +269,75 @@ const scale = 3;
 
     const arrive = () => {
       if (mode === "walk") return rest("stand", between(800, 2500));
-      // She got to the ball's landing place. If it is still in the air she waits for it.
-      // A ball that landed close to her made her step away from it, so she turns back to it.
-      if (mode === "fetch") {
+      // Back home she drops the ball in front of her, sits down, and wags and pants.
+      ({ x: ballX, up: ballUp } = held(0));
+      flying = true;
+      speedX = facing * 10 * unit;
+      speedUp = 0;
+      rest("sit", 4500, true, true);
+    };
+
+    // She goes after a ball that is held or moving: to where her mouth would be over it. She
+    // turns round only for a ball that is well past her middle, so that one right above her
+    // does not make her spin.
+    const chase = (elapsed: number) => {
+      const offset = ballX + ballSize / 2 - (x + size / 2);
+      if (Math.abs(offset) > 4 * unit) toward = Math.sign(offset);
+      target = over(ballX, toward);
+      const distance = target - x;
+      const reach = (speeds.fetch * elapsed) / 1000;
+      const settled = !drag && !flying;
+      // Under a ball that is still on the move she stands, and lets it drift a little.
+      if (!settled && mode === "wait" && Math.abs(distance) <= 6 * unit) {
         facing = toward;
-        if (flight) mode = "wait";
-        else pick();
+      } else if (Math.abs(distance) <= reach) {
+        x = target;
+        facing = toward;
+        if (settled) pick();
+        else mode = "wait";
+      } else {
+        mode = "fetch";
+        facing = Math.sign(distance);
+        x += facing * reach;
+      }
+    };
+
+    // The ball falls, bounces off the grass and the two ends of the ground, and rolls out.
+    const fly = (elapsed: number) => {
+      const time = elapsed / 1000;
+      const right = ground.clientWidth - ballSize - edge;
+      speedUp -= gravity * time;
+      ballX += speedX * time;
+      ballUp += speedUp * time;
+      if (ballX < edge || ballX > right) {
+        ballX = Math.max(edge, Math.min(ballX, right));
+        speedX *= -0.6;
+      }
+      if (ballUp > 0) return;
+      ballUp = 0;
+      if (speedUp < -120) {
+        speedUp *= -0.5;
+        speedX *= 0.75;
         return;
       }
-      // Back home she drops the ball in front of her, sits down, and wags and pants.
-      const from = held(0);
-      flight = {
-        from: from.x,
-        to: limit(from.x + facing * 2 * unit, ballSize),
-        start: clock,
-        length: 180,
-        base: from.up,
-        height: 0,
-        bounce: 16,
-      };
-      rest("sit", 4500, true, true);
+      speedUp = 0;
+      const slowed = Math.abs(speedX) - 900 * time;
+      speedX = slowed > 0 ? Math.sign(speedX) * slowed : 0;
+      flying = speedX !== 0;
+    };
+
+    // She says so over her head, and turns to the ball. Near an end of the ground her words
+    // are moved in, so that they stay on the page.
+    const asking = () => lilly.classList.contains("asking");
+    const quiet = () => {
+      lilly.classList.remove("asking");
+      ask = clock + 20000;
+    };
+    const place = () => {
+      const wide = hint.offsetWidth;
+      const left = x + size / 2 - wide / 2;
+      const room = Math.max(4, ground.clientWidth - wide - 4);
+      hint.style.marginLeft = `${Math.round(Math.max(4, Math.min(left, room)) - left)}px`;
     };
 
     // How far a hop has lifted her, in pixels of her drawing. A hop takes 300ms.
@@ -349,7 +439,9 @@ const scale = 3;
         ball.style.visibility = "hidden";
         field.hidden = false;
         board.hidden = false;
-        flight = null;
+        drop();
+        flying = false;
+        quiet();
         ground.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
       run.reset();
@@ -434,7 +526,9 @@ const scale = 3;
 
       if (play) {
         advance(elapsed);
-      } else if (mode === "walk" || mode === "fetch" || mode === "carry") {
+      } else if (mode === "fetch" || mode === "wait") {
+        chase(elapsed);
+      } else if (mode === "walk" || mode === "carry") {
         const distance = target - x;
         const reach = (speeds[mode] * elapsed) / 1000;
         if (Math.abs(distance) <= reach) {
@@ -444,31 +538,28 @@ const scale = 3;
           facing = Math.sign(distance);
           x += facing * reach;
         }
-      } else if (mode === "wait") {
-        if (!flight) pick();
+      } else if (!thrown && !asking() && clock >= ask && mode !== "sleep") {
+        // She stands, looks at her ball, and asks for it.
+        lilly.classList.add("asking");
+        asked = clock + 6000;
+        facing = ballX + ballSize / 2 > x + size / 2 ? 1 : -1;
+        rest("stand", 6000, true);
       } else if (clock >= until) {
         wander();
       }
+      if (asking()) {
+        if (clock >= asked) quiet();
+        else place();
+      }
 
-      if (mode === "carry") {
+      if (drag) {
+        // The pointer has the ball.
+      } else if (mode === "carry") {
         // The ball is in her mouth, and dips with her head as she trots.
         const dip = Math.floor(clock / 110) % 2 === 0 ? 1 : 0;
         ({ x: ballX, up: ballUp } = held(dip));
-      } else if (flight) {
-        // A thrown or dropped ball falls in an arc and bounces once where it lands.
-        const part = (clock - flight.start) / flight.length;
-        const bounce = (clock - flight.start - flight.length) / 220;
-        if (part < 1) {
-          ballX = flight.from + (flight.to - flight.from) * part;
-          ballUp = flight.base * (1 - part * part) + flight.height * 4 * part * (1 - part);
-        } else if (bounce < 1) {
-          ballX = flight.to;
-          ballUp = flight.bounce * 4 * bounce * (1 - bounce);
-        } else {
-          ballX = flight.to;
-          ballUp = 0;
-          flight = null;
-        }
+      } else if (flying) {
+        fly(elapsed);
       } else {
         ballX = limit(ballX, ballSize);
       }
@@ -480,44 +571,92 @@ const scale = 3;
       paint();
     };
 
-    // Pressing the ground throws the ball there, from wherever it is, and Lilly runs to it.
-    // Pressing Lilly herself is a pat: she wakes up if she was asleep, and wags and pants.
-    // A click, unlike a pointer press, leaves out the other mouse buttons and a finger that
-    // starts to scroll the page.
-    ground.classList.add("pixel-cursor-pointer");
-    ground.addEventListener("click", (event) => {
-      if (play) return;
-      const busy = mode === "fetch" || mode === "wait" || mode === "carry";
-      if (lilly.contains(event.target as Node)) {
-        pats = [...pats.filter((at) => clock - at < 1500), clock];
-        if (pats.length >= 3) {
-          pats = [];
-          start();
-        } else if (!busy) rest("stand", 2500, true, true);
-        return;
-      }
-      const to = limit(
-        event.clientX - ground.getBoundingClientRect().left - ballSize / 2,
-        ballSize,
-      );
-      const distance = Math.abs(to - ballX);
-      const height = Math.min(64, 24 + distance * 0.12);
-      flight = {
-        from: ballX,
-        to,
-        start: clock,
-        length: Math.min(900, 350 + distance * 0.6),
-        base: ballUp,
-        height,
-        bounce: height / 4,
+    // The ball is picked up with a press and goes where the pointer goes, anywhere above the
+    // grass. Lilly wakes up, and follows it from below. Let go, it flies on at the speed the
+    // pointer had over its last 100ms, and she runs after it.
+    const hold = (event: PointerEvent) => {
+      if (!drag) return;
+      const box = ground.getBoundingClientRect();
+      ballX = limit(event.clientX - box.left - drag.dx, ballSize);
+      ballUp = Math.max(0, box.bottom - 24 - ballSize - (event.clientY - drag.dy));
+      const at = event.timeStamp;
+      drag.trail = [
+        ...drag.trail.filter((past) => at - past.at < 100),
+        { at, x: ballX, up: ballUp },
+      ];
+    };
+    // Lets go of the ball without a throw: it falls from where it is.
+    const drop = () => {
+      if (!drag) return;
+      if (ball.hasPointerCapture(drag.pointer)) ball.releasePointerCapture(drag.pointer);
+      drag = null;
+      flying = true;
+      speedX = 0;
+      speedUp = 0;
+      ball.classList.replace("pixel-cursor-grabbing", "pixel-cursor-grab");
+    };
+    ball.classList.remove("pointer-events-none");
+    ball.classList.add("loose", "pixel-cursor-grab");
+    ball.addEventListener("pointerdown", (event) => {
+      if (play || drag || event.button !== 0) return;
+      // The press would otherwise select text as it moves.
+      event.preventDefault();
+      const box = ball.getBoundingClientRect();
+      drag = {
+        pointer: event.pointerId,
+        dx: event.clientX - box.left,
+        dy: event.clientY - box.top,
+        trail: [],
       };
-      // A ball thrown again while she is still busy with it comes back to the same place.
-      if (!busy) home = x;
-      toward = to + ballSize / 2 > x + size / 2 ? 1 : -1;
-      target = over(to, toward);
-      mode = "fetch";
-      wagging = false;
+      ball.setPointerCapture(event.pointerId);
+      ball.classList.replace("pixel-cursor-grab", "pixel-cursor-grabbing");
+      // A ball taken while she is still busy with it comes back to the same place.
+      if (mode !== "fetch" && mode !== "wait" && mode !== "carry") home = x;
+      mode = "wait";
+      wagging = true;
       panting = false;
+      flying = false;
+      quiet();
+      hold(event);
+    });
+    ball.addEventListener("pointermove", (event) => {
+      if (event.pointerId === drag?.pointer) hold(event);
+    });
+    ball.addEventListener("pointerup", (event) => {
+      if (event.pointerId !== drag?.pointer) return;
+      hold(event);
+      const [first] = drag.trail;
+      const time = (event.timeStamp - first.at) / 1000;
+      drop();
+      if (time > 0.01) {
+        const capped = (speed: number) => Math.max(-1400, Math.min(speed, 1400));
+        speedX = capped((ballX - first.x) / time);
+        speedUp = capped((ballUp - first.up) / time);
+      }
+      wagging = false;
+      if (thrown) return;
+      thrown = true;
+      try {
+        localStorage.setItem("lilly-thrown", "1");
+      } catch {
+        // She asks again on the next page.
+      }
+    });
+    ball.addEventListener("pointercancel", drop);
+
+    // Pressing Lilly is a pat: she wakes up if she was asleep, and wags and pants. A click,
+    // unlike a pointer press, leaves out the other mouse buttons and a finger that starts to
+    // scroll the page.
+    lilly.classList.add("pixel-cursor-pointer");
+    lilly.addEventListener("click", () => {
+      if (play) return;
+      pats = [...pats.filter((at) => clock - at < 1500), clock];
+      if (pats.length >= 3) {
+        pats = [];
+        start();
+      } else if (mode !== "fetch" && mode !== "wait" && mode !== "carry") {
+        rest("stand", 2500, true, true);
+      }
     });
 
     // She hops when the pointer reaches her, unless she is asleep or running.
