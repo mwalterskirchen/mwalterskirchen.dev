@@ -9,7 +9,7 @@ import { config } from "../../config";
 // Runs at build time in Node (see `prerenderEnvironment` in astro.config.mjs),
 // so paths are relative to the project root.
 const FONT_DIR = "src/assets/fonts/ibm-plex-mono";
-const DISPLAY_FONT = "node_modules/@fontsource/jersey-10/files/jersey-10-latin-400-normal.woff2";
+const DISPLAY_FONT = "src/assets/fonts/jersey-10/jersey-10-latin-400-normal.woff2";
 const AVATAR = "src/assets/avatar.jpeg";
 // The homepage and other pages link to /og/site.png.
 const SITE_SLUG = "site";

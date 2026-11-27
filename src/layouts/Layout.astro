@@ -1,14 +1,8 @@
 ---
+import { Font } from "astro:assets";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { config } from "../config";
-import "@fontsource/ibm-plex-mono/latin-400.css";
-import "@fontsource/ibm-plex-mono/latin-400-italic.css";
-import "@fontsource/ibm-plex-mono/latin-500.css";
-import "@fontsource/ibm-plex-mono/latin-600.css";
-import "@fontsource/ibm-plex-mono/latin-700.css";
-import "@fontsource/jersey-10/latin-400.css";
-import plexMono from "@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url";
 import "../styles/global.css";
 ---
 
@@ -24,7 +18,8 @@ import "../styles/global.css";
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title={config.site.name} href="/rss.xml" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="preload" as="font" type="font/woff2" href={plexMono} crossorigin="anonymous" />
+    <Font cssVariable="--font-plex-mono" preload={[{ weight: 400, style: "normal" }]} />
+    <Font cssVariable="--font-jersey-10" />
     <!-- Theme detection script - runs before page renders -->
     <script is:inline>
       // A theme is stored only once the toggle is used (Header.astro). Until then the page

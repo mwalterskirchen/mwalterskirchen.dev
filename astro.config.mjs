@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import cloudflare from "@astrojs/cloudflare";
@@ -21,6 +21,60 @@ export default defineConfig({
       assetsInlineLimit: (file) => (file.includes("/assets/cursors/") ? false : undefined),
     },
   },
+  // Self-hosted from src/assets/fonts. Astro writes the @font-face rules and a fallback font
+  // sized to match, so text does not jump when the web font arrives.
+  fonts: [
+    {
+      provider: fontProviders.local(),
+      name: "IBM Plex Mono",
+      cssVariable: "--font-plex-mono",
+      fallbacks: ["ui-monospace", "monospace"],
+      options: {
+        variants: [
+          {
+            weight: 400,
+            style: "normal",
+            src: ["./src/assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-400-normal.woff2"],
+          },
+          {
+            weight: 400,
+            style: "italic",
+            src: ["./src/assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-400-italic.woff2"],
+          },
+          {
+            weight: 500,
+            style: "normal",
+            src: ["./src/assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-500-normal.woff2"],
+          },
+          {
+            weight: 600,
+            style: "normal",
+            src: ["./src/assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-600-normal.woff2"],
+          },
+          {
+            weight: 700,
+            style: "normal",
+            src: ["./src/assets/fonts/ibm-plex-mono/ibm-plex-mono-latin-700-normal.woff2"],
+          },
+        ],
+      },
+    },
+    {
+      provider: fontProviders.local(),
+      name: "Jersey 10",
+      cssVariable: "--font-jersey-10",
+      fallbacks: ["ui-monospace", "monospace"],
+      options: {
+        variants: [
+          {
+            weight: 400,
+            style: "normal",
+            src: ["./src/assets/fonts/jersey-10/jersey-10-latin-400-normal.woff2"],
+          },
+        ],
+      },
+    },
+  ],
   integrations: [sitemap()],
   adapter: cloudflare({ imageService: "compile", prerenderEnvironment: "node" }),
 });
