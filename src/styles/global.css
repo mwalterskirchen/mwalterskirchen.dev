@@ -5,8 +5,9 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --font-display: "Jersey 10", ui-monospace, monospace;
+  /* The font variables come from the `fonts` config in astro.config.mjs (see Layout.astro). */
+  --font-mono: var(--font-plex-mono);
+  --font-display: var(--font-jersey-10);
 
   /* The whole site is drawn from five blue-greys and one accent. No gradients, no opacity. */
   --color-ink: #1a1c2c;
